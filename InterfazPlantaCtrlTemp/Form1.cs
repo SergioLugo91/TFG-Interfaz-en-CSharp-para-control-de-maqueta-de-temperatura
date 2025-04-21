@@ -187,6 +187,7 @@ namespace InterfazPlantaCtrlTemp
             for (int i = 0; i < graph; i++)
             {
                 Debug.WriteLine($"Leyendo dato: {i}");
+                PuertoArduino.WriteLine($"t{i}T");
                 PuertoArduino.ReadTimeout = 200;
                 try 
                 {

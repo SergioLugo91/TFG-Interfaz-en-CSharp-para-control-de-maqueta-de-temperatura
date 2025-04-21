@@ -74,7 +74,7 @@ void loop() {
 
                case 'V': 
                posFinal = i;    // La posicion final será lo que recorra el bucle
-               numcadena[j] = cadena.substring(posInicio, posFinal);  // Numcadena almacena en un string lo que va despues de v, PE(v43q) pues coge el 43
+               numcadena[j] = cadena.substring(posInicio, posFinal);  // Numcadena almacena en un string lo que va despues de v, PE(v43V) pues coge el 43
                valorSerialVentilador = numcadena[j].toInt();  // El valor del ventilador será el valor anterior convertido en entero
                j++;
 
@@ -99,7 +99,7 @@ void loop() {
 
                case 'N': 
                posFinal = i;    // La posicion final será lo que recorra el bucle
-               numcadena[j] = cadena.substring(posInicio, posFinal);  // Numcadena almacena en un string lo que va despues de v, PE(v43q) pues coge el 43
+               numcadena[j] = cadena.substring(posInicio, posFinal);  // Numcadena almacena en un string lo que va despues de n, PE(n43N) pues coge el 43
                valorSerialNicrom = numcadena[j].toInt();  // El valor del Nicrom será el valor anterior convertido en entero
                j++;
                
@@ -111,6 +111,21 @@ void loop() {
                   valorPWMNicrom = (255*85)/100; 
                }
                analogWrite(NicromPWM, valorPWMNicrom);         // Escribir en el pin analógico el valor PWM
+
+               posInicio = i + 1;
+               break;
+
+               case 't':   // Entre t y T estará el índice de la lectura 
+               posInicio = i + 1;
+               break;
+
+               case 'T': 
+               posFinal = i;    // La posicion final será lo que recorra el bucle
+               numcadena[j] = cadena.substring(posInicio, posFinal);  // Numcadena almacena en un string lo que va despues de t, PE(t43T) pues coge el 43
+               valorSerialVentilador = numcadena[j].toInt();  // El valor del ventilador será el valor anterior convertido en entero
+               j++;
+               
+               lecturaTemperatura();
 
                posInicio = i + 1;
                break;
@@ -171,8 +186,8 @@ void lecturaTemperatura() {
    VS = (VoltajeINA/gananciaINA)+(1.05463/1000);         // Esto sirve para promediar la muestra de temperatura en 100 muestras
    T = (VS*(k+1)*(k+1))/(Vin*k*alpha);                   // el 0.681818 es un offset calculado con diferentes valores de temperatura
 
-   temperatura = String("t" + T + "T");
-   Serial.print(temperatura);
+   temperatura = String(T);
+   Serial.print("t" + temperatura + "T");
 
    unsigned long currentMillis = millis(); // tiempo actual
    
