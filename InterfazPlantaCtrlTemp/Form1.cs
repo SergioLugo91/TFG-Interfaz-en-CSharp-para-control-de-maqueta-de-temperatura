@@ -192,6 +192,7 @@ namespace InterfazPlantaCtrlTemp
                 try 
                 {
                     string lectura = PuertoArduino.ReadLine();
+                    lectura = lectura.Trim();
                     Debug.WriteLine($"Datos recibidos: {lectura}");
                     lectura = lectura.Substring(1, 4);
                     double dato = double.Parse(lectura);
