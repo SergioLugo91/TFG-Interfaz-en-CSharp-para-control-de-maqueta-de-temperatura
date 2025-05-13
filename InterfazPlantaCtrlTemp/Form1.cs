@@ -15,32 +15,31 @@ using LiveCharts.Defaults;
 using LiveCharts.Wpf;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using System.IO.Ports;
+using System.Globalization;
+using LiveCharts;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.TreeView;
 
 namespace InterfazPlantaCtrlTemp
 {
     public partial class Form1 : Form
     {
         System.IO.Ports.SerialPort PuertoArduino;
-        List<datoEntrada> datosEntrada;
+        List<double> datosEntrada;
         Stopwatch cronometro;
-        LiveCharts.Wpf.LineSeries lineaSeries;
+        private System.Windows.Forms.Timer portCheckTimer;
+
+        private ChartValues<double> temperaturas = new ChartValues<double>();
+        private ChartValues<double> tiempos = new ChartValues<double>();
 
         public Form1()
         {
             InitializeComponent();
 
             // Inicializar la lista de datos
-            datosEntrada = new List<datoEntrada>();
+            datosEntrada = new List<double>();
 
             // Inicializar el cronómetro
             cronometro = new Stopwatch();
-
-            // Inicializar la serie de datos
-            lineaSeries = new LiveCharts.Wpf.LineSeries
-            {
-                Title = "Datos",
-                Values = new LiveCharts.ChartValues<ObservablePoint>()
-            };
 
             // Asociar el evento .ValueChanged con el método _ValueChanged
             numericVelVent.ValueChanged += numericVelVent_ValueChanged;
@@ -53,21 +52,6 @@ namespace InterfazPlantaCtrlTemp
             numericTInicioCal.ValueChanged += numericTInicioCal_ValueChanged;
             numericTInicioVent.ValueChanged += numericTInicioVent_ValueChanged;
 
-            // Configurar el gráfico
-            tempChart.AxisX.Add(new LiveCharts.Wpf.Axis
-            { 
-                Title = "Tiempo",
-                LabelFormatter = value => value.ToString("0") + "s" 
-            });
-
-            tempChart.AxisY.Add(new LiveCharts.Wpf.Axis
-            {
-                Title = "Temperatura",
-                LabelFormatter = value => value.ToString("0") + "°C"
-            });
-
-            tempChart.Series = new LiveCharts.SeriesCollection { lineaSeries };
-
             // Asociar el evento FormClosing con el método Form1_FormClosing
             this.FormClosing += new FormClosingEventHandler(Form1_FormClosing);
 
@@ -78,19 +62,14 @@ namespace InterfazPlantaCtrlTemp
         // Método para realizar las acciones de inicio y carga de la interfaz
         private void Form1_Load(object sender, EventArgs e)
         {
-            // Búsqueda de puertos seriales disponibles
-            Debug.WriteLine("Form1_Load ejecutándose...");
-            var portNames = SerialPort.GetPortNames();
-            Debug.WriteLine($"Puertos detectados: {string.Join(", ", portNames)}");
+            // Configurar el timer para buscar puertos
+            portCheckTimer = new System.Windows.Forms.Timer();
+            portCheckTimer.Interval = 1000; // Verificar cada segundo
+            portCheckTimer.Tick += CheckSerialPorts;
+            portCheckTimer.Start();
 
-            foreach (string s in SerialPort.GetPortNames())
-            {
-                comBox.Items.Add(s);
-            }
-            if (comBox.Items.Count > 0)
-                comBox.SelectedIndex = comBox.Items.Count - 1;
-            else
-                comBox.SelectedIndex = -1;
+            // Ejecutar la primera verificación inmediatamente
+            CheckSerialPorts(null, EventArgs.Empty);
 
             // Set up de los botones de la interfaz
             buttonCargar.Enabled = false;
@@ -111,12 +90,52 @@ namespace InterfazPlantaCtrlTemp
             numericTInicioCal.Enabled = false;
             numericTFinalCal.Enabled = false;
         }
+
+        // Método para verificar los puertos seriales disponibles
+        private void CheckSerialPorts(object sender, EventArgs e)
+        {
+            // Limpiar los puertos existentes en el ComboBox
+            comBox.Items.Clear();
+
+            // Obtener los puertos disponibles
+            var portNames = SerialPort.GetPortNames();
+            Debug.WriteLine($"Puertos detectados: {string.Join(", ", portNames)}");
+
+            // Añadir los puertos encontrados al ComboBox
+            foreach (string s in portNames)
+            {
+                comBox.Items.Add(s);
+            }
+
+            // Seleccionar el último puerto si hay alguno
+            if (comBox.Items.Count > 0)
+            {
+                comBox.SelectedIndex = comBox.Items.Count - 1;
+
+                // Detener el timer si lo encontramos
+                if (sender is System.Windows.Forms.Timer timer)
+                {
+                    timer.Stop();
+                    timer.Dispose();
+                }
+            }
+            else
+            {
+                comBox.SelectedIndex = -1;
+                Debug.WriteLine("No se encontraron puertos seriales. Volviendo a intentar...");
+            }
+        }
+
         // Método para cerrar el puerto serial
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
             //cerrar puerto
-            if (PuertoArduino.IsOpen) PuertoArduino.Close();
-            Debug.WriteLine("Puerto Cerrado");
+            if (PuertoArduino != null && PuertoArduino.IsOpen)
+            {
+                try { PuertoArduino.Close(); }
+                catch (Exception ex) { Debug.WriteLine($"Error al cerrar el puerto: {ex.Message}"); }
+                Debug.WriteLine("Puerto Cerrado");
+            }
         }
 
         // Método para conectar el puerto serial con el botón conectar
@@ -166,20 +185,65 @@ namespace InterfazPlantaCtrlTemp
         private void BtnCargar_Click(object sender, EventArgs e)
         {
             datosEntrada.Clear();
+            tempChart.Series.Clear();
+            temperaturas.Clear();
+            tiempos.Clear();
+
+            // Forzar una actualización del gráfico para limpiar visualmente
+            tempChart.Update(true, true);
+
+            // Configurar el gráfico inicial
+            ConfigurarGraficoInicial();
+
             EnviarDatos($"v{numericVelVent.Value.ToString()}V");
             EnviarDatos($"n{numericPotCal.Value.ToString()}N");
 
             cronometro.Restart();
 
-            tempChart.Series.Clear();
-
-            RecibirDatos(100);
+            // Iniciar la recepción de datos
+            Task.Factory.StartNew(() => RecibirDatos(11),
+            CancellationToken.None,
+            TaskCreationOptions.None,
+            TaskScheduler.FromCurrentSynchronizationContext());
         }
 
         private void EnviarDatos(string datos)
         {
             PuertoArduino.WriteLine(datos);
             Debug.WriteLine($"Datos enviados: {datos}"); 
+        }
+        
+        private void ConfigurarGraficoInicial()
+        {
+            tempChart.Series = new SeriesCollection
+            {
+                new LineSeries
+                {
+                    Title = "Temperatura",
+                    Values = temperaturas,
+                    PointGeometry = DefaultGeometries.Circle,
+                    PointGeometrySize = 8,
+                    StrokeThickness = 2  // Añadido para mejor visibilidad
+                }
+            };
+
+            tempChart.AxisX.Clear();
+            tempChart.AxisX.Add(new Axis
+            {
+                Title = "Tiempo (s)",
+                LabelFormatter = value => value.ToString("N1") + "s",
+                MinValue = 0,
+                MaxValue = 11 // Establecer el máximo inicial según los puntos esperados
+            });
+
+            tempChart.AxisY.Clear();
+            tempChart.AxisY.Add(new Axis
+            {
+                Title = "Temperatura (°C)",
+                LabelFormatter = value => value.ToString("N1") + "°C",
+                MinValue = 0,  // Valor inicial mínimo
+                MaxValue = 50  // Valor inicial máximo
+            });
         }
 
         private void RecibirDatos(int graph)
@@ -191,26 +255,42 @@ namespace InterfazPlantaCtrlTemp
                 PuertoArduino.ReadTimeout = 200;
                 try 
                 {
-                    string lectura = PuertoArduino.ReadLine();
-                    lectura = lectura.Trim();
+                    string lectura = PuertoArduino.ReadLine().Trim();
                     Debug.WriteLine($"Datos recibidos: {lectura}");
-                    lectura = lectura.Substring(1, 4);
-                    double dato = double.Parse(lectura);
-                    double tiempo = cronometro.Elapsed.TotalSeconds;
-                    datosEntrada.Add(new datoEntrada(tiempo,dato));
-                    ActualizarGrafica();
-                    Thread.Sleep(100);
+
+                    // Extraer y parsear el dato de temperatura
+                    lectura = lectura.Substring(1, 5);
+                    double temperatura = double.Parse(lectura, CultureInfo.InvariantCulture);
+                    double tiempoActual = cronometro.Elapsed.TotalSeconds;
+
+                    Debug.WriteLine($"Tiempo: {tiempoActual}s, Temperatura: {temperatura}°C");
+
+                    // Actualizar la interfaz desde el hilo principal
+                    tempChart.Invoke((MethodInvoker)delegate
+                    {
+                        temperaturas.Add(temperatura);
+                        tiempos.Add(tiempoActual);
+
+                        // Ajustar eje X dinámicamente
+                        tempChart.AxisX[0].MaxValue = Math.Max(tiempoActual + 1, graph);
+
+                        if (temperaturas.Count > 0)
+                        {
+                            double margen = Math.Max(5, temperaturas.Max() * 0.1); // 10% de margen o 5 unidades
+                            tempChart.AxisY[0].MinValue = Math.Floor(temperaturas.Min() - margen);
+                            tempChart.AxisY[0].MaxValue = Math.Ceiling(temperaturas.Max() + margen);
+                        }
+
+                        tempChart.Update(true, true); // Forzar actualización
+                    });
+
+                    // Actualizar gráfico
+                    tempChart.Update(true, true);
+
+                    // Esperar un segundo antes de la siguiente lectura
+                    Thread.Sleep(1000);
                 }
                 catch (TimeoutException) { Debug.WriteLine("Timeout"); }
-            }
-        }
-
-        private void ActualizarGrafica()
-        {
-            foreach (var dato in datosEntrada)
-            {
-                lineaSeries.Values.Add(new ObservablePoint(dato.Tiempo, dato.Dato));
-                Debug.WriteLine($"Datos graficados: Tiempo={dato.Tiempo}, Dato={dato.Dato}");
             }
         }
 
