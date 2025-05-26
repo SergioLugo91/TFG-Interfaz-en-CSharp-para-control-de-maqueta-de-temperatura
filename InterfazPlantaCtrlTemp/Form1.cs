@@ -24,7 +24,6 @@ namespace InterfazPlantaCtrlTemp
     public partial class Form1 : Form
     {
         System.IO.Ports.SerialPort PuertoArduino;
-        List<double> datosEntrada;
         Stopwatch cronometro;
         private System.Windows.Forms.Timer portCheckTimer;
 
@@ -34,9 +33,6 @@ namespace InterfazPlantaCtrlTemp
         public Form1()
         {
             InitializeComponent();
-
-            // Inicializar la lista de datos
-            datosEntrada = new List<double>();
 
             // Inicializar el cronómetro
             cronometro = new Stopwatch();
@@ -182,37 +178,46 @@ namespace InterfazPlantaCtrlTemp
             numericPotCal.Value = trackPotCal.Value;
         }
 
-        private void BtnCargar_Click(object sender, EventArgs e)
+        private async void BtnCargar_Click(object sender, EventArgs e)
         {
-            datosEntrada.Clear();
-            tempChart.Series.Clear();
-            temperaturas.Clear();
-            tiempos.Clear();
+            buttonCargar.Enabled = false; // Deshabilitar botón durante la operación
+            
+            try
+            {
+                // Limpiar gráfico
+                tempChart.Series.Clear();
+                temperaturas.Clear();
+                tiempos.Clear();
+                tempChart.Update(true, true);
+                Debug.WriteLine("Gráfico actualizado");
 
-            // Forzar una actualización del gráfico para limpiar visualmente
-            tempChart.Update(true, true);
+                // Configurar el gráfico inicial
+                ConfigurarGraficoInicial();
 
-            // Configurar el gráfico inicial
-            ConfigurarGraficoInicial();
+                EnviarDatos($"v{numericVelVent.Value.ToString()}V");
+                EnviarDatos($"n{numericPotCal.Value.ToString()}N");
 
-            EnviarDatos($"v{numericVelVent.Value.ToString()}V");
-            EnviarDatos($"n{numericPotCal.Value.ToString()}N");
+                cronometro.Restart();
 
-            cronometro.Restart();
-
-            // Iniciar la recepción de datos
-            Task.Factory.StartNew(() => RecibirDatos(11),
-            CancellationToken.None,
-            TaskCreationOptions.None,
-            TaskScheduler.FromCurrentSynchronizationContext());
+                // Iniciar la recepción de datos
+                await Task.Run (() => RecibirDatos(16));
+            }
+            finally 
+            {
+                // Rehabilitar botón al finalizar
+                buttonCargar.Enabled = true; 
+            }
+            
         }
 
+        // Método de enviar datos al arduino
         private void EnviarDatos(string datos)
         {
             PuertoArduino.WriteLine(datos);
             Debug.WriteLine($"Datos enviados: {datos}"); 
         }
         
+        // Método para la configuración inicial del gráfico
         private void ConfigurarGraficoInicial()
         {
             tempChart.Series = new SeriesCollection
@@ -246,6 +251,7 @@ namespace InterfazPlantaCtrlTemp
             });
         }
 
+        // Método de recibir datos del arduino
         private void RecibirDatos(int graph)
         {
             for (int i = 0; i < graph; i++)
@@ -253,6 +259,7 @@ namespace InterfazPlantaCtrlTemp
                 Debug.WriteLine($"Leyendo dato: {i}");
                 PuertoArduino.WriteLine($"t{i}T");
                 PuertoArduino.ReadTimeout = 200;
+
                 try 
                 {
                     string lectura = PuertoArduino.ReadLine().Trim();
@@ -265,27 +272,22 @@ namespace InterfazPlantaCtrlTemp
 
                     Debug.WriteLine($"Tiempo: {tiempoActual}s, Temperatura: {temperatura}°C");
 
-                    // Actualizar la interfaz desde el hilo principal
+                    // Añadir valores al gráfico (Actualizar UI)
                     tempChart.Invoke((MethodInvoker)delegate
                     {
+                        // Añadir los valores a las series
                         temperaturas.Add(temperatura);
                         tiempos.Add(tiempoActual);
 
                         // Ajustar eje X dinámicamente
                         tempChart.AxisX[0].MaxValue = Math.Max(tiempoActual + 1, graph);
-
                         if (temperaturas.Count > 0)
                         {
                             double margen = Math.Max(5, temperaturas.Max() * 0.1); // 10% de margen o 5 unidades
                             tempChart.AxisY[0].MinValue = Math.Floor(temperaturas.Min() - margen);
                             tempChart.AxisY[0].MaxValue = Math.Ceiling(temperaturas.Max() + margen);
                         }
-
-                        tempChart.Update(true, true); // Forzar actualización
                     });
-
-                    // Actualizar gráfico
-                    tempChart.Update(true, true);
 
                     // Esperar un segundo antes de la siguiente lectura
                     Thread.Sleep(1000);
@@ -422,15 +424,21 @@ namespace InterfazPlantaCtrlTemp
         }
 
 
-        private void buttonCargarEntradas_Click(object sender, EventArgs e)
+        private async void buttonCargarEntradas_Click(object sender, EventArgs e)
         {
-            datosEntrada.Clear();
+            buttonCargarEntradas.Enabled = false; // Deshabilitar botón durante la operación
+
             cronometro.Restart();
 
             if (buttonEntrEscalon.Enabled == false)
             {
-
-            }
+                while (cronometro.Elapsed.TotalSeconds < numericTInicioCal.Value.ToDouble())
+                {
+                    EnviarDatos($"v{numericConsignaVent.Value.ToString()}N");
+                    EnviarDatos($"n{numericConsignaCal.Value.ToString()}N");
+                    // Iniciar la recepción de datos
+                    await Task.Run(() => RecibirDatos(21));
+                }
             else if (buttonEntrRampa.Enabled == false)
             {
 
