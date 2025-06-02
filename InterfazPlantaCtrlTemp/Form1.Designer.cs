@@ -68,6 +68,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.btnConectar = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.entradaChart = new LiveCharts.WinForms.CartesianChart();
             ((System.ComponentModel.ISupportInitialize)(this.numericVelVent)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericPotCal)).BeginInit();
             this.groupCtrlMaqueta.SuspendLayout();
@@ -504,6 +505,7 @@
             // 
             // groupGrafico
             // 
+            this.groupGrafico.Controls.Add(this.entradaChart);
             this.groupGrafico.Controls.Add(this.tempChart);
             this.groupGrafico.Location = new System.Drawing.Point(382, 77);
             this.groupGrafico.Name = "groupGrafico";
@@ -514,9 +516,9 @@
             // 
             // tempChart
             // 
-            this.tempChart.Location = new System.Drawing.Point(16, 29);
+            this.tempChart.Location = new System.Drawing.Point(15, 30);
             this.tempChart.Name = "tempChart";
-            this.tempChart.Size = new System.Drawing.Size(802, 652);
+            this.tempChart.Size = new System.Drawing.Size(810, 660);
             this.tempChart.TabIndex = 0;
             this.tempChart.Text = "cartesianChart1";
             // 
@@ -557,6 +559,15 @@
             this.groupBox2.Size = new System.Drawing.Size(350, 51);
             this.groupBox2.TabIndex = 9;
             this.groupBox2.TabStop = false;
+            // 
+            // entradaChart
+            // 
+            this.entradaChart.Location = new System.Drawing.Point(15, 355);
+            this.entradaChart.Name = "entradaChart";
+            this.entradaChart.Size = new System.Drawing.Size(810, 330);
+            this.entradaChart.TabIndex = 1;
+            this.entradaChart.Text = "cartesianChart1";
+            this.entradaChart.Visible = false;
             // 
             // Form1
             // 
@@ -635,6 +646,7 @@
         private System.Windows.Forms.Label labelTInicioCal;
         private System.Windows.Forms.NumericUpDown numericTInicioCal;
         private System.Windows.Forms.Button buttonCargarEntradas;
+        private LiveCharts.WinForms.CartesianChart entradaChart;
     }
 }
 
