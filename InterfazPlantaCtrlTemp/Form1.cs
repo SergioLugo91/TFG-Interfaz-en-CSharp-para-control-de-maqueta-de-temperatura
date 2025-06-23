@@ -180,10 +180,12 @@ namespace InterfazPlantaCtrlTemp
             numericPotCal.Value = trackPotCal.Value;
         }
 
+        // Método para el control directo de la maqueta con el botón Cargar
         private async void BtnCargar_Click(object sender, EventArgs e)
         {
             buttonCargar.Enabled = false; // Deshabilitar botón durante la operación
             entradaChart.Visible = false; // Ocultar el gráfico de entradas
+            buttonOcultar.Visible = false; // Ocultar el botón de ocultar el gráfico de entradas
 
             tempChart.Size = new Size(810, 660); // Ajustar el tamaño del gráfico de temperatura
 
@@ -198,6 +200,7 @@ namespace InterfazPlantaCtrlTemp
 
                 // Configurar el gráfico inicial
                 ConfigurarGraficoTempInicial();
+                ConfigurarGraficoEntradas();
 
                 EnviarDatos($"v{numericVelVent.Value.ToString()}V");
                 EnviarDatos($"n{numericPotCal.Value.ToString()}N");
@@ -258,6 +261,7 @@ namespace InterfazPlantaCtrlTemp
             });
         }
 
+        // Método para configurar el gráfico de entradas
         private void ConfigurarGraficoEntradas()
         {
             // Crear un pincel con opacidad personalizada para el Fill
@@ -486,11 +490,12 @@ namespace InterfazPlantaCtrlTemp
             }
         }
 
-
+        // Método para el control a través de entradas del sistema con el botón Cargar Entradas
         private async void buttonCargarEntradas_Click(object sender, EventArgs e)
         {
             buttonCargarEntradas.Enabled = false; // Deshabilitar botón durante la operación
             entradaChart.Visible = true; // Mostrar el gráfico de entradas
+            buttonOcultar.Visible = true; // Mostrar el botón de ocultar el gráfico de entradas
 
             tempChart.Size = new Size(810, 330); // Ajustar el tamaño del gráfico de temperatura
 
@@ -582,13 +587,14 @@ namespace InterfazPlantaCtrlTemp
                         // Cálculo y envío de los valores de la rampa
                         for (int i = 0; i < (int)numericTFinalVent.Value - (int)numericTInicioVent.Value; i++)
                         {
-                            int valorMidRamp = (i + 1) * (int)(numericConsignaVent.Value / ((int)numericTFinalVent.Value - (int)numericTInicioVent.Value));
+                            int valorMidRamp = i * (int)(numericConsignaVent.Value / ((int)numericTFinalVent.Value - (int)numericTInicioVent.Value));
                             EnviarDatos($"v{valorMidRamp.ToString()}V");
                             await Task.Run(() => RecibirDatos(1, valorMidRamp));
                         }
 
                         // Ajustar los valores enviados a los seleccionados por el usuario para la entrada rampa
                         EnviarDatos($"v{numericConsignaVent.Value.ToString()}V");
+                        // Iniciar la recepción de datos
                         int valorPostRamp = 21 - (int)numericTFinalVent.Value;
                         Debug.WriteLine($"Tiempo posterior a la rampa: {valorPostRamp}");
                         await Task.Run(() => RecibirDatos(valorPostRamp, (int)numericConsignaVent.Value));
@@ -609,8 +615,8 @@ namespace InterfazPlantaCtrlTemp
                         // Cálculo y envío de los valores de la rampa
                         for (int i = 0; i < (int)numericTFinalCal.Value - (int)numericTInicioCal.Value; i++)
                         {
-                            int valorMidRamp = (i + 1) * (int)(numericConsignaCal.Value / ((int)numericTFinalCal.Value - (int)numericTInicioCal.Value));
-                            EnviarDatos($"v{valorMidRamp.ToString()}V");
+                            int valorMidRamp = i * (int)(numericConsignaCal.Value / ((int)numericTFinalCal.Value - (int)numericTInicioCal.Value));
+                            EnviarDatos($"n{valorMidRamp.ToString()}N");
                             await Task.Run(() => RecibirDatos(1, valorMidRamp));
                         }
 
@@ -636,6 +642,21 @@ namespace InterfazPlantaCtrlTemp
             {
                 // Rehabilitar botón al finalizar
                 buttonCargarEntradas.Enabled = true;
+            }
+        }
+
+        // Método para ocultar o mostrar el gráfico de entradas
+        private void buttonOcultar_Click(object sender, EventArgs e)
+        {
+            if (entradaChart.Visible == true)
+            {
+                entradaChart.Visible = false; // Ocultar el gráfico de entradas
+                tempChart.Size = new Size(810, 660); // Ajustar el tamaño del gráfico de temperatura
+            }
+            else
+            {
+                entradaChart.Visible = true; // Ocultar el gráfico de entradas
+                tempChart.Size = new Size(810, 330); // Ajustar el tamaño del gráfico de temperatura
             }
         }
     }

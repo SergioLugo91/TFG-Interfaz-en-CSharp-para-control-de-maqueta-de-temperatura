@@ -41,7 +41,6 @@
             this.labelCal = new System.Windows.Forms.Label();
             this.labelVent = new System.Windows.Forms.Label();
             this.groupCtrlEntradas = new System.Windows.Forms.GroupBox();
-            this.labelBtnPID = new System.Windows.Forms.Label();
             this.labelBtnRampa = new System.Windows.Forms.Label();
             this.labelBtnEscalon = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
@@ -63,12 +62,14 @@
             this.buttonEntrRampa = new System.Windows.Forms.Button();
             this.buttonEntrEscalon = new System.Windows.Forms.Button();
             this.groupGrafico = new System.Windows.Forms.GroupBox();
+            this.buttonOcultar = new System.Windows.Forms.Button();
+            this.entradaChart = new LiveCharts.WinForms.CartesianChart();
             this.tempChart = new LiveCharts.WinForms.CartesianChart();
             this.comBox = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
             this.btnConectar = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.entradaChart = new LiveCharts.WinForms.CartesianChart();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.numericVelVent)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericPotCal)).BeginInit();
             this.groupCtrlMaqueta.SuspendLayout();
@@ -84,6 +85,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericTInicioVent)).BeginInit();
             this.groupGrafico.SuspendLayout();
             this.groupBox2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // title
@@ -215,7 +217,6 @@
             // 
             // groupCtrlEntradas
             // 
-            this.groupCtrlEntradas.Controls.Add(this.labelBtnPID);
             this.groupCtrlEntradas.Controls.Add(this.labelBtnRampa);
             this.groupCtrlEntradas.Controls.Add(this.labelBtnEscalon);
             this.groupCtrlEntradas.Controls.Add(this.groupBox1);
@@ -223,24 +224,15 @@
             this.groupCtrlEntradas.Controls.Add(this.buttonEntrEscalon);
             this.groupCtrlEntradas.Location = new System.Drawing.Point(12, 393);
             this.groupCtrlEntradas.Name = "groupCtrlEntradas";
-            this.groupCtrlEntradas.Size = new System.Drawing.Size(350, 389);
+            this.groupCtrlEntradas.Size = new System.Drawing.Size(350, 398);
             this.groupCtrlEntradas.TabIndex = 4;
             this.groupCtrlEntradas.TabStop = false;
             this.groupCtrlEntradas.Text = "Control de Entradas del Sistema";
             // 
-            // labelBtnPID
-            // 
-            this.labelBtnPID.AutoSize = true;
-            this.labelBtnPID.Location = new System.Drawing.Point(232, 91);
-            this.labelBtnPID.Name = "labelBtnPID";
-            this.labelBtnPID.Size = new System.Drawing.Size(65, 13);
-            this.labelBtnPID.TabIndex = 8;
-            this.labelBtnPID.Text = "Entrada PID";
-            // 
             // labelBtnRampa
             // 
             this.labelBtnRampa.AutoSize = true;
-            this.labelBtnRampa.Location = new System.Drawing.Point(114, 91);
+            this.labelBtnRampa.Location = new System.Drawing.Point(204, 91);
             this.labelBtnRampa.Name = "labelBtnRampa";
             this.labelBtnRampa.Size = new System.Drawing.Size(81, 13);
             this.labelBtnRampa.TabIndex = 7;
@@ -249,7 +241,7 @@
             // labelBtnEscalon
             // 
             this.labelBtnEscalon.AutoSize = true;
-            this.labelBtnEscalon.Location = new System.Drawing.Point(6, 91);
+            this.labelBtnEscalon.Location = new System.Drawing.Point(58, 91);
             this.labelBtnEscalon.Name = "labelBtnEscalon";
             this.labelBtnEscalon.Size = new System.Drawing.Size(85, 13);
             this.labelBtnEscalon.TabIndex = 6;
@@ -274,13 +266,13 @@
             this.groupBox1.Controls.Add(this.numericTInicioVent);
             this.groupBox1.Location = new System.Drawing.Point(0, 120);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(350, 269);
+            this.groupBox1.Size = new System.Drawing.Size(350, 278);
             this.groupBox1.TabIndex = 5;
             this.groupBox1.TabStop = false;
             // 
             // buttonCargarEntradas
             // 
-            this.buttonCargarEntradas.Location = new System.Drawing.Point(269, 240);
+            this.buttonCargarEntradas.Location = new System.Drawing.Point(269, 248);
             this.buttonCargarEntradas.Name = "buttonCargarEntradas";
             this.buttonCargarEntradas.Size = new System.Drawing.Size(75, 23);
             this.buttonCargarEntradas.TabIndex = 10;
@@ -486,7 +478,7 @@
             // buttonEntrRampa
             // 
             this.buttonEntrRampa.Image = ((System.Drawing.Image)(resources.GetObject("buttonEntrRampa.Image")));
-            this.buttonEntrRampa.Location = new System.Drawing.Point(125, 29);
+            this.buttonEntrRampa.Location = new System.Drawing.Point(215, 29);
             this.buttonEntrRampa.Name = "buttonEntrRampa";
             this.buttonEntrRampa.Size = new System.Drawing.Size(58, 59);
             this.buttonEntrRampa.TabIndex = 1;
@@ -496,7 +488,7 @@
             // buttonEntrEscalon
             // 
             this.buttonEntrEscalon.Image = ((System.Drawing.Image)(resources.GetObject("buttonEntrEscalon.Image")));
-            this.buttonEntrEscalon.Location = new System.Drawing.Point(17, 29);
+            this.buttonEntrEscalon.Location = new System.Drawing.Point(69, 29);
             this.buttonEntrEscalon.Name = "buttonEntrEscalon";
             this.buttonEntrEscalon.Size = new System.Drawing.Size(58, 59);
             this.buttonEntrEscalon.TabIndex = 0;
@@ -505,18 +497,40 @@
             // 
             // groupGrafico
             // 
+            this.groupGrafico.Controls.Add(this.buttonOcultar);
             this.groupGrafico.Controls.Add(this.entradaChart);
             this.groupGrafico.Controls.Add(this.tempChart);
             this.groupGrafico.Location = new System.Drawing.Point(382, 77);
             this.groupGrafico.Name = "groupGrafico";
-            this.groupGrafico.Size = new System.Drawing.Size(833, 705);
+            this.groupGrafico.Size = new System.Drawing.Size(833, 715);
             this.groupGrafico.TabIndex = 5;
             this.groupGrafico.TabStop = false;
             this.groupGrafico.Text = "Gráfica de Temperatura";
             // 
+            // buttonOcultar
+            // 
+            this.buttonOcultar.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("buttonOcultar.BackgroundImage")));
+            this.buttonOcultar.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.buttonOcultar.Location = new System.Drawing.Point(7, 684);
+            this.buttonOcultar.Name = "buttonOcultar";
+            this.buttonOcultar.Size = new System.Drawing.Size(34, 24);
+            this.buttonOcultar.TabIndex = 2;
+            this.buttonOcultar.UseVisualStyleBackColor = true;
+            this.buttonOcultar.Visible = false;
+            this.buttonOcultar.Click += new System.EventHandler(this.buttonOcultar_Click);
+            // 
+            // entradaChart
+            // 
+            this.entradaChart.Location = new System.Drawing.Point(15, 350);
+            this.entradaChart.Name = "entradaChart";
+            this.entradaChart.Size = new System.Drawing.Size(810, 330);
+            this.entradaChart.TabIndex = 1;
+            this.entradaChart.Text = "cartesianChart1";
+            this.entradaChart.Visible = false;
+            // 
             // tempChart
             // 
-            this.tempChart.Location = new System.Drawing.Point(15, 30);
+            this.tempChart.Location = new System.Drawing.Point(15, 20);
             this.tempChart.Name = "tempChart";
             this.tempChart.Size = new System.Drawing.Size(810, 660);
             this.tempChart.TabIndex = 0;
@@ -560,20 +574,22 @@
             this.groupBox2.TabIndex = 9;
             this.groupBox2.TabStop = false;
             // 
-            // entradaChart
+            // pictureBox1
             // 
-            this.entradaChart.Location = new System.Drawing.Point(15, 355);
-            this.entradaChart.Name = "entradaChart";
-            this.entradaChart.Size = new System.Drawing.Size(810, 330);
-            this.entradaChart.TabIndex = 1;
-            this.entradaChart.Text = "cartesianChart1";
-            this.entradaChart.Visible = false;
+            this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
+            this.pictureBox1.Location = new System.Drawing.Point(12, 9);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(143, 62);
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox1.TabIndex = 10;
+            this.pictureBox1.TabStop = false;
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1239, 796);
+            this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupGrafico);
             this.Controls.Add(this.groupCtrlEntradas);
@@ -600,6 +616,7 @@
             this.groupGrafico.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -622,7 +639,6 @@
         private LiveCharts.WinForms.CartesianChart tempChart;
         private System.Windows.Forms.Button buttonCargar;
         private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.Label labelBtnPID;
         private System.Windows.Forms.Label labelBtnRampa;
         private System.Windows.Forms.Label labelBtnEscalon;
         private System.Windows.Forms.Label labelTInicioVent;
@@ -647,6 +663,8 @@
         private System.Windows.Forms.NumericUpDown numericTInicioCal;
         private System.Windows.Forms.Button buttonCargarEntradas;
         private LiveCharts.WinForms.CartesianChart entradaChart;
+        private System.Windows.Forms.Button buttonOcultar;
+        private System.Windows.Forms.PictureBox pictureBox1;
     }
 }
 
