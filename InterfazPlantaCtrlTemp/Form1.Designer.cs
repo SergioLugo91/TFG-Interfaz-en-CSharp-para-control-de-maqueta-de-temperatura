@@ -70,6 +70,10 @@
             this.btnConectar = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.labelTEjec = new System.Windows.Forms.Label();
+            this.numericTEjecucion = new System.Windows.Forms.NumericUpDown();
+            this.labelTEjecucion = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.numericVelVent)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericPotCal)).BeginInit();
             this.groupCtrlMaqueta.SuspendLayout();
@@ -86,6 +90,8 @@
             this.groupGrafico.SuspendLayout();
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            this.groupBox3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericTEjecucion)).BeginInit();
             this.SuspendLayout();
             // 
             // title
@@ -140,9 +146,9 @@
             this.groupCtrlMaqueta.Controls.Add(this.labelVent);
             this.groupCtrlMaqueta.Controls.Add(this.numericPotCal);
             this.groupCtrlMaqueta.Controls.Add(this.numericVelVent);
-            this.groupCtrlMaqueta.Location = new System.Drawing.Point(12, 134);
+            this.groupCtrlMaqueta.Location = new System.Drawing.Point(12, 178);
             this.groupCtrlMaqueta.Name = "groupCtrlMaqueta";
-            this.groupCtrlMaqueta.Size = new System.Drawing.Size(350, 253);
+            this.groupCtrlMaqueta.Size = new System.Drawing.Size(350, 243);
             this.groupCtrlMaqueta.TabIndex = 3;
             this.groupCtrlMaqueta.TabStop = false;
             this.groupCtrlMaqueta.Text = "Control de la Maqueta";
@@ -169,7 +175,7 @@
             // 
             // buttonCargar
             // 
-            this.buttonCargar.Location = new System.Drawing.Point(269, 224);
+            this.buttonCargar.Location = new System.Drawing.Point(269, 213);
             this.buttonCargar.Name = "buttonCargar";
             this.buttonCargar.Size = new System.Drawing.Size(75, 23);
             this.buttonCargar.TabIndex = 7;
@@ -222,9 +228,9 @@
             this.groupCtrlEntradas.Controls.Add(this.groupBox1);
             this.groupCtrlEntradas.Controls.Add(this.buttonEntrRampa);
             this.groupCtrlEntradas.Controls.Add(this.buttonEntrEscalon);
-            this.groupCtrlEntradas.Location = new System.Drawing.Point(12, 393);
+            this.groupCtrlEntradas.Location = new System.Drawing.Point(12, 427);
             this.groupCtrlEntradas.Name = "groupCtrlEntradas";
-            this.groupCtrlEntradas.Size = new System.Drawing.Size(350, 398);
+            this.groupCtrlEntradas.Size = new System.Drawing.Size(350, 364);
             this.groupCtrlEntradas.TabIndex = 4;
             this.groupCtrlEntradas.TabStop = false;
             this.groupCtrlEntradas.Text = "Control de Entradas del Sistema";
@@ -266,13 +272,13 @@
             this.groupBox1.Controls.Add(this.numericTInicioVent);
             this.groupBox1.Location = new System.Drawing.Point(0, 120);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(350, 278);
+            this.groupBox1.Size = new System.Drawing.Size(350, 245);
             this.groupBox1.TabIndex = 5;
             this.groupBox1.TabStop = false;
             // 
             // buttonCargarEntradas
             // 
-            this.buttonCargarEntradas.Location = new System.Drawing.Point(269, 248);
+            this.buttonCargarEntradas.Location = new System.Drawing.Point(269, 218);
             this.buttonCargarEntradas.Name = "buttonCargarEntradas";
             this.buttonCargarEntradas.Size = new System.Drawing.Size(75, 23);
             this.buttonCargarEntradas.TabIndex = 10;
@@ -584,11 +590,64 @@
             this.pictureBox1.TabIndex = 10;
             this.pictureBox1.TabStop = false;
             // 
+            // groupBox3
+            // 
+            this.groupBox3.Controls.Add(this.labelTEjec);
+            this.groupBox3.Controls.Add(this.numericTEjecucion);
+            this.groupBox3.Controls.Add(this.labelTEjecucion);
+            this.groupBox3.Location = new System.Drawing.Point(12, 127);
+            this.groupBox3.Name = "groupBox3";
+            this.groupBox3.Size = new System.Drawing.Size(350, 51);
+            this.groupBox3.TabIndex = 10;
+            this.groupBox3.TabStop = false;
+            // 
+            // labelTEjec
+            // 
+            this.labelTEjec.AutoSize = true;
+            this.labelTEjec.Location = new System.Drawing.Point(276, 22);
+            this.labelTEjec.Name = "labelTEjec";
+            this.labelTEjec.Size = new System.Drawing.Size(55, 13);
+            this.labelTEjec.TabIndex = 9;
+            this.labelTEjec.Text = "Segundos";
+            // 
+            // numericTEjecucion
+            // 
+            this.numericTEjecucion.Location = new System.Drawing.Point(137, 20);
+            this.numericTEjecucion.Maximum = new decimal(new int[] {
+            90,
+            0,
+            0,
+            0});
+            this.numericTEjecucion.Minimum = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.numericTEjecucion.Name = "numericTEjecucion";
+            this.numericTEjecucion.Size = new System.Drawing.Size(121, 20);
+            this.numericTEjecucion.TabIndex = 11;
+            this.numericTEjecucion.Tag = "";
+            this.numericTEjecucion.Value = new decimal(new int[] {
+            30,
+            0,
+            0,
+            0});
+            // 
+            // labelTEjecucion
+            // 
+            this.labelTEjecucion.AutoSize = true;
+            this.labelTEjecucion.Location = new System.Drawing.Point(6, 22);
+            this.labelTEjecucion.Name = "labelTEjecucion";
+            this.labelTEjecucion.Size = new System.Drawing.Size(110, 13);
+            this.labelTEjecucion.TabIndex = 6;
+            this.labelTEjecucion.Text = "Tiempo de Ejecución:";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1239, 796);
+            this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupGrafico);
@@ -617,6 +676,9 @@
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            this.groupBox3.ResumeLayout(false);
+            this.groupBox3.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericTEjecucion)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -665,6 +727,10 @@
         private LiveCharts.WinForms.CartesianChart entradaChart;
         private System.Windows.Forms.Button buttonOcultar;
         private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.GroupBox groupBox3;
+        private System.Windows.Forms.Label labelTEjecucion;
+        private System.Windows.Forms.NumericUpDown numericTEjecucion;
+        private System.Windows.Forms.Label labelTEjec;
     }
 }
 
