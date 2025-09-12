@@ -16,11 +16,10 @@ Uso de la aplicación:
 3. Dentro de la interfaz establecer la conexión con la maqueta seleccionando el puerto USB correspondiente.
 4. Cambiar el tiempo de ejecución al deseado por el usuario.
 5. Modo de control manual:
-6.   Cambiar los valores de los actuadores haciendo uso de las barras o las casillas numéricas.
-7.   Pulsar el botón de Cargar situado en la esquina inferior derecha del grupo Control de la Maqueta.
-
+6. Cambiar los valores de los actuadores haciendo uso de las barras o las casillas numéricas.
+7. Pulsar el botón de Cargar situado en la esquina inferior derecha del grupo Control de la Maqueta.
 8. Modo de control automático/entradas del sistema:
-9.   Seleccionar el tipo de entrada entre escalón y rampa.
-10.  Seleccionar el actuador a controlar.
-11.  Asignar valores a la consigna, al tiempo inicial y en caso de entrada rampa al tiempo final.
-12.  Pulsar el botón Cargar situado en la esquina inferior derecha del grupo Control de Entradas del Sistema.
+9. Seleccionar el tipo de entrada entre escalón y rampa.
+10. Seleccionar el actuador a controlar.
+11. Asignar valores a la consigna, al tiempo inicial y en caso de entrada rampa al tiempo final.
+12. Pulsar el botón Cargar situado en la esquina inferior derecha del grupo Control de Entradas del Sistema.
