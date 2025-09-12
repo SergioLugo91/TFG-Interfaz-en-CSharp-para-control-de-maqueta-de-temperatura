@@ -18,3 +18,4 @@ C:\Users\sergi\Documents\Universidad\4\TFG\InterfazPlantaCtrlTemp\obj\x64\Releas
 C:\Users\sergi\Documents\Universidad\4\TFG\InterfazPlantaCtrlTemp\obj\x64\Release\Interfaz.D344F253.Up2Date
 C:\Users\sergi\Documents\Universidad\4\TFG\InterfazPlantaCtrlTemp\obj\x64\Release\InterfazPlantaCtrlTemp.exe
 C:\Users\sergi\Documents\Universidad\4\TFG\InterfazPlantaCtrlTemp\obj\x64\Release\InterfazPlantaCtrlTemp.pdb
+C:\Users\sergi\Documents\Universidad\4\TFG\InterfazPlantaCtrlTemp\obj\x64\Release\InterfazPlantaCtrlTemp.exe.config

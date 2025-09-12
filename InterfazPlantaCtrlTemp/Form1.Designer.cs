@@ -41,26 +41,43 @@
             this.labelCal = new System.Windows.Forms.Label();
             this.labelVent = new System.Windows.Forms.Label();
             this.groupCtrlEntradas = new System.Windows.Forms.GroupBox();
-            this.labelBtnRampa = new System.Windows.Forms.Label();
-            this.labelBtnEscalon = new System.Windows.Forms.Label();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.tabControl1 = new System.Windows.Forms.TabControl();
+            this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.numericRampCalTInicio = new System.Windows.Forms.NumericUpDown();
+            this.label4 = new System.Windows.Forms.Label();
+            this.numericRampCalConsg = new System.Windows.Forms.NumericUpDown();
+            this.label5 = new System.Windows.Forms.Label();
+            this.checkRampCal = new System.Windows.Forms.CheckBox();
+            this.checkRampVent = new System.Windows.Forms.CheckBox();
+            this.pictureBox6 = new System.Windows.Forms.PictureBox();
+            this.pictureBox7 = new System.Windows.Forms.PictureBox();
+            this.numericRampVentTInicio = new System.Windows.Forms.NumericUpDown();
+            this.label6 = new System.Windows.Forms.Label();
+            this.numericRampVentConsg = new System.Windows.Forms.NumericUpDown();
+            this.label7 = new System.Windows.Forms.Label();
+            this.numericEscCalTInicio = new System.Windows.Forms.NumericUpDown();
+            this.label2 = new System.Windows.Forms.Label();
+            this.numericEscCalConsg = new System.Windows.Forms.NumericUpDown();
+            this.label3 = new System.Windows.Forms.Label();
+            this.checkEscCal = new System.Windows.Forms.CheckBox();
+            this.checkEscVent = new System.Windows.Forms.CheckBox();
+            this.pictureBox5 = new System.Windows.Forms.PictureBox();
+            this.pictureBox4 = new System.Windows.Forms.PictureBox();
+            this.pictureBox3 = new System.Windows.Forms.PictureBox();
+            this.pictureBox2 = new System.Windows.Forms.PictureBox();
+            this.checkRampa = new System.Windows.Forms.CheckBox();
+            this.checkEscalon = new System.Windows.Forms.CheckBox();
             this.buttonCargarEntradas = new System.Windows.Forms.Button();
             this.labelTFinalCal = new System.Windows.Forms.Label();
-            this.numericTFinalCal = new System.Windows.Forms.NumericUpDown();
-            this.labelConsignaCal = new System.Windows.Forms.Label();
-            this.numericConsignaCal = new System.Windows.Forms.NumericUpDown();
-            this.labelTInicioCal = new System.Windows.Forms.Label();
-            this.numericTInicioCal = new System.Windows.Forms.NumericUpDown();
-            this.buttonEscCal = new System.Windows.Forms.Button();
-            this.buttonEscVent = new System.Windows.Forms.Button();
-            this.labelTFinalVent = new System.Windows.Forms.Label();
-            this.numericTFinalVent = new System.Windows.Forms.NumericUpDown();
-            this.labelConsignaVent = new System.Windows.Forms.Label();
-            this.numericConsignaVent = new System.Windows.Forms.NumericUpDown();
+            this.numericRampVentTFinal = new System.Windows.Forms.NumericUpDown();
+            this.numericEscVentTInicio = new System.Windows.Forms.NumericUpDown();
             this.labelTInicioVent = new System.Windows.Forms.Label();
-            this.numericTInicioVent = new System.Windows.Forms.NumericUpDown();
-            this.buttonEntrRampa = new System.Windows.Forms.Button();
-            this.buttonEntrEscalon = new System.Windows.Forms.Button();
+            this.numericEscVentConsg = new System.Windows.Forms.NumericUpDown();
+            this.labelTFinalVent = new System.Windows.Forms.Label();
+            this.labelConsignaVent = new System.Windows.Forms.Label();
+            this.numericRampCalTFinal = new System.Windows.Forms.NumericUpDown();
+            this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.tabPage2 = new System.Windows.Forms.TabPage();
             this.groupGrafico = new System.Windows.Forms.GroupBox();
             this.buttonOcultar = new System.Windows.Forms.Button();
             this.entradaChart = new LiveCharts.WinForms.CartesianChart();
@@ -69,29 +86,40 @@
             this.label1 = new System.Windows.Forms.Label();
             this.btnConectar = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.labelTEjec = new System.Windows.Forms.Label();
             this.numericTEjecucion = new System.Windows.Forms.NumericUpDown();
             this.labelTEjecucion = new System.Windows.Forms.Label();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.numericVelVent)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericPotCal)).BeginInit();
             this.groupCtrlMaqueta.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackPotCal)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackVelVent)).BeginInit();
             this.groupCtrlEntradas.SuspendLayout();
-            this.groupBox1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericTFinalCal)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericConsignaCal)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericTInicioCal)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericTFinalVent)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericConsignaVent)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericTInicioVent)).BeginInit();
+            this.tabControl1.SuspendLayout();
+            this.tabPage1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericRampCalTInicio)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericRampCalConsg)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox6)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox7)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericRampVentTInicio)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericRampVentConsg)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericEscCalTInicio)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericEscCalConsg)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox5)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericRampVentTFinal)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericEscVentTInicio)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericEscVentConsg)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericRampCalTFinal)).BeginInit();
             this.groupGrafico.SuspendLayout();
             this.groupBox2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.groupBox3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericTEjecucion)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // title
@@ -146,12 +174,12 @@
             this.groupCtrlMaqueta.Controls.Add(this.labelVent);
             this.groupCtrlMaqueta.Controls.Add(this.numericPotCal);
             this.groupCtrlMaqueta.Controls.Add(this.numericVelVent);
-            this.groupCtrlMaqueta.Location = new System.Drawing.Point(12, 178);
+            this.groupCtrlMaqueta.Location = new System.Drawing.Point(12, 126);
             this.groupCtrlMaqueta.Name = "groupCtrlMaqueta";
-            this.groupCtrlMaqueta.Size = new System.Drawing.Size(350, 243);
+            this.groupCtrlMaqueta.Size = new System.Drawing.Size(364, 243);
             this.groupCtrlMaqueta.TabIndex = 3;
             this.groupCtrlMaqueta.TabStop = false;
-            this.groupCtrlMaqueta.Text = "Control de la Maqueta";
+            this.groupCtrlMaqueta.Text = "Control Manual";
             // 
             // trackPotCal
             // 
@@ -223,62 +251,349 @@
             // 
             // groupCtrlEntradas
             // 
-            this.groupCtrlEntradas.Controls.Add(this.labelBtnRampa);
-            this.groupCtrlEntradas.Controls.Add(this.labelBtnEscalon);
-            this.groupCtrlEntradas.Controls.Add(this.groupBox1);
-            this.groupCtrlEntradas.Controls.Add(this.buttonEntrRampa);
-            this.groupCtrlEntradas.Controls.Add(this.buttonEntrEscalon);
-            this.groupCtrlEntradas.Location = new System.Drawing.Point(12, 427);
+            this.groupCtrlEntradas.Controls.Add(this.tabControl1);
+            this.groupCtrlEntradas.Location = new System.Drawing.Point(12, 420);
             this.groupCtrlEntradas.Name = "groupCtrlEntradas";
-            this.groupCtrlEntradas.Size = new System.Drawing.Size(350, 364);
+            this.groupCtrlEntradas.Size = new System.Drawing.Size(414, 459);
             this.groupCtrlEntradas.TabIndex = 4;
             this.groupCtrlEntradas.TabStop = false;
             this.groupCtrlEntradas.Text = "Control de Entradas del Sistema";
             // 
-            // labelBtnRampa
+            // tabControl1
             // 
-            this.labelBtnRampa.AutoSize = true;
-            this.labelBtnRampa.Location = new System.Drawing.Point(204, 91);
-            this.labelBtnRampa.Name = "labelBtnRampa";
-            this.labelBtnRampa.Size = new System.Drawing.Size(81, 13);
-            this.labelBtnRampa.TabIndex = 7;
-            this.labelBtnRampa.Text = "Entrada Rampa";
+            this.tabControl1.Controls.Add(this.tabPage1);
+            this.tabControl1.Controls.Add(this.tabPage3);
+            this.tabControl1.Controls.Add(this.tabPage2);
+            this.tabControl1.Location = new System.Drawing.Point(0, 19);
+            this.tabControl1.Name = "tabControl1";
+            this.tabControl1.SelectedIndex = 0;
+            this.tabControl1.Size = new System.Drawing.Size(408, 434);
+            this.tabControl1.TabIndex = 8;
             // 
-            // labelBtnEscalon
+            // tabPage1
             // 
-            this.labelBtnEscalon.AutoSize = true;
-            this.labelBtnEscalon.Location = new System.Drawing.Point(58, 91);
-            this.labelBtnEscalon.Name = "labelBtnEscalon";
-            this.labelBtnEscalon.Size = new System.Drawing.Size(85, 13);
-            this.labelBtnEscalon.TabIndex = 6;
-            this.labelBtnEscalon.Text = "Entrada Escalón";
+            this.tabPage1.Controls.Add(this.numericRampCalTInicio);
+            this.tabPage1.Controls.Add(this.label4);
+            this.tabPage1.Controls.Add(this.numericRampCalConsg);
+            this.tabPage1.Controls.Add(this.label5);
+            this.tabPage1.Controls.Add(this.checkRampCal);
+            this.tabPage1.Controls.Add(this.checkRampVent);
+            this.tabPage1.Controls.Add(this.pictureBox6);
+            this.tabPage1.Controls.Add(this.pictureBox7);
+            this.tabPage1.Controls.Add(this.numericRampVentTInicio);
+            this.tabPage1.Controls.Add(this.label6);
+            this.tabPage1.Controls.Add(this.numericRampVentConsg);
+            this.tabPage1.Controls.Add(this.label7);
+            this.tabPage1.Controls.Add(this.numericEscCalTInicio);
+            this.tabPage1.Controls.Add(this.label2);
+            this.tabPage1.Controls.Add(this.numericEscCalConsg);
+            this.tabPage1.Controls.Add(this.label3);
+            this.tabPage1.Controls.Add(this.checkEscCal);
+            this.tabPage1.Controls.Add(this.checkEscVent);
+            this.tabPage1.Controls.Add(this.pictureBox5);
+            this.tabPage1.Controls.Add(this.pictureBox4);
+            this.tabPage1.Controls.Add(this.pictureBox3);
+            this.tabPage1.Controls.Add(this.pictureBox2);
+            this.tabPage1.Controls.Add(this.checkRampa);
+            this.tabPage1.Controls.Add(this.checkEscalon);
+            this.tabPage1.Controls.Add(this.buttonCargarEntradas);
+            this.tabPage1.Controls.Add(this.labelTFinalCal);
+            this.tabPage1.Controls.Add(this.numericRampVentTFinal);
+            this.tabPage1.Controls.Add(this.numericEscVentTInicio);
+            this.tabPage1.Controls.Add(this.labelTInicioVent);
+            this.tabPage1.Controls.Add(this.numericEscVentConsg);
+            this.tabPage1.Controls.Add(this.labelTFinalVent);
+            this.tabPage1.Controls.Add(this.labelConsignaVent);
+            this.tabPage1.Controls.Add(this.numericRampCalTFinal);
+            this.tabPage1.Location = new System.Drawing.Point(4, 22);
+            this.tabPage1.Name = "tabPage1";
+            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage1.Size = new System.Drawing.Size(400, 408);
+            this.tabPage1.TabIndex = 2;
+            this.tabPage1.Text = "Control Automático";
             // 
-            // groupBox1
+            // numericRampCalTInicio
             // 
-            this.groupBox1.Controls.Add(this.buttonCargarEntradas);
-            this.groupBox1.Controls.Add(this.labelTFinalCal);
-            this.groupBox1.Controls.Add(this.numericTFinalCal);
-            this.groupBox1.Controls.Add(this.labelConsignaCal);
-            this.groupBox1.Controls.Add(this.numericConsignaCal);
-            this.groupBox1.Controls.Add(this.labelTInicioCal);
-            this.groupBox1.Controls.Add(this.numericTInicioCal);
-            this.groupBox1.Controls.Add(this.buttonEscCal);
-            this.groupBox1.Controls.Add(this.buttonEscVent);
-            this.groupBox1.Controls.Add(this.labelTFinalVent);
-            this.groupBox1.Controls.Add(this.numericTFinalVent);
-            this.groupBox1.Controls.Add(this.labelConsignaVent);
-            this.groupBox1.Controls.Add(this.numericConsignaVent);
-            this.groupBox1.Controls.Add(this.labelTInicioVent);
-            this.groupBox1.Controls.Add(this.numericTInicioVent);
-            this.groupBox1.Location = new System.Drawing.Point(0, 120);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(350, 245);
-            this.groupBox1.TabIndex = 5;
-            this.groupBox1.TabStop = false;
+            this.numericRampCalTInicio.DecimalPlaces = 1;
+            this.numericRampCalTInicio.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
+            this.numericRampCalTInicio.Location = new System.Drawing.Point(295, 298);
+            this.numericRampCalTInicio.Maximum = new decimal(new int[] {
+            19,
+            0,
+            0,
+            0});
+            this.numericRampCalTInicio.Name = "numericRampCalTInicio";
+            this.numericRampCalTInicio.Size = new System.Drawing.Size(75, 20);
+            this.numericRampCalTInicio.TabIndex = 43;
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(300, 282);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(45, 13);
+            this.label4.TabIndex = 44;
+            this.label4.Text = "T. Inicio";
+            // 
+            // numericRampCalConsg
+            // 
+            this.numericRampCalConsg.Location = new System.Drawing.Point(295, 256);
+            this.numericRampCalConsg.Minimum = new decimal(new int[] {
+            40,
+            0,
+            0,
+            0});
+            this.numericRampCalConsg.Name = "numericRampCalConsg";
+            this.numericRampCalConsg.Size = new System.Drawing.Size(75, 20);
+            this.numericRampCalConsg.TabIndex = 45;
+            this.numericRampCalConsg.Value = new decimal(new int[] {
+            40,
+            0,
+            0,
+            0});
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(300, 240);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(51, 13);
+            this.label5.TabIndex = 46;
+            this.label5.Text = "Consigna";
+            // 
+            // checkRampCal
+            // 
+            this.checkRampCal.AutoSize = true;
+            this.checkRampCal.Location = new System.Drawing.Point(217, 301);
+            this.checkRampCal.Name = "checkRampCal";
+            this.checkRampCal.Size = new System.Drawing.Size(74, 17);
+            this.checkRampCal.TabIndex = 42;
+            this.checkRampCal.Text = "Calefactor";
+            this.checkRampCal.UseVisualStyleBackColor = true;
+            // 
+            // checkRampVent
+            // 
+            this.checkRampVent.AutoSize = true;
+            this.checkRampVent.Location = new System.Drawing.Point(217, 173);
+            this.checkRampVent.Name = "checkRampVent";
+            this.checkRampVent.Size = new System.Drawing.Size(73, 17);
+            this.checkRampVent.TabIndex = 41;
+            this.checkRampVent.Text = "Ventilador";
+            this.checkRampVent.UseVisualStyleBackColor = true;
+            // 
+            // pictureBox6
+            // 
+            this.pictureBox6.Image = global::InterfazPlantaCtrlTemp.Properties.Resources.heating_element_filled_line_icon_vector1;
+            this.pictureBox6.Location = new System.Drawing.Point(231, 251);
+            this.pictureBox6.Name = "pictureBox6";
+            this.pictureBox6.Size = new System.Drawing.Size(40, 40);
+            this.pictureBox6.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pictureBox6.TabIndex = 40;
+            this.pictureBox6.TabStop = false;
+            // 
+            // pictureBox7
+            // 
+            this.pictureBox7.Image = global::InterfazPlantaCtrlTemp.Properties.Resources._72502;
+            this.pictureBox7.Location = new System.Drawing.Point(231, 131);
+            this.pictureBox7.Name = "pictureBox7";
+            this.pictureBox7.Size = new System.Drawing.Size(35, 35);
+            this.pictureBox7.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pictureBox7.TabIndex = 35;
+            this.pictureBox7.TabStop = false;
+            // 
+            // numericRampVentTInicio
+            // 
+            this.numericRampVentTInicio.DecimalPlaces = 1;
+            this.numericRampVentTInicio.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
+            this.numericRampVentTInicio.Location = new System.Drawing.Point(295, 172);
+            this.numericRampVentTInicio.Maximum = new decimal(new int[] {
+            19,
+            0,
+            0,
+            0});
+            this.numericRampVentTInicio.Name = "numericRampVentTInicio";
+            this.numericRampVentTInicio.Size = new System.Drawing.Size(75, 20);
+            this.numericRampVentTInicio.TabIndex = 36;
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(300, 156);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(45, 13);
+            this.label6.TabIndex = 37;
+            this.label6.Text = "T. Inicio";
+            // 
+            // numericRampVentConsg
+            // 
+            this.numericRampVentConsg.Location = new System.Drawing.Point(295, 130);
+            this.numericRampVentConsg.Minimum = new decimal(new int[] {
+            40,
+            0,
+            0,
+            0});
+            this.numericRampVentConsg.Name = "numericRampVentConsg";
+            this.numericRampVentConsg.Size = new System.Drawing.Size(75, 20);
+            this.numericRampVentConsg.TabIndex = 38;
+            this.numericRampVentConsg.Value = new decimal(new int[] {
+            60,
+            0,
+            0,
+            0});
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(300, 114);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(51, 13);
+            this.label7.TabIndex = 39;
+            this.label7.Text = "Consigna";
+            // 
+            // numericEscCalTInicio
+            // 
+            this.numericEscCalTInicio.DecimalPlaces = 1;
+            this.numericEscCalTInicio.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
+            this.numericEscCalTInicio.Location = new System.Drawing.Point(87, 298);
+            this.numericEscCalTInicio.Maximum = new decimal(new int[] {
+            19,
+            0,
+            0,
+            0});
+            this.numericEscCalTInicio.Name = "numericEscCalTInicio";
+            this.numericEscCalTInicio.Size = new System.Drawing.Size(75, 20);
+            this.numericEscCalTInicio.TabIndex = 31;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(92, 282);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(45, 13);
+            this.label2.TabIndex = 32;
+            this.label2.Text = "T. Inicio";
+            // 
+            // numericEscCalConsg
+            // 
+            this.numericEscCalConsg.Location = new System.Drawing.Point(87, 256);
+            this.numericEscCalConsg.Minimum = new decimal(new int[] {
+            40,
+            0,
+            0,
+            0});
+            this.numericEscCalConsg.Name = "numericEscCalConsg";
+            this.numericEscCalConsg.Size = new System.Drawing.Size(75, 20);
+            this.numericEscCalConsg.TabIndex = 33;
+            this.numericEscCalConsg.Value = new decimal(new int[] {
+            40,
+            0,
+            0,
+            0});
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(92, 240);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(51, 13);
+            this.label3.TabIndex = 34;
+            this.label3.Text = "Consigna";
+            // 
+            // checkEscCal
+            // 
+            this.checkEscCal.AutoSize = true;
+            this.checkEscCal.Location = new System.Drawing.Point(9, 301);
+            this.checkEscCal.Name = "checkEscCal";
+            this.checkEscCal.Size = new System.Drawing.Size(74, 17);
+            this.checkEscCal.TabIndex = 30;
+            this.checkEscCal.Text = "Calefactor";
+            this.checkEscCal.UseVisualStyleBackColor = true;
+            // 
+            // checkEscVent
+            // 
+            this.checkEscVent.AutoSize = true;
+            this.checkEscVent.Location = new System.Drawing.Point(9, 173);
+            this.checkEscVent.Name = "checkEscVent";
+            this.checkEscVent.Size = new System.Drawing.Size(73, 17);
+            this.checkEscVent.TabIndex = 29;
+            this.checkEscVent.Text = "Ventilador";
+            this.checkEscVent.UseVisualStyleBackColor = true;
+            // 
+            // pictureBox5
+            // 
+            this.pictureBox5.Image = global::InterfazPlantaCtrlTemp.Properties.Resources.Captura_de_pantalla_2025_02_05_142444;
+            this.pictureBox5.Location = new System.Drawing.Point(277, 11);
+            this.pictureBox5.Name = "pictureBox5";
+            this.pictureBox5.Size = new System.Drawing.Size(50, 50);
+            this.pictureBox5.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pictureBox5.TabIndex = 26;
+            this.pictureBox5.TabStop = false;
+            // 
+            // pictureBox4
+            // 
+            this.pictureBox4.Image = global::InterfazPlantaCtrlTemp.Properties.Resources.heating_element_filled_line_icon_vector1;
+            this.pictureBox4.Location = new System.Drawing.Point(23, 251);
+            this.pictureBox4.Name = "pictureBox4";
+            this.pictureBox4.Size = new System.Drawing.Size(40, 40);
+            this.pictureBox4.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pictureBox4.TabIndex = 25;
+            this.pictureBox4.TabStop = false;
+            // 
+            // pictureBox3
+            // 
+            this.pictureBox3.Image = global::InterfazPlantaCtrlTemp.Properties.Resources.Captura_de_pantalla_2025_02_05_141935;
+            this.pictureBox3.Location = new System.Drawing.Point(77, 11);
+            this.pictureBox3.Name = "pictureBox3";
+            this.pictureBox3.Size = new System.Drawing.Size(50, 50);
+            this.pictureBox3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pictureBox3.TabIndex = 24;
+            this.pictureBox3.TabStop = false;
+            // 
+            // pictureBox2
+            // 
+            this.pictureBox2.Image = global::InterfazPlantaCtrlTemp.Properties.Resources._72502;
+            this.pictureBox2.Location = new System.Drawing.Point(23, 131);
+            this.pictureBox2.Name = "pictureBox2";
+            this.pictureBox2.Size = new System.Drawing.Size(35, 35);
+            this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pictureBox2.TabIndex = 0;
+            this.pictureBox2.TabStop = false;
+            // 
+            // checkRampa
+            // 
+            this.checkRampa.AutoSize = true;
+            this.checkRampa.Location = new System.Drawing.Point(250, 72);
+            this.checkRampa.Name = "checkRampa";
+            this.checkRampa.Size = new System.Drawing.Size(100, 17);
+            this.checkRampa.TabIndex = 23;
+            this.checkRampa.Text = "Entrada Rampa";
+            this.checkRampa.UseVisualStyleBackColor = true;
+            // 
+            // checkEscalon
+            // 
+            this.checkEscalon.AutoSize = true;
+            this.checkEscalon.Location = new System.Drawing.Point(48, 72);
+            this.checkEscalon.Name = "checkEscalon";
+            this.checkEscalon.Size = new System.Drawing.Size(104, 17);
+            this.checkEscalon.TabIndex = 22;
+            this.checkEscalon.Text = "Entrada Escalón";
+            this.checkEscalon.UseVisualStyleBackColor = true;
             // 
             // buttonCargarEntradas
             // 
-            this.buttonCargarEntradas.Location = new System.Drawing.Point(269, 218);
+            this.buttonCargarEntradas.Location = new System.Drawing.Point(319, 379);
             this.buttonCargarEntradas.Name = "buttonCargarEntradas";
             this.buttonCargarEntradas.Size = new System.Drawing.Size(75, 23);
             this.buttonCargarEntradas.TabIndex = 10;
@@ -289,224 +604,154 @@
             // labelTFinalCal
             // 
             this.labelTFinalCal.AutoSize = true;
-            this.labelTFinalCal.Location = new System.Drawing.Point(199, 175);
+            this.labelTFinalCal.Location = new System.Drawing.Point(300, 196);
             this.labelTFinalCal.Name = "labelTFinalCal";
             this.labelTFinalCal.Size = new System.Drawing.Size(42, 13);
             this.labelTFinalCal.TabIndex = 21;
             this.labelTFinalCal.Text = "T. Final";
             // 
-            // numericTFinalCal
+            // numericRampVentTFinal
             // 
-            this.numericTFinalCal.DecimalPlaces = 1;
-            this.numericTFinalCal.Increment = new decimal(new int[] {
+            this.numericRampVentTFinal.DecimalPlaces = 1;
+            this.numericRampVentTFinal.Increment = new decimal(new int[] {
             1,
             0,
             0,
             65536});
-            this.numericTFinalCal.Location = new System.Drawing.Point(194, 191);
-            this.numericTFinalCal.Maximum = new decimal(new int[] {
+            this.numericRampVentTFinal.Location = new System.Drawing.Point(295, 212);
+            this.numericRampVentTFinal.Maximum = new decimal(new int[] {
             20,
             0,
             0,
             0});
-            this.numericTFinalCal.Minimum = new decimal(new int[] {
+            this.numericRampVentTFinal.Minimum = new decimal(new int[] {
             1,
             0,
             0,
             0});
-            this.numericTFinalCal.Name = "numericTFinalCal";
-            this.numericTFinalCal.Size = new System.Drawing.Size(120, 20);
-            this.numericTFinalCal.TabIndex = 20;
-            this.numericTFinalCal.Value = new decimal(new int[] {
+            this.numericRampVentTFinal.Name = "numericRampVentTFinal";
+            this.numericRampVentTFinal.Size = new System.Drawing.Size(75, 20);
+            this.numericRampVentTFinal.TabIndex = 20;
+            this.numericRampVentTFinal.Value = new decimal(new int[] {
             10,
             0,
             0,
             0});
             // 
-            // labelConsignaCal
+            // numericEscVentTInicio
             // 
-            this.labelConsignaCal.AutoSize = true;
-            this.labelConsignaCal.Location = new System.Drawing.Point(199, 89);
-            this.labelConsignaCal.Name = "labelConsignaCal";
-            this.labelConsignaCal.Size = new System.Drawing.Size(51, 13);
-            this.labelConsignaCal.TabIndex = 19;
-            this.labelConsignaCal.Text = "Consigna";
-            // 
-            // numericConsignaCal
-            // 
-            this.numericConsignaCal.Location = new System.Drawing.Point(194, 105);
-            this.numericConsignaCal.Maximum = new decimal(new int[] {
-            85,
-            0,
-            0,
-            0});
-            this.numericConsignaCal.Name = "numericConsignaCal";
-            this.numericConsignaCal.Size = new System.Drawing.Size(120, 20);
-            this.numericConsignaCal.TabIndex = 18;
-            // 
-            // labelTInicioCal
-            // 
-            this.labelTInicioCal.AutoSize = true;
-            this.labelTInicioCal.Location = new System.Drawing.Point(199, 131);
-            this.labelTInicioCal.Name = "labelTInicioCal";
-            this.labelTInicioCal.Size = new System.Drawing.Size(45, 13);
-            this.labelTInicioCal.TabIndex = 17;
-            this.labelTInicioCal.Text = "T. Inicio";
-            // 
-            // numericTInicioCal
-            // 
-            this.numericTInicioCal.DecimalPlaces = 1;
-            this.numericTInicioCal.Increment = new decimal(new int[] {
+            this.numericEscVentTInicio.DecimalPlaces = 1;
+            this.numericEscVentTInicio.Increment = new decimal(new int[] {
             1,
             0,
             0,
             65536});
-            this.numericTInicioCal.Location = new System.Drawing.Point(194, 147);
-            this.numericTInicioCal.Maximum = new decimal(new int[] {
+            this.numericEscVentTInicio.Location = new System.Drawing.Point(87, 172);
+            this.numericEscVentTInicio.Maximum = new decimal(new int[] {
             19,
             0,
             0,
             0});
-            this.numericTInicioCal.Name = "numericTInicioCal";
-            this.numericTInicioCal.Size = new System.Drawing.Size(120, 20);
-            this.numericTInicioCal.TabIndex = 16;
-            // 
-            // buttonEscCal
-            // 
-            this.buttonEscCal.Image = ((System.Drawing.Image)(resources.GetObject("buttonEscCal.Image")));
-            this.buttonEscCal.Location = new System.Drawing.Point(216, 25);
-            this.buttonEscCal.Name = "buttonEscCal";
-            this.buttonEscCal.Size = new System.Drawing.Size(55, 55);
-            this.buttonEscCal.TabIndex = 15;
-            this.buttonEscCal.UseVisualStyleBackColor = true;
-            this.buttonEscCal.Click += new System.EventHandler(this.buttonEscCal_Click);
-            // 
-            // buttonEscVent
-            // 
-            this.buttonEscVent.Image = ((System.Drawing.Image)(resources.GetObject("buttonEscVent.Image")));
-            this.buttonEscVent.Location = new System.Drawing.Point(70, 25);
-            this.buttonEscVent.Name = "buttonEscVent";
-            this.buttonEscVent.Size = new System.Drawing.Size(55, 55);
-            this.buttonEscVent.TabIndex = 14;
-            this.buttonEscVent.UseVisualStyleBackColor = true;
-            this.buttonEscVent.Click += new System.EventHandler(this.buttonEscVent_Click);
-            // 
-            // labelTFinalVent
-            // 
-            this.labelTFinalVent.AutoSize = true;
-            this.labelTFinalVent.Location = new System.Drawing.Point(22, 175);
-            this.labelTFinalVent.Name = "labelTFinalVent";
-            this.labelTFinalVent.Size = new System.Drawing.Size(42, 13);
-            this.labelTFinalVent.TabIndex = 11;
-            this.labelTFinalVent.Text = "T. Final";
-            // 
-            // numericTFinalVent
-            // 
-            this.numericTFinalVent.DecimalPlaces = 1;
-            this.numericTFinalVent.Increment = new decimal(new int[] {
-            1,
-            0,
-            0,
-            65536});
-            this.numericTFinalVent.Location = new System.Drawing.Point(17, 191);
-            this.numericTFinalVent.Maximum = new decimal(new int[] {
-            20,
-            0,
-            0,
-            0});
-            this.numericTFinalVent.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.numericTFinalVent.Name = "numericTFinalVent";
-            this.numericTFinalVent.Size = new System.Drawing.Size(120, 20);
-            this.numericTFinalVent.TabIndex = 10;
-            this.numericTFinalVent.Value = new decimal(new int[] {
-            10,
-            0,
-            0,
-            0});
-            // 
-            // labelConsignaVent
-            // 
-            this.labelConsignaVent.AutoSize = true;
-            this.labelConsignaVent.Location = new System.Drawing.Point(22, 89);
-            this.labelConsignaVent.Name = "labelConsignaVent";
-            this.labelConsignaVent.Size = new System.Drawing.Size(51, 13);
-            this.labelConsignaVent.TabIndex = 9;
-            this.labelConsignaVent.Text = "Consigna";
-            // 
-            // numericConsignaVent
-            // 
-            this.numericConsignaVent.Location = new System.Drawing.Point(17, 105);
-            this.numericConsignaVent.Minimum = new decimal(new int[] {
-            40,
-            0,
-            0,
-            0});
-            this.numericConsignaVent.Name = "numericConsignaVent";
-            this.numericConsignaVent.Size = new System.Drawing.Size(120, 20);
-            this.numericConsignaVent.TabIndex = 8;
-            this.numericConsignaVent.Value = new decimal(new int[] {
-            40,
-            0,
-            0,
-            0});
+            this.numericEscVentTInicio.Name = "numericEscVentTInicio";
+            this.numericEscVentTInicio.Size = new System.Drawing.Size(75, 20);
+            this.numericEscVentTInicio.TabIndex = 0;
             // 
             // labelTInicioVent
             // 
             this.labelTInicioVent.AutoSize = true;
-            this.labelTInicioVent.Location = new System.Drawing.Point(22, 131);
+            this.labelTInicioVent.Location = new System.Drawing.Point(92, 156);
             this.labelTInicioVent.Name = "labelTInicioVent";
             this.labelTInicioVent.Size = new System.Drawing.Size(45, 13);
             this.labelTInicioVent.TabIndex = 7;
             this.labelTInicioVent.Text = "T. Inicio";
             // 
-            // numericTInicioVent
+            // numericEscVentConsg
             // 
-            this.numericTInicioVent.DecimalPlaces = 1;
-            this.numericTInicioVent.Increment = new decimal(new int[] {
+            this.numericEscVentConsg.Location = new System.Drawing.Point(87, 130);
+            this.numericEscVentConsg.Minimum = new decimal(new int[] {
+            40,
+            0,
+            0,
+            0});
+            this.numericEscVentConsg.Name = "numericEscVentConsg";
+            this.numericEscVentConsg.Size = new System.Drawing.Size(75, 20);
+            this.numericEscVentConsg.TabIndex = 8;
+            this.numericEscVentConsg.Value = new decimal(new int[] {
+            60,
+            0,
+            0,
+            0});
+            // 
+            // labelTFinalVent
+            // 
+            this.labelTFinalVent.AutoSize = true;
+            this.labelTFinalVent.Location = new System.Drawing.Point(300, 325);
+            this.labelTFinalVent.Name = "labelTFinalVent";
+            this.labelTFinalVent.Size = new System.Drawing.Size(42, 13);
+            this.labelTFinalVent.TabIndex = 11;
+            this.labelTFinalVent.Text = "T. Final";
+            // 
+            // labelConsignaVent
+            // 
+            this.labelConsignaVent.AutoSize = true;
+            this.labelConsignaVent.Location = new System.Drawing.Point(92, 114);
+            this.labelConsignaVent.Name = "labelConsignaVent";
+            this.labelConsignaVent.Size = new System.Drawing.Size(51, 13);
+            this.labelConsignaVent.TabIndex = 9;
+            this.labelConsignaVent.Text = "Consigna";
+            // 
+            // numericRampCalTFinal
+            // 
+            this.numericRampCalTFinal.DecimalPlaces = 1;
+            this.numericRampCalTFinal.Increment = new decimal(new int[] {
             1,
             0,
             0,
             65536});
-            this.numericTInicioVent.Location = new System.Drawing.Point(17, 147);
-            this.numericTInicioVent.Maximum = new decimal(new int[] {
-            19,
+            this.numericRampCalTFinal.Location = new System.Drawing.Point(295, 341);
+            this.numericRampCalTFinal.Maximum = new decimal(new int[] {
+            20,
             0,
             0,
             0});
-            this.numericTInicioVent.Name = "numericTInicioVent";
-            this.numericTInicioVent.Size = new System.Drawing.Size(120, 20);
-            this.numericTInicioVent.TabIndex = 0;
+            this.numericRampCalTFinal.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numericRampCalTFinal.Name = "numericRampCalTFinal";
+            this.numericRampCalTFinal.Size = new System.Drawing.Size(75, 20);
+            this.numericRampCalTFinal.TabIndex = 10;
+            this.numericRampCalTFinal.Value = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
             // 
-            // buttonEntrRampa
+            // tabPage3
             // 
-            this.buttonEntrRampa.Image = ((System.Drawing.Image)(resources.GetObject("buttonEntrRampa.Image")));
-            this.buttonEntrRampa.Location = new System.Drawing.Point(215, 29);
-            this.buttonEntrRampa.Name = "buttonEntrRampa";
-            this.buttonEntrRampa.Size = new System.Drawing.Size(58, 59);
-            this.buttonEntrRampa.TabIndex = 1;
-            this.buttonEntrRampa.UseVisualStyleBackColor = true;
-            this.buttonEntrRampa.Click += new System.EventHandler(this.buttonEntrRampa_Click);
+            this.tabPage3.Location = new System.Drawing.Point(4, 22);
+            this.tabPage3.Name = "tabPage3";
+            this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage3.Size = new System.Drawing.Size(400, 408);
+            this.tabPage3.TabIndex = 4;
+            this.tabPage3.Text = "Control en Lazo Cerrado";
             // 
-            // buttonEntrEscalon
+            // tabPage2
             // 
-            this.buttonEntrEscalon.Image = ((System.Drawing.Image)(resources.GetObject("buttonEntrEscalon.Image")));
-            this.buttonEntrEscalon.Location = new System.Drawing.Point(69, 29);
-            this.buttonEntrEscalon.Name = "buttonEntrEscalon";
-            this.buttonEntrEscalon.Size = new System.Drawing.Size(58, 59);
-            this.buttonEntrEscalon.TabIndex = 0;
-            this.buttonEntrEscalon.UseVisualStyleBackColor = true;
-            this.buttonEntrEscalon.Click += new System.EventHandler(this.buttonEntrEscalon_Click);
+            this.tabPage2.Location = new System.Drawing.Point(4, 22);
+            this.tabPage2.Name = "tabPage2";
+            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage2.Size = new System.Drawing.Size(400, 408);
+            this.tabPage2.TabIndex = 3;
+            this.tabPage2.Text = "Perturbación";
             // 
             // groupGrafico
             // 
             this.groupGrafico.Controls.Add(this.buttonOcultar);
             this.groupGrafico.Controls.Add(this.entradaChart);
             this.groupGrafico.Controls.Add(this.tempChart);
-            this.groupGrafico.Location = new System.Drawing.Point(382, 77);
+            this.groupGrafico.Location = new System.Drawing.Point(526, 76);
             this.groupGrafico.Name = "groupGrafico";
             this.groupGrafico.Size = new System.Drawing.Size(833, 715);
             this.groupGrafico.TabIndex = 5;
@@ -574,30 +819,20 @@
             this.groupBox2.Controls.Add(this.comBox);
             this.groupBox2.Controls.Add(this.label1);
             this.groupBox2.Controls.Add(this.btnConectar);
-            this.groupBox2.Location = new System.Drawing.Point(12, 77);
+            this.groupBox2.Location = new System.Drawing.Point(12, 76);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(350, 51);
+            this.groupBox2.Size = new System.Drawing.Size(364, 51);
             this.groupBox2.TabIndex = 9;
             this.groupBox2.TabStop = false;
-            // 
-            // pictureBox1
-            // 
-            this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
-            this.pictureBox1.Location = new System.Drawing.Point(12, 9);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(143, 62);
-            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pictureBox1.TabIndex = 10;
-            this.pictureBox1.TabStop = false;
             // 
             // groupBox3
             // 
             this.groupBox3.Controls.Add(this.labelTEjec);
             this.groupBox3.Controls.Add(this.numericTEjecucion);
             this.groupBox3.Controls.Add(this.labelTEjecucion);
-            this.groupBox3.Location = new System.Drawing.Point(12, 127);
+            this.groupBox3.Location = new System.Drawing.Point(12, 368);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(350, 51);
+            this.groupBox3.Size = new System.Drawing.Size(364, 51);
             this.groupBox3.TabIndex = 10;
             this.groupBox3.TabStop = false;
             // 
@@ -642,11 +877,21 @@
             this.labelTEjecucion.TabIndex = 6;
             this.labelTEjecucion.Text = "Tiempo de Ejecución:";
             // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
+            this.pictureBox1.Location = new System.Drawing.Point(12, 9);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(143, 62);
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox1.TabIndex = 10;
+            this.pictureBox1.TabStop = false;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1239, 796);
+            this.ClientSize = new System.Drawing.Size(1380, 884);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.groupBox2);
@@ -663,22 +908,32 @@
             ((System.ComponentModel.ISupportInitialize)(this.trackPotCal)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackVelVent)).EndInit();
             this.groupCtrlEntradas.ResumeLayout(false);
-            this.groupCtrlEntradas.PerformLayout();
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericTFinalCal)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericConsignaCal)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericTInicioCal)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericTFinalVent)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericConsignaVent)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericTInicioVent)).EndInit();
+            this.tabControl1.ResumeLayout(false);
+            this.tabPage1.ResumeLayout(false);
+            this.tabPage1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericRampCalTInicio)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericRampCalConsg)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox6)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox7)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericRampVentTInicio)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericRampVentConsg)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericEscCalTInicio)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericEscCalConsg)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox5)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericRampVentTFinal)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericEscVentTInicio)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericEscVentConsg)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericRampCalTFinal)).EndInit();
             this.groupGrafico.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericTEjecucion)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -696,34 +951,14 @@
         private System.Windows.Forms.Label labelCal;
         private System.Windows.Forms.GroupBox groupCtrlEntradas;
         private System.Windows.Forms.GroupBox groupGrafico;
-        private System.Windows.Forms.Button buttonEntrEscalon;
-        private System.Windows.Forms.Button buttonEntrRampa;
         private LiveCharts.WinForms.CartesianChart tempChart;
         private System.Windows.Forms.Button buttonCargar;
-        private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.Label labelBtnRampa;
-        private System.Windows.Forms.Label labelBtnEscalon;
-        private System.Windows.Forms.Label labelTInicioVent;
-        private System.Windows.Forms.NumericUpDown numericTInicioVent;
-        private System.Windows.Forms.Label labelConsignaVent;
-        private System.Windows.Forms.NumericUpDown numericConsignaVent;
-        private System.Windows.Forms.Label labelTFinalVent;
-        private System.Windows.Forms.NumericUpDown numericTFinalVent;
         private System.Windows.Forms.TrackBar trackVelVent;
         private System.Windows.Forms.TrackBar trackPotCal;
         private System.Windows.Forms.ComboBox comBox;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button btnConectar;
         private System.Windows.Forms.GroupBox groupBox2;
-        private System.Windows.Forms.Button buttonEscVent;
-        private System.Windows.Forms.Button buttonEscCal;
-        private System.Windows.Forms.Label labelTFinalCal;
-        private System.Windows.Forms.NumericUpDown numericTFinalCal;
-        private System.Windows.Forms.Label labelConsignaCal;
-        private System.Windows.Forms.NumericUpDown numericConsignaCal;
-        private System.Windows.Forms.Label labelTInicioCal;
-        private System.Windows.Forms.NumericUpDown numericTInicioCal;
-        private System.Windows.Forms.Button buttonCargarEntradas;
         private LiveCharts.WinForms.CartesianChart entradaChart;
         private System.Windows.Forms.Button buttonOcultar;
         private System.Windows.Forms.PictureBox pictureBox1;
@@ -731,6 +966,43 @@
         private System.Windows.Forms.Label labelTEjecucion;
         private System.Windows.Forms.NumericUpDown numericTEjecucion;
         private System.Windows.Forms.Label labelTEjec;
+        private System.Windows.Forms.TabControl tabControl1;
+        private System.Windows.Forms.TabPage tabPage1;
+        private System.Windows.Forms.TabPage tabPage2;
+        private System.Windows.Forms.Button buttonCargarEntradas;
+        private System.Windows.Forms.Label labelTFinalCal;
+        private System.Windows.Forms.NumericUpDown numericRampVentTFinal;
+        private System.Windows.Forms.Label labelTFinalVent;
+        private System.Windows.Forms.NumericUpDown numericRampCalTFinal;
+        private System.Windows.Forms.Label labelConsignaVent;
+        private System.Windows.Forms.NumericUpDown numericEscVentConsg;
+        private System.Windows.Forms.Label labelTInicioVent;
+        private System.Windows.Forms.NumericUpDown numericEscVentTInicio;
+        private System.Windows.Forms.TabPage tabPage3;
+        private System.Windows.Forms.CheckBox checkRampa;
+        private System.Windows.Forms.CheckBox checkEscalon;
+        private System.Windows.Forms.PictureBox pictureBox2;
+        private System.Windows.Forms.PictureBox pictureBox3;
+        private System.Windows.Forms.PictureBox pictureBox5;
+        private System.Windows.Forms.PictureBox pictureBox4;
+        private System.Windows.Forms.CheckBox checkEscCal;
+        private System.Windows.Forms.CheckBox checkEscVent;
+        private System.Windows.Forms.NumericUpDown numericEscCalTInicio;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.NumericUpDown numericEscCalConsg;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.NumericUpDown numericRampCalTInicio;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.NumericUpDown numericRampCalConsg;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.CheckBox checkRampCal;
+        private System.Windows.Forms.CheckBox checkRampVent;
+        private System.Windows.Forms.PictureBox pictureBox6;
+        private System.Windows.Forms.PictureBox pictureBox7;
+        private System.Windows.Forms.NumericUpDown numericRampVentTInicio;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.NumericUpDown numericRampVentConsg;
+        private System.Windows.Forms.Label label7;
     }
 }
 
