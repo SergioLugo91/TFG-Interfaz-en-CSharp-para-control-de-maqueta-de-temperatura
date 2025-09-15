@@ -307,7 +307,7 @@ namespace InterfazPlantaCtrlTemp
 
                         // Ajustar eje X dinámicamente
                         entradaChart.AxisX[0].MaxValue = Math.Max(tiempoActual + 1, graph);
-                        if (temperaturas.Count > 0)
+                        if (entradas.Count > 0)
                         {
                             double margen = Math.Max(5, entradas.Max() * 0.1); // 10% de margen o 5 unidades
                             entradaChart.AxisY[0].MinValue = Math.Floor(entradas.Min() - margen);
@@ -364,35 +364,43 @@ namespace InterfazPlantaCtrlTemp
                     // Ajuste del gráfico de entradas para reflejar ambas entradas
                     var fillBrushVent = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Colors.Blue);
                     fillBrushVent.Opacity = 0.3;
+                    fillBrushVent.Freeze();
 
                     var fillBrushCal = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Colors.Orange);
                     fillBrushCal.Opacity = 0.3;
+                    fillBrushCal.Freeze();
 
-                    entradaChart.Series.Clear();
-                    entradaChart.Series = new SeriesCollection
+                    if (i == 0) // Solo configurar las series la primera vez
                     {
-                        new LineSeries
+                        entradaChart.Invoke((MethodInvoker)delegate
                         {
-                            Title = "Entrada Ventilador",
-                            Values = entradaVent,
-                            Fill = fillBrushVent,
-                            Stroke = System.Windows.Media.Brushes.Blue,
-                            PointGeometry = DefaultGeometries.Square,
-                            PointGeometrySize = 8,
-                            StrokeThickness = 2  // Añadido para mejor visibilidad
-                        },
+                            entradaChart.Series.Clear();
+                            entradaChart.Series = new SeriesCollection
+                            {
+                                new LineSeries
+                                {
+                                    Title = "Entrada Ventilador",
+                                    Values = entradaVent,
+                                    Fill = fillBrushVent,
+                                    Stroke = System.Windows.Media.Brushes.Blue,
+                                    PointGeometry = DefaultGeometries.Square,
+                                    PointGeometrySize = 8,
+                                    StrokeThickness = 2  // Añadido para mejor visibilidad
+                                },
 
-                        new LineSeries
-                        {
-                            Title = "Entrada Calefactor",
-                            Values = entradaCal,
-                            Fill = fillBrushCal,
-                            Stroke = System.Windows.Media.Brushes.Orange,
-                            PointGeometry = DefaultGeometries.Circle,
-                            PointGeometrySize = 8,
-                            StrokeThickness = 2  // Añadido para mejor visibilidad
-                        }
-                    };
+                                new LineSeries
+                                {
+                                    Title = "Entrada Calefactor",
+                                    Values = entradaCal,
+                                    Fill = fillBrushCal,
+                                    Stroke = System.Windows.Media.Brushes.Orange,
+                                    PointGeometry = DefaultGeometries.Circle,
+                                    PointGeometrySize = 8,
+                                    StrokeThickness = 2  // Añadido para mejor visibilidad
+                                }
+                            };
+                        });
+                    }
 
                     // Añadir valores al gráfico de entradas (Actualizar UI) (Para el modo de entradas del sistema)
                     entradaChart.Invoke((MethodInvoker)delegate
@@ -404,11 +412,11 @@ namespace InterfazPlantaCtrlTemp
 
                         // Ajustar eje X dinámicamente
                         entradaChart.AxisX[0].MaxValue = Math.Max(tiempoActual + 1, graph);
-                        if (temperaturas.Count > 0)
+                        if (entradaVent.Count > 0 || entradaCal.Count > 0)
                         {
-                            double margen = Math.Max(5, entradas.Max() * 0.1); // 10% de margen o 5 unidades
-                            entradaChart.AxisY[0].MinValue = Math.Floor(entradas.Min() - margen);
-                            entradaChart.AxisY[0].MaxValue = Math.Ceiling(entradas.Max() + margen);
+                            double margen = Math.Max(5, Math.Max(entradaVent.Max(), entradaCal.Max()) * 0.1); // 10% de margen o 5 unidades
+                            entradaChart.AxisY[0].MinValue = Math.Floor(Math.Min(entradaVent.Min(), entradaCal.Min()) - margen);
+                            entradaChart.AxisY[0].MaxValue = Math.Ceiling(Math.Max(entradaVent.Max(), entradaCal.Max()) + margen);
                         }
                     });
 
@@ -507,6 +515,14 @@ namespace InterfazPlantaCtrlTemp
                 numericEscVentTInicio.Enabled = true;
                 numericEscCalConsg.Enabled = true;
                 numericEscCalTInicio.Enabled = true;
+
+                // Deshabilitar los controles de entrada rampa
+                numericRampVentConsg.Enabled = false;
+                numericRampVentTInicio.Enabled = false;
+                numericRampVentTFinal.Enabled = false;
+                numericRampCalConsg.Enabled = false;
+                numericRampCalTInicio.Enabled = false;
+                numericRampCalTFinal.Enabled = false;
             }
             else
             {
@@ -531,6 +547,12 @@ namespace InterfazPlantaCtrlTemp
                 numericRampCalConsg.Enabled = true;
                 numericRampCalTInicio.Enabled = true;
                 numericRampCalTFinal.Enabled = true;
+
+                // Deshabilitar los controles de entrada escalón
+                numericEscVentConsg.Enabled = false;
+                numericEscVentTInicio.Enabled = false;
+                numericEscCalConsg.Enabled = false;
+                numericEscCalTInicio.Enabled = false;
             }
             else
             {
@@ -584,6 +606,7 @@ namespace InterfazPlantaCtrlTemp
                         Debug.WriteLine("Entrada escalón para el Ventilador");
                         // Valores iniciales antes de la entrada escalón
                         EnviarDatos("v40V");
+                        EnviarDatos("n0N");
 
                         // Iniciar la recepción de datos
                         int valorPreEsc = (int)numericEscVentTInicio.Value;
@@ -602,6 +625,7 @@ namespace InterfazPlantaCtrlTemp
                     {
                         Debug.WriteLine("Entrada escalón para el Calefactor");
                         // Valores iniciales antes de la entrada escalón
+                        EnviarDatos("v40V");
                         EnviarDatos("n0N");
 
                         // Iniciar la recepción de datos
@@ -619,7 +643,7 @@ namespace InterfazPlantaCtrlTemp
                         await Task.Run(() => RecibirDatos(valorPostEsc, (int)numericEscCalConsg.Value));
                         Debug.WriteLine("Fin de RecibirDatos");
                     }
-                    else if (checkEscVent.Checked && checkEscCal.Checked) // Entradas escalon para ambos componentes
+                    else if (checkEscVent.Checked && checkEscCal.Checked) // Entradas escalón para ambos componentes
                     {
                         Debug.WriteLine("Entrada escalón para ambos componentes");
                         // Valores iniciales antes de la entrada escalón
@@ -629,22 +653,22 @@ namespace InterfazPlantaCtrlTemp
                         // Iniciar la recepción de datos
                         int valorPreEsc = Math.Min((int)numericEscVentTInicio.Value, (int)numericEscCalTInicio.Value);
                         Debug.WriteLine($"Tiempo previo al escalón: {valorPreEsc}");
-                        await Task.Run(() => RecibirDatos2(valorPreEsc, 0, 0));
+                        await Task.Run(() => RecibirDatos2(valorPreEsc, 40, 0));
                         Debug.WriteLine("Fin de RecibirDatos");
 
                         // Enviar el primer valor de escalón
-                        if ((int)numericEscVentTInicio.Value < (int)numericEscCalTInicio.Value)
+                        if ((int)numericEscVentTInicio.Value < (int)numericEscCalTInicio.Value) // Se envía primero el del ventilador
                         {
                             EnviarDatos($"v{numericEscVentConsg.Value.ToString()}V");
                             int valorFirstEsc = (int)numericEscCalTInicio.Value - (int)numericEscVentTInicio.Value;
                             await Task.Run(() => RecibirDatos2(valorFirstEsc, (int)numericEscVentConsg.Value, 0));
                             EnviarDatos($"n{numericEscCalConsg.Value.ToString()}N");
                         }
-                        else if ((int)numericEscVentTInicio.Value > (int)numericEscCalTInicio.Value)
+                        else if ((int)numericEscVentTInicio.Value > (int)numericEscCalTInicio.Value) // Se envía primero el del calefactor
                         {
                             EnviarDatos($"n{numericEscCalConsg.Value.ToString()}N");
                             int valorFirstEsc = (int)numericEscVentTInicio.Value - (int)numericEscCalTInicio.Value;
-                            await Task.Run(() => RecibirDatos2(valorFirstEsc, 0, (int)numericEscCalConsg.Value));
+                            await Task.Run(() => RecibirDatos2(valorFirstEsc, 40, (int)numericEscCalConsg.Value));
                             EnviarDatos($"v{numericEscVentConsg.Value.ToString()}V");
                         }
                         else // Si ambos tiempos de inicio son iguales
@@ -668,40 +692,42 @@ namespace InterfazPlantaCtrlTemp
                 {
                     Debug.WriteLine("Se ha seleccionado la entrada rampa");
 
-                    if (checkRampVent.Checked) // Entrada rampa para el ventilador
+                    if (checkRampVent.Checked && !checkRampCal.Checked) // Entrada rampa para el ventilador
                     {
                         Debug.WriteLine("Entrada rampa para el Ventilador");
                         // Valores iniciales antes de la entrada rampa
                         EnviarDatos("v40V");
-                        EnviarDatos("n40N");
+                        EnviarDatos("n0N");
+
                         // Iniciar la recepción de datos
-                        int valorPreRamp = (int)numericEscVentTInicio.Value;
+                        int valorPreRamp = (int)numericRampVentTInicio.Value;
                         Debug.WriteLine($"Tiempo previo a la rampa: {valorPreRamp}");
                         await Task.Run(() => RecibirDatos(valorPreRamp, 40));
                         Debug.WriteLine("Fin de RecibirDatos");
 
                         // Cálculo y envío de los valores de la rampa
-                        for (int i = 0; i < (int)numericRampCalTFinal.Value - (int)numericEscVentTInicio.Value; i++)
+                        for (int i = 0; i < (int)numericRampVentTFinal.Value - (int)numericRampVentTInicio.Value; i++)
                         {
-                            int valorMidRamp = 40 + (i * ((int)(numericEscVentConsg.Value - 40) / ((int)numericRampCalTFinal.Value - (int)numericEscVentTInicio.Value)));
+                            int valorMidRamp = 40 + (i * ((int)numericRampVentConsg.Value - 40 / ((int)numericRampVentTFinal.Value - (int)numericRampVentTInicio.Value)));
                             EnviarDatos($"v{valorMidRamp.ToString()}V");
                             await Task.Run(() => RecibirDatos(1, valorMidRamp));
                         }
 
                         // Ajustar los valores enviados a los seleccionados por el usuario para la entrada rampa
-                        EnviarDatos($"v{numericEscVentConsg.Value.ToString()}V");
+                        EnviarDatos($"v{numericRampVentConsg.Value.ToString()}V");
                         // Iniciar la recepción de datos
-                        int valorPostRamp = (int)numericTEjecucion.Value + 1 - (int)numericRampCalTFinal.Value;
+                        int valorPostRamp = (int)numericTEjecucion.Value + 1 - (int)numericRampVentTFinal.Value;
                         Debug.WriteLine($"Tiempo posterior a la rampa: {valorPostRamp}");
-                        await Task.Run(() => RecibirDatos(valorPostRamp, (int)numericEscVentConsg.Value));
+                        await Task.Run(() => RecibirDatos(valorPostRamp, (int)numericRampVentConsg.Value));
                         Debug.WriteLine("Fin de RecibirDatos");
                     }
-                    else if (checkRampCal.Checked) // Entrada rampa para el calefactor
+                    else if (!checkRampVent.Checked && checkRampCal.Checked) // Entrada rampa para el calefactor
                     {
                         Debug.WriteLine("Entrada rampa para el Calefactor");
                         // Valores iniciales antes de la entrada rampa
-                        EnviarDatos("v60V");
+                        EnviarDatos("v40V");
                         EnviarDatos("n0N");
+
                         // Iniciar la recepción de datos
                         int valorPreRamp = (int)numericRampCalTInicio.Value;
                         Debug.WriteLine($"Tiempo previo a la rampa: {valorPreRamp}");
@@ -709,9 +735,9 @@ namespace InterfazPlantaCtrlTemp
                         Debug.WriteLine("Fin de RecibirDatos");
 
                         // Cálculo y envío de los valores de la rampa
-                        for (int i = 0; i < (int)numericRampVentTFinal.Value - (int)numericRampCalTInicio.Value; i++)
+                        for (int i = 0; i < (int)numericRampCalTFinal.Value - (int)numericRampCalTInicio.Value; i++)
                         {
-                            int valorMidRamp = i * (int)(numericRampCalConsg.Value / ((int)numericRampVentTFinal.Value - (int)numericRampCalTInicio.Value));
+                            int valorMidRamp = i * ((int)numericRampCalConsg.Value / ((int)numericRampCalTFinal.Value - (int)numericRampCalTInicio.Value));
                             EnviarDatos($"n{valorMidRamp.ToString()}N");
                             await Task.Run(() => RecibirDatos(1, valorMidRamp));
                         }
@@ -719,9 +745,63 @@ namespace InterfazPlantaCtrlTemp
                         // Ajustar los valores enviados a los seleccionados por el usuario para la entrada rampa
                         EnviarDatos($"n{numericRampCalConsg.Value.ToString()}N");
                         // Iniciar la recepción de datos
-                        int valorPostRamp = (int)numericTEjecucion.Value + 1 - (int)numericRampVentTFinal.Value;
+                        int valorPostRamp = (int)numericTEjecucion.Value + 1 - (int)numericRampCalTFinal.Value;
                         Debug.WriteLine($"Tiempo posterior a la rampa: {valorPostRamp}");
                         await Task.Run(() => RecibirDatos(valorPostRamp, (int)numericRampCalConsg.Value));
+                        Debug.WriteLine("Fin de RecibirDatos");
+                    }
+                    else if (checkRampVent.Checked && checkRampCal.Checked) // Entrada rampa para ambos componentes
+                    {
+                        Debug.WriteLine("Entrada rampa para ambos componentes");
+                        // Valores iniciales antes de la entrada rampa
+                        EnviarDatos("v40V");
+                        EnviarDatos("n0N");
+
+                        // Iniciar la recepción de datos
+                        int valorPreRamp = Math.Min((int)numericRampVentTInicio.Value, (int)numericRampCalTInicio.Value);
+                        Debug.WriteLine($"Tiempo previo a la rampa: {valorPreRamp}");
+                        await Task.Run(() => RecibirDatos2(valorPreRamp, 40, 0));
+                        Debug.WriteLine("Fin de RecibirDatos");
+
+                        // Enviar el primer valor de rampa
+                        if ((int)numericRampVentTInicio.Value < (int)numericRampCalTInicio.Value) // Se envía primero el del ventilador
+                        {
+                            EnviarDatos($"v{numericEscVentConsg.Value.ToString()}V");
+                            int valorFirstEsc = (int)numericEscCalTInicio.Value - (int)numericEscVentTInicio.Value;
+                            await Task.Run(() => RecibirDatos2(valorFirstEsc, (int)numericEscVentConsg.Value, 0));
+                            EnviarDatos($"n{numericEscCalConsg.Value.ToString()}N");
+                        }
+                        else if ((int)numericEscVentTInicio.Value > (int)numericEscCalTInicio.Value) // Se envía primero el del calefactor
+                        {
+                            EnviarDatos($"n{numericEscCalConsg.Value.ToString()}N");
+                            int valorFirstEsc = (int)numericEscVentTInicio.Value - (int)numericEscCalTInicio.Value;
+                            await Task.Run(() => RecibirDatos2(valorFirstEsc, 0, (int)numericEscCalConsg.Value));
+                            EnviarDatos($"v{numericEscVentConsg.Value.ToString()}V");
+                        }
+                        else // Si ambos tiempos de inicio son iguales
+                        {
+                            // Se itera hasta el tiempo final de la rampa que termine más tarde y se controla
+                            // internamente el valor de cada rampa para no superar el valor de consigna
+                            for (int i = 0; i < Math.Max((int)numericRampVentTFinal.Value, (int)numericRampCalTFinal.Value) - (int)numericRampVentTInicio.Value; i++)
+                            {
+                                // El valor de cada rampa no puede superar el valor de consigna definido por el usuario
+                                int valorMidRampVent = Math.Min(40 + (i * ((int)numericRampVentConsg.Value - 40 / ((int)numericRampVentTFinal.Value - (int)numericRampVentTInicio.Value))), (int)numericRampVentConsg.Value);
+                                EnviarDatos($"v{valorMidRampVent.ToString()}V");
+                                int valorMidRampCal = Math.Min(i * ((int)numericRampCalConsg.Value / ((int)numericRampCalTFinal.Value - (int)numericRampCalTInicio.Value)), (int)numericRampCalConsg.Value);
+                                EnviarDatos($"n{valorMidRampCal.ToString()}N");
+
+                                await Task.Run(() => RecibirDatos2(1, valorMidRampVent, valorMidRampCal));
+                            }
+
+                            // Ajustar los valores enviados a los seleccionados por el usuario para cada entrada rampa
+                            EnviarDatos($"v{numericRampVentConsg.Value.ToString()}V");
+                            EnviarDatos($"n{numericRampCalConsg.Value.ToString()}N");
+                        }
+
+                        // Iniciar la recepción de datos
+                        int valorPostEsc = (int)numericTEjecucion.Value + 1 - Math.Max((int)numericRampVentTFinal.Value, (int)numericRampCalTFinal.Value);
+                        Debug.WriteLine($"Tiempo posterior al escalón: {valorPostEsc}");
+                        await Task.Run(() => RecibirDatos2(valorPostEsc, (int)numericEscVentConsg.Value, (int)numericEscCalConsg.Value));
                         Debug.WriteLine("Fin de RecibirDatos");
                     }
                     else

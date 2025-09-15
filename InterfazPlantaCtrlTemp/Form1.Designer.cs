@@ -342,8 +342,8 @@
             // numericRampCalConsg
             // 
             this.numericRampCalConsg.Location = new System.Drawing.Point(295, 256);
-            this.numericRampCalConsg.Minimum = new decimal(new int[] {
-            40,
+            this.numericRampCalConsg.Maximum = new decimal(new int[] {
+            85,
             0,
             0,
             0});
@@ -488,8 +488,8 @@
             // numericEscCalConsg
             // 
             this.numericEscCalConsg.Location = new System.Drawing.Point(87, 256);
-            this.numericEscCalConsg.Minimum = new decimal(new int[] {
-            40,
+            this.numericEscCalConsg.Maximum = new decimal(new int[] {
+            85,
             0,
             0,
             0});
