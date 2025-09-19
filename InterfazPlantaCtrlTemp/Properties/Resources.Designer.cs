@@ -93,6 +93,16 @@ namespace InterfazPlantaCtrlTemp.Properties {
         /// <summary>
         ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap Captura_de_pantalla_2025_09_19_125114 {
+            get {
+                object obj = ResourceManager.GetObject("Captura de pantalla 2025-09-19 125114", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap heating_element_filled_line_icon_vector1 {
             get {
                 object obj = ResourceManager.GetObject("heating-element-filled-line-icon-vector1", resourceCulture);

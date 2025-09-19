@@ -152,21 +152,9 @@ namespace InterfazPlantaCtrlTemp
                     }
                 }
             }
-            catch (UnauthorizedAccessException)
-            {
-                MessageBox.Show("El puerto está en uso por otra aplicación.", "Error de conexión", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
             catch (IOException)
             {
                 MessageBox.Show("No se puede acceder al puerto seleccionado. Verifique la conexión y el puerto.", "Error de conexión", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-            catch (ArgumentException)
-            {
-                MessageBox.Show("El nombre del puerto es inválido.", "Error de conexión", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Error inesperado al abrir el puerto: {ex.Message}", "Error de conexión", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -352,7 +340,7 @@ namespace InterfazPlantaCtrlTemp
 
                 try
                 {
-                    string lectura = "t12.34T";
+                    string lectura = PuertoArduino.ReadLine().Trim();
                     Debug.WriteLine($"Datos recibidos: {lectura}");
 
                     // Extraer y parsear el dato de temperatura
@@ -414,7 +402,7 @@ namespace InterfazPlantaCtrlTemp
 
                 try
                 {
-                    string lectura = "t12.34T";
+                    string lectura = PuertoArduino.ReadLine().Trim();
                     Debug.WriteLine($"Datos recibidos: {lectura}");
 
                     // Extraer y parsear el dato de temperatura
@@ -925,8 +913,60 @@ namespace InterfazPlantaCtrlTemp
             }
         }
 
-        
-        // Control de Entradas en Lazo Cerrado
 
+        // Control de Entradas en Lazo Cerrado
+        //
+
+        private string calculoComando(float Kp, float Ki, float Kd)
+        {
+            string comando = "c";
+            if (checkKp.Checked)
+            {
+                comando += $"P{numericKp.Value.ToString()}";
+            }
+            if (checkKi.Checked)
+            {
+                comando += $"I{numericKi.Value.ToString()}";
+            }
+            if (checkKd.Checked)
+            {
+                comando += $"D{numericKd.Value.ToString()}";
+            }
+            comando += "C";
+            return comando;
+        }
+
+        private void buttonCargarLazoCerrado_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (checkKp.Checked && !checkKi.Checked && !checkKd.Checked) // Se ha seleccionado el control P
+                {
+                    string comando = calculoComando((float)numericKp.Value, 0, 0);
+                    EnviarDatos($"v{comando}V");
+                    RecibirDatos(1, 40);
+                }
+                else if (checkKp.Checked && checkKi.Checked && !checkKd.Checked) // Se ha seleccionado el control PI
+                {
+                    calculoComando((float)numericKp.Value, (float)numericKi.Value, 0);
+                }
+                else if (checkKp.Checked && !checkKi.Checked && checkKd.Checked) // Se ha seleccionado el control PD
+                {
+                    calculoComando((float)numericKp.Value, 0, (float)numericKd.Value);
+                }
+                else if (checkKp.Checked && checkKi.Checked && checkKd.Checked) // Se ha seleccionado el control PID
+                {
+                    calculoComando((float)numericKp.Value, (float)numericKi.Value, (float)numericKd.Value);
+                }
+                else
+                {
+                    MessageBox.Show("Seleccione un tipo de control en lazo cerrado válido entre los siguientes: Control P, Control PD, Control PI y Control PID");
+                }
+            }
+            catch
+            {  
+
+            }
+        }
     }
 }
