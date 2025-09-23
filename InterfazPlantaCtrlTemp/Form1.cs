@@ -917,34 +917,64 @@ namespace InterfazPlantaCtrlTemp
         // Control de Entradas en Lazo Cerrado
         //
 
-        private string calculoComando(float Kp, float Ki, float Kd)
+        private void calculoComando(float Kp, float Ki, float Kd)
         {
-            string comando = "c";
-            if (checkKp.Checked)
+            string comando = "";
+            float temperatura = 0;
+            for (int i = 0; i < (int)numericTEjecucion.Value; i++) 
             {
-                comando += $"P{numericKp.Value.ToString()}";
+                PuertoArduino.WriteLine($"t{i}T");
+                PuertoArduino.ReadTimeout = 200;
+                try
+                {
+                    string lectura = PuertoArduino.ReadLine().Trim();
+                    Debug.WriteLine($"Datos recibidos: {lectura}");
+                    // Extraer y parsear el dato de temperatura
+                    lectura = lectura.Substring(1, 5);
+                    temperatura = float.Parse(lectura, CultureInfo.InvariantCulture);
+                    Debug.WriteLine($"Temperatura actual: {temperatura}°C");
+                }
+                catch (TimeoutException)
+                {
+                    Debug.WriteLine("Timeout");
+                }
+
+                float error = temperatura - (float)numericConsgTemp.Value;
+                Debug.WriteLine($"Error actual: {error}");
+
+
+                comando = error * Kp + ;
+
+
+                EnviarDatos($"v{comando}V");
+                RecibirDatos(1, );
             }
-            if (checkKi.Checked)
-            {
-                comando += $"I{numericKi.Value.ToString()}";
-            }
-            if (checkKd.Checked)
-            {
-                comando += $"D{numericKd.Value.ToString()}";
-            }
-            comando += "C";
-            return comando;
+            
         }
 
         private void buttonCargarLazoCerrado_Click(object sender, EventArgs e)
         {
+            checkKp.Enabled = false; // Deshabilitar el checkbox de Kp
+            checkKi.Enabled = false; // Deshabilitar el checkbox de Ki
+            checkKd.Enabled = false; // Deshabilitar el checkbox de Kd
+
+            // Limpiar gráfico
+            tempChart.Series.Clear();
+            temperaturas.Clear();
+            tiempos.Clear();
+            tempChart.Update(true, true);
+            Debug.WriteLine("Gráfico actualizado");
+            // Configurar el gráfico inicial
+            ConfigurarGraficoTempInicial();
+            ConfigurarGraficoEntradas();
+
+            cronometro.Restart();
+
             try
             {
                 if (checkKp.Checked && !checkKi.Checked && !checkKd.Checked) // Se ha seleccionado el control P
                 {
-                    string comando = calculoComando((float)numericKp.Value, 0, 0);
-                    EnviarDatos($"v{comando}V");
-                    RecibirDatos(1, 40);
+                    calculoComando((float)numericKp.Value, 0, 0);
                 }
                 else if (checkKp.Checked && checkKi.Checked && !checkKd.Checked) // Se ha seleccionado el control PI
                 {
