@@ -330,7 +330,7 @@ namespace InterfazPlantaCtrlTemp
         }
 
         // Método de recibir datos del arduino
-        private void RecibirDatos(int graph, float entrada)
+        private void RecibirDatos(int graph, float entrada, int dt)
         {
             for (int i = 0; i < graph; i++)
             {
@@ -385,14 +385,14 @@ namespace InterfazPlantaCtrlTemp
                     });
 
                     // Esperar un segundo antes de la siguiente lectura
-                    Thread.Sleep(1000);
+                    Thread.Sleep(dt);
                 }
                 catch (TimeoutException) { Debug.WriteLine("Timeout"); }
             }
         }
 
         // Método de recibir datos para dos entradas de control automático
-        private void RecibirDatos2(int graph, float entradavent, float entradacal)
+        private void RecibirDatos2(int graph, float entradavent, float entradacal, int dt)
         {
             for (int i = 0; i < graph; i++)
             {
@@ -449,7 +449,7 @@ namespace InterfazPlantaCtrlTemp
                     });
 
                     // Esperar un segundo antes de la siguiente lectura
-                    Thread.Sleep(1000);
+                    Thread.Sleep(dt);
                 }
                 catch (TimeoutException) { Debug.WriteLine("Timeout"); }
             }
@@ -484,7 +484,7 @@ namespace InterfazPlantaCtrlTemp
                 cronometro.Restart();
 
                 // Iniciar la recepción de datos
-                await Task.Run(() => RecibirDatos((int)numericTEjecucion.Value + 1, (int)numericVelVent.Value));
+                await Task.Run(() => RecibirDatos((int)numericTEjecucion.Value + 1, (float)numericVelVent.Value, 1000));
 
                 Debug.WriteLine("Fin de RecibirDatos");
             }
@@ -641,14 +641,14 @@ namespace InterfazPlantaCtrlTemp
                         // Iniciar la recepción de datos
                         int valorPreEsc = (int)numericEscVentTInicio.Value;
                         Debug.WriteLine($"Tiempo previo al escalón: {valorPreEsc}");
-                        await Task.Run(() => RecibirDatos(valorPreEsc, 40));
+                        await Task.Run(() => RecibirDatos(valorPreEsc, 40, 1000));
                         Debug.WriteLine("Fin de RecibirDatos");
 
                         // Ajustar los valores enviados a los seleccionados por el usuario para la entrada escalón
                         EnviarDatos($"v{numericEscVentConsg.Value.ToString()}V");
                         int valorPostEsc = (int)numericTEjecucion.Value + 1 - (int)numericEscVentTInicio.Value;
                         Debug.WriteLine($"Tiempo posterior al escalón: {valorPostEsc}");
-                        await Task.Run(() => RecibirDatos(valorPostEsc, (float)numericEscVentConsg.Value));
+                        await Task.Run(() => RecibirDatos(valorPostEsc, (float)numericEscVentConsg.Value, 1000));
                         Debug.WriteLine("Fin de RecibirDatos");
                     }
                     else if (!checkEscVent.Checked && checkEscCal.Checked) // Solo entrada escalón para el calefactor
@@ -661,7 +661,7 @@ namespace InterfazPlantaCtrlTemp
                         // Iniciar la recepción de datos
                         int valorPreEsc = (int)numericEscCalTInicio.Value;
                         Debug.WriteLine($"Tiempo previo al escalón: {valorPreEsc}");
-                        await Task.Run(() => RecibirDatos(valorPreEsc, 0));
+                        await Task.Run(() => RecibirDatos(valorPreEsc, 0, 1000));
                         Debug.WriteLine("Fin de RecibirDatos");
 
                         // Ajustar los valores enviados a los seleccionados por el usuario para la entrada escalón
@@ -670,7 +670,7 @@ namespace InterfazPlantaCtrlTemp
                         // Iniciar la recepción de datos
                         int valorPostEsc = (int)numericTEjecucion.Value + 1 - (int)numericEscCalTInicio.Value;
                         Debug.WriteLine($"Tiempo posterior al escalón: {valorPostEsc}");
-                        await Task.Run(() => RecibirDatos(valorPostEsc, (float)numericEscCalConsg.Value));
+                        await Task.Run(() => RecibirDatos(valorPostEsc, (float)numericEscCalConsg.Value, 1000));
                         Debug.WriteLine("Fin de RecibirDatos");
                     }
                     else if (checkEscVent.Checked && checkEscCal.Checked) // Entradas escalón para ambos componentes
@@ -684,7 +684,7 @@ namespace InterfazPlantaCtrlTemp
                         // Iniciar la recepción de datos
                         int valorPreEsc = Math.Min((int)numericEscVentTInicio.Value, (int)numericEscCalTInicio.Value);
                         Debug.WriteLine($"Tiempo previo al escalón: {valorPreEsc}");
-                        await Task.Run(() => RecibirDatos2(valorPreEsc, 40, 0));
+                        await Task.Run(() => RecibirDatos2(valorPreEsc, 40, 0, 1000));
                         Debug.WriteLine("Fin de RecibirDatos");
 
                         // Enviar el primer valor de escalón
@@ -692,14 +692,14 @@ namespace InterfazPlantaCtrlTemp
                         {
                             EnviarDatos($"v{numericEscVentConsg.Value.ToString()}V");
                             int valorFirstEsc = (int)numericEscCalTInicio.Value - (int)numericEscVentTInicio.Value;
-                            await Task.Run(() => RecibirDatos2(valorFirstEsc, (float)numericEscVentConsg.Value, 0));
+                            await Task.Run(() => RecibirDatos2(valorFirstEsc, (float)numericEscVentConsg.Value, 0, 1000));
                             EnviarDatos($"n{numericEscCalConsg.Value.ToString()}N");
                         }
                         else if ((int)numericEscVentTInicio.Value > (int)numericEscCalTInicio.Value) // Se envía primero el del calefactor
                         {
                             EnviarDatos($"n{numericEscCalConsg.Value.ToString()}N");
                             int valorFirstEsc = (int)numericEscVentTInicio.Value - (int)numericEscCalTInicio.Value;
-                            await Task.Run(() => RecibirDatos2(valorFirstEsc, 40, (float)numericEscCalConsg.Value));
+                            await Task.Run(() => RecibirDatos2(valorFirstEsc, 40, (float)numericEscCalConsg.Value, 1000));
                             EnviarDatos($"v{numericEscVentConsg.Value.ToString()}V");
                         }
                         else // Si ambos tiempos de inicio son iguales
@@ -711,7 +711,7 @@ namespace InterfazPlantaCtrlTemp
                         // Iniciar la recepción de datos
                         int valorPostEsc = (int)numericTEjecucion.Value + 1 - Math.Max((int)numericEscVentTInicio.Value, (int)numericEscCalTInicio.Value);
                         Debug.WriteLine($"Tiempo posterior al escalón: {valorPostEsc}");
-                        await Task.Run(() => RecibirDatos2(valorPostEsc, (float)numericEscVentConsg.Value, (float)numericEscCalConsg.Value));
+                        await Task.Run(() => RecibirDatos2(valorPostEsc, (float)numericEscVentConsg.Value, (float)numericEscCalConsg.Value, 1000));
                         Debug.WriteLine("Fin de RecibirDatos");
                     }
                     else
@@ -733,7 +733,7 @@ namespace InterfazPlantaCtrlTemp
                         // Iniciar la recepción de datos
                         int valorPreRamp = (int)numericRampVentTInicio.Value;
                         Debug.WriteLine($"Tiempo previo a la rampa: {valorPreRamp}");
-                        await Task.Run(() => RecibirDatos(valorPreRamp, 40));
+                        await Task.Run(() => RecibirDatos(valorPreRamp, 40, 1000));
                         Debug.WriteLine("Fin de RecibirDatos");
 
                         // Cálculo y envío de los valores de la rampa
@@ -741,7 +741,7 @@ namespace InterfazPlantaCtrlTemp
                         {
                             float valorMidRamp = 40 + (i * (((float)numericRampVentConsg.Value - 40) / ((int)numericRampVentTFinal.Value - (int)numericRampVentTInicio.Value)));
                             EnviarDatos($"v{valorMidRamp.ToString()}V");
-                            await Task.Run(() => RecibirDatos(1, valorMidRamp));
+                            await Task.Run(() => RecibirDatos(1, valorMidRamp, 1000));
                         }
 
                         // Ajustar los valores enviados a los seleccionados por el usuario para la entrada rampa
@@ -749,7 +749,7 @@ namespace InterfazPlantaCtrlTemp
                         // Iniciar la recepción de datos
                         int valorPostRamp = (int)numericTEjecucion.Value + 1 - (int)numericRampVentTFinal.Value;
                         Debug.WriteLine($"Tiempo posterior a la rampa: {valorPostRamp}");
-                        await Task.Run(() => RecibirDatos(valorPostRamp, (float)numericRampVentConsg.Value));
+                        await Task.Run(() => RecibirDatos(valorPostRamp, (float)numericRampVentConsg.Value, 1000));
                         Debug.WriteLine("Fin de RecibirDatos");
                     }
                     else if (!checkRampVent.Checked && checkRampCal.Checked) // Entrada rampa para el calefactor
@@ -762,7 +762,7 @@ namespace InterfazPlantaCtrlTemp
                         // Iniciar la recepción de datos
                         int valorPreRamp = (int)numericRampCalTInicio.Value;
                         Debug.WriteLine($"Tiempo previo a la rampa: {valorPreRamp}");
-                        await Task.Run(() => RecibirDatos(valorPreRamp, 0));
+                        await Task.Run(() => RecibirDatos(valorPreRamp, 0, 1000));
                         Debug.WriteLine("Fin de RecibirDatos");
 
                         // Cálculo y envío de los valores de la rampa
@@ -770,7 +770,7 @@ namespace InterfazPlantaCtrlTemp
                         {
                             float valorMidRamp = i * ((float)numericRampCalConsg.Value / ((int)numericRampCalTFinal.Value - (int)numericRampCalTInicio.Value));
                             EnviarDatos($"n{valorMidRamp.ToString()}N");
-                            await Task.Run(() => RecibirDatos(1, valorMidRamp));
+                            await Task.Run(() => RecibirDatos(1, valorMidRamp, 1000));
                         }
 
                         // Ajustar los valores enviados a los seleccionados por el usuario para la entrada rampa
@@ -778,7 +778,7 @@ namespace InterfazPlantaCtrlTemp
                         // Iniciar la recepción de datos
                         int valorPostRamp = (int)numericTEjecucion.Value + 1 - (int)numericRampCalTFinal.Value;
                         Debug.WriteLine($"Tiempo posterior a la rampa: {valorPostRamp}");
-                        await Task.Run(() => RecibirDatos(valorPostRamp, (float)numericRampCalConsg.Value));
+                        await Task.Run(() => RecibirDatos(valorPostRamp, (float)numericRampCalConsg.Value, 1000));
                         Debug.WriteLine("Fin de RecibirDatos");
                     }
                     else if (checkRampVent.Checked && checkRampCal.Checked) // Entrada rampa para ambos componentes
@@ -792,7 +792,7 @@ namespace InterfazPlantaCtrlTemp
                         // Iniciar la recepción de datos
                         int valorPreRamp = Math.Min((int)numericRampVentTInicio.Value, (int)numericRampCalTInicio.Value);
                         Debug.WriteLine($"Tiempo previo a la rampa: {valorPreRamp}");
-                        await Task.Run(() => RecibirDatos2(valorPreRamp, 40, 0));
+                        await Task.Run(() => RecibirDatos2(valorPreRamp, 40, 0, 1000));
                         Debug.WriteLine("Fin de RecibirDatos");
 
                         // Enviar el primer valor de rampa
@@ -812,7 +812,7 @@ namespace InterfazPlantaCtrlTemp
                                     int valorMidRampCal = 0;
                                     EnviarDatos($"n{valorMidRampCal.ToString()}N");
 
-                                    await Task.Run(() => RecibirDatos2(1, valorMidRampVent, valorMidRampCal));
+                                    await Task.Run(() => RecibirDatos2(1, valorMidRampVent, valorMidRampCal, 1000));
                                 }
                                 // Cuando el tiempo de inicio de la rampa del calefactor se alcanza, se empieza a incrementar su valor
                                 else
@@ -821,7 +821,7 @@ namespace InterfazPlantaCtrlTemp
                                     float valorMidRampCal = Math.Min(j * ((float)numericRampCalConsg.Value / ((int)numericRampCalTFinal.Value - (int)numericRampCalTInicio.Value)), (float)numericRampCalConsg.Value);
                                     EnviarDatos($"n{valorMidRampCal.ToString()}N");
 
-                                    await Task.Run(() => RecibirDatos2(1, valorMidRampVent, valorMidRampCal));
+                                    await Task.Run(() => RecibirDatos2(1, valorMidRampVent, valorMidRampCal, 1000));
                                 }
                             }
                         }
@@ -841,7 +841,7 @@ namespace InterfazPlantaCtrlTemp
                                     int valorMidRampVent = 40;
                                     EnviarDatos($"v{valorMidRampVent.ToString()}V");
 
-                                    await Task.Run(() => RecibirDatos2(1, valorMidRampVent, valorMidRampCal));
+                                    await Task.Run(() => RecibirDatos2(1, valorMidRampVent, valorMidRampCal, 1000));
                                 }
                                 // Cuando el tiempo de inicio de la rampa del ventilador se alcanza, se empieza a incrementar su valor
                                 else
@@ -850,7 +850,7 @@ namespace InterfazPlantaCtrlTemp
                                     float valorMidRampVent = Math.Min(40 + (j * (((float)numericRampVentConsg.Value - 40) / ((int)numericRampVentTFinal.Value - (int)numericRampVentTInicio.Value))), (float)numericRampVentConsg.Value);
                                     EnviarDatos($"v{valorMidRampVent.ToString()}V");
 
-                                    await Task.Run(() => RecibirDatos2(1, valorMidRampVent, valorMidRampCal));
+                                    await Task.Run(() => RecibirDatos2(1, valorMidRampVent, valorMidRampCal, 1000));
                                 }
                             }
 
@@ -867,7 +867,7 @@ namespace InterfazPlantaCtrlTemp
                                 float valorMidRampCal = Math.Min(i * ((float)numericRampCalConsg.Value / ((int)numericRampCalTFinal.Value - (int)numericRampCalTInicio.Value)), (float)numericRampCalConsg.Value);
                                 EnviarDatos($"n{valorMidRampCal.ToString()}N");
 
-                                await Task.Run(() => RecibirDatos2(1, valorMidRampVent, valorMidRampCal));
+                                await Task.Run(() => RecibirDatos2(1, valorMidRampVent, valorMidRampCal, 1000));
                             }
 
                             // Ajustar los valores enviados a los seleccionados por el usuario para cada entrada rampa
@@ -878,7 +878,7 @@ namespace InterfazPlantaCtrlTemp
                         // Envío de valores finales de rampa
                         int valorPostEsc = (int)numericTEjecucion.Value + 1 - Math.Max((int)numericRampVentTFinal.Value, (int)numericRampCalTFinal.Value);
                         Debug.WriteLine($"Tiempo posterior al escalón: {valorPostEsc}");
-                        await Task.Run(() => RecibirDatos2(valorPostEsc, (float)numericRampVentConsg.Value, (float)numericRampCalConsg.Value));
+                        await Task.Run(() => RecibirDatos2(valorPostEsc, (float)numericRampVentConsg.Value, (float)numericRampCalConsg.Value, 1000));
                         Debug.WriteLine("Fin de RecibirDatos");
                     }
                     else
@@ -914,14 +914,18 @@ namespace InterfazPlantaCtrlTemp
         }
 
 
-        // Control de Entradas en Lazo Cerrado
-        //
+        // Control de Entradas en Lazo Cerrado Mediante un Controlador PID
 
         private void calculoComando(float Kp, float Ki, float Kd)
         {
-            string comando = "";
+            float comando;
             float temperatura = 0;
-            for (int i = 0; i < (int)numericTEjecucion.Value; i++) 
+            int dt = 10;
+            float error = 0;
+            float errorPrev = 0;
+            float integralTotal = 0;
+
+            for (double i = 0; i < (double)numericTEjecucion.Value; i += (dt/1000D)) 
             {
                 PuertoArduino.WriteLine($"t{i}T");
                 PuertoArduino.ReadTimeout = 200;
@@ -933,21 +937,39 @@ namespace InterfazPlantaCtrlTemp
                     lectura = lectura.Substring(1, 5);
                     temperatura = float.Parse(lectura, CultureInfo.InvariantCulture);
                     Debug.WriteLine($"Temperatura actual: {temperatura}°C");
+
+                    // Cálculo del error
+                    error = (float)numericConsgTemp.Value - temperatura;
+                    Debug.WriteLine($"Error actual: {error}");
+
+                    // Cálculo de la integral del error
+                    integralTotal += error * dt;
                 }
                 catch (TimeoutException)
                 {
                     Debug.WriteLine("Timeout");
                 }
 
-                float error = temperatura - (float)numericConsgTemp.Value;
-                Debug.WriteLine($"Error actual: {error}");
+                float gananciaProporcional = Kp * error;
+                float gananciaIntegral = Ki * integralTotal;
+                float gananciaDerivativa = Kd * (error - errorPrev) / dt;
 
+                errorPrev = error;
 
-                comando = error * Kp + ;
+                comando = gananciaProporcional + gananciaIntegral + gananciaDerivativa;
 
-
-                EnviarDatos($"v{comando}V");
-                RecibirDatos(1, );
+                if (comando < 0) // Si el comando es negativo se quiere enfriar el sistema
+                {
+                    comando = Math.Max(40, Math.Min(comando, 100));
+                    EnviarDatos($"v{comando}V");
+                }
+                else if (comando > 0) // Si el comando es positivo se quiere calentar el sistema
+                {
+                    comando = Math.Max(0, Math.Min(comando, 85));
+                    EnviarDatos($"n{comando}N");
+                }
+                
+                RecibirDatos(1, comando, dt);
             }
             
         }
@@ -976,6 +998,14 @@ namespace InterfazPlantaCtrlTemp
                 {
                     calculoComando((float)numericKp.Value, 0, 0);
                 }
+                else if (!checkKp.Checked && checkKi.Checked && !checkKd.Checked) // Se ha seleccionado el control I
+                {
+                    calculoComando(0, (float)numericKi.Value, 0);
+                }
+                else if (!checkKp.Checked && !checkKi.Checked && checkKd.Checked) // Se ha seleccionado el control D
+                {
+                    calculoComando(0, 0, (float)numericKd.Value);
+                }
                 else if (checkKp.Checked && checkKi.Checked && !checkKd.Checked) // Se ha seleccionado el control PI
                 {
                     calculoComando((float)numericKp.Value, (float)numericKi.Value, 0);
@@ -984,13 +1014,17 @@ namespace InterfazPlantaCtrlTemp
                 {
                     calculoComando((float)numericKp.Value, 0, (float)numericKd.Value);
                 }
+                else if (!checkKp.Checked && checkKi.Checked && checkKd.Checked) // Se ha seleccionado el control ID
+                {
+                    calculoComando(0, (float)numericKi.Value, (float)numericKd.Value);
+                }
                 else if (checkKp.Checked && checkKi.Checked && checkKd.Checked) // Se ha seleccionado el control PID
                 {
                     calculoComando((float)numericKp.Value, (float)numericKi.Value, (float)numericKd.Value);
                 }
                 else
                 {
-                    MessageBox.Show("Seleccione un tipo de control en lazo cerrado válido entre los siguientes: Control P, Control PD, Control PI y Control PID");
+                    MessageBox.Show("Seleccione un tipo de control en lazo cerrado válido");
                 }
             }
             catch
