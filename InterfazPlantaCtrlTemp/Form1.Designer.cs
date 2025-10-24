@@ -35,7 +35,6 @@
             this.groupCtrlMaqueta = new System.Windows.Forms.GroupBox();
             this.trackPotCal = new System.Windows.Forms.TrackBar();
             this.trackVelVent = new System.Windows.Forms.TrackBar();
-            this.buttonCargar = new System.Windows.Forms.Button();
             this.titleCal = new System.Windows.Forms.Label();
             this.titleVent = new System.Windows.Forms.Label();
             this.labelCal = new System.Windows.Forms.Label();
@@ -101,6 +100,7 @@
             this.numericTEjecucion = new System.Windows.Forms.NumericUpDown();
             this.labelTEjecucion = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.checkCrtlManual = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.numericVelVent)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericPotCal)).BeginInit();
             this.groupCtrlMaqueta.SuspendLayout();
@@ -181,9 +181,9 @@
             // 
             // groupCtrlMaqueta
             // 
+            this.groupCtrlMaqueta.Controls.Add(this.checkCrtlManual);
             this.groupCtrlMaqueta.Controls.Add(this.trackPotCal);
             this.groupCtrlMaqueta.Controls.Add(this.trackVelVent);
-            this.groupCtrlMaqueta.Controls.Add(this.buttonCargar);
             this.groupCtrlMaqueta.Controls.Add(this.titleCal);
             this.groupCtrlMaqueta.Controls.Add(this.titleVent);
             this.groupCtrlMaqueta.Controls.Add(this.labelCal);
@@ -216,16 +216,6 @@
             this.trackVelVent.TabIndex = 6;
             this.trackVelVent.TickFrequency = 5;
             this.trackVelVent.Value = 40;
-            // 
-            // buttonCargar
-            // 
-            this.buttonCargar.Location = new System.Drawing.Point(269, 213);
-            this.buttonCargar.Name = "buttonCargar";
-            this.buttonCargar.Size = new System.Drawing.Size(75, 23);
-            this.buttonCargar.TabIndex = 7;
-            this.buttonCargar.Text = "Cargar";
-            this.buttonCargar.UseVisualStyleBackColor = true;
-            this.buttonCargar.Click += new System.EventHandler(this.BtnCargar_Click);
             // 
             // titleCal
             // 
@@ -1001,6 +991,16 @@
             this.pictureBox1.TabIndex = 10;
             this.pictureBox1.TabStop = false;
             // 
+            // checkCrtlManual
+            // 
+            this.checkCrtlManual.AutoSize = true;
+            this.checkCrtlManual.Location = new System.Drawing.Point(216, 213);
+            this.checkCrtlManual.Name = "checkCrtlManual";
+            this.checkCrtlManual.Size = new System.Drawing.Size(133, 17);
+            this.checkCrtlManual.TabIndex = 9;
+            this.checkCrtlManual.Text = "Activar Control Manual";
+            this.checkCrtlManual.UseVisualStyleBackColor = true;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1073,7 +1073,6 @@
         private System.Windows.Forms.GroupBox groupCtrlEntradas;
         private System.Windows.Forms.GroupBox groupGrafico;
         private LiveCharts.WinForms.CartesianChart tempChart;
-        private System.Windows.Forms.Button buttonCargar;
         private System.Windows.Forms.TrackBar trackVelVent;
         private System.Windows.Forms.TrackBar trackPotCal;
         private System.Windows.Forms.ComboBox comBox;
@@ -1134,6 +1133,7 @@
         private System.Windows.Forms.PictureBox pictureBox8;
         private System.Windows.Forms.CheckBox checkPID;
         private System.Windows.Forms.Button buttonCargarLazoCerrado;
+        private System.Windows.Forms.CheckBox checkCrtlManual;
     }
 }
 

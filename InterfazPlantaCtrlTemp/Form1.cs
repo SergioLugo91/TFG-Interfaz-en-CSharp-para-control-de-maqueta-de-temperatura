@@ -21,6 +21,9 @@ namespace InterfazPlantaCtrlTemp
         Stopwatch cronometro;
         private System.Windows.Forms.Timer portCheckTimer;
 
+        private Ventilador ventilador;
+        private Calefactor calefactor;
+
         private ChartValues<double> temperaturas = new ChartValues<double>();
         private ChartValues<double> tiempos = new ChartValues<double>();
 
@@ -33,6 +36,9 @@ namespace InterfazPlantaCtrlTemp
         public Form1()
         {
             InitializeComponent();
+
+            ventilador = new Ventilador();
+            calefactor = new Calefactor();
 
             // Inicializar el cronómetro
             cronometro = new Stopwatch();
@@ -59,6 +65,82 @@ namespace InterfazPlantaCtrlTemp
             this.Load += new EventHandler(Form1_Load);
 
             numericTEjecucion.ValueChanged += numericTEjecucion_ValueChanged;
+
+            // Suscripciones para enviar cuando se cambien los valores
+            ventilador.VelocidadChanged += v =>
+            {
+                if (PuertoArduino != null && PuertoArduino.IsOpen)
+                    EnviarDatos($"v{v}V");
+                if (checkCrtlManual.Checked)
+                {
+
+                    // Iniciar la recepción de datos
+                    await Task.Run(() => RecibirDatos((int)numericTEjecucion.Value + 1, (float)numericVelVent.Value, 1000));
+
+                    Debug.WriteLine("Fin de RecibirDatos");
+                }
+            };
+
+            calefactor.PotenciaChanged += p =>
+            {
+                if (PuertoArduino != null && PuertoArduino.IsOpen)
+                    EnviarDatos($"n{p}N");
+            };
+        }
+
+        async private void checkCrtlManual_CheckedChanged(object sender, EventArgs e)
+        {
+            if (checkCrtlManual.Checked)
+            {
+                // Habilitar controles de control manual
+                numericVelVent.Enabled = true;
+                trackVelVent.Enabled = true;
+                numericPotCal.Enabled = true;
+                trackPotCal.Enabled = true;
+                // Deshabilitar controles de entradas del sistema
+                checkEscalon.Enabled = false;
+                checkRampa.Enabled = false;
+                buttonCargarEntradas.Enabled = false;
+
+                entradaChart.Visible = false; // Ocultar el gráfico de entradas
+                buttonOcultar.Visible = false; // Ocultar el botón de ocultar el gráfico de entradas
+
+                tempChart.Size = new Size(810, 660); // Ajustar el tamaño del gráfico de temperatura
+
+                try
+                {
+                    // Limpiar gráfico
+                    tempChart.Series.Clear();
+                    temperaturas.Clear();
+                    tiempos.Clear();
+                    tempChart.Update(true, true);
+                    Debug.WriteLine("Gráfico actualizado");
+
+                    // Configurar el gráfico inicial
+                    ConfigurarGraficoTempInicial();
+                    ConfigurarGraficoEntradas();
+                }
+                finally
+                {
+                    // Rehabilitar botón al finalizar
+                    buttonCargarEntradas.Enabled = true;
+                }
+
+                cronometro.Restart();
+
+            }
+            else
+            {
+                // Deshabilitar controles de control manual
+                numericVelVent.Enabled = false;
+                trackVelVent.Enabled = false;
+                numericPotCal.Enabled = false;
+                trackPotCal.Enabled = false;
+                // Habilitar controles de entradas del sistema
+                checkEscalon.Enabled = true;
+                checkRampa.Enabled = true;
+                buttonCargarEntradas.Enabled = true;
+            }
         }
 
         // Método para realizar las acciones de inicio y carga de la interfaz
@@ -74,7 +156,6 @@ namespace InterfazPlantaCtrlTemp
             CheckSerialPorts(null, EventArgs.Empty);
 
             // Set up de los botones de la interfaz
-            buttonCargar.Enabled = false;
             buttonCargarEntradas.Enabled = false;
         }
 
@@ -143,7 +224,6 @@ namespace InterfazPlantaCtrlTemp
                     Debug.WriteLine("Puerto Abierto");
                     comBox.Enabled = false;
                     btnConectar.Enabled = false;
-                    buttonCargar.Enabled = true;
                     buttonCargarEntradas.Enabled = true;
 
                     // Detener el timer si lo encontramos
@@ -175,32 +255,47 @@ namespace InterfazPlantaCtrlTemp
         {
             // Sincronización entre la barra y el numericUpDown
             trackVelVent.Value = Convert.ToInt32(numericVelVent.Value);
+            // Ajustar la velocidad del ventilador
+            ventilador.SetVelocidad((int)numericVelVent.Value);
         }
         private void trackVelVent_ValueChanged(object sender, EventArgs e)
         {
             // Sincronización entre la barra y el numericUpDown
             numericVelVent.Value = trackVelVent.Value;
+            // Ajustar la velocidad del ventilador
+            ventilador.SetVelocidad(trackVelVent.Value);
         }
         private void numericPotCal_ValueChanged(object sender, EventArgs e)
         {
             // Sincronización entre la barra y el numericUpDown
             trackPotCal.Value = Convert.ToInt32(numericPotCal.Value);
+            // Ajustar la potencia del calefactor
+            calefactor.SetPotencia((int)numericPotCal.Value);
         }
         private void trackPotCal_ValueChanged(object sender, EventArgs e)
         {
             // Sincronización entre la barra y el numericUpDown
             numericPotCal.Value = trackPotCal.Value;
+            // Ajustar la potencia del calefactor   
+            calefactor.SetPotencia(trackPotCal.Value);
         }
 
         // Método para la configuración inicial del gráfico
         private void ConfigurarGraficoTempInicial()
         {
+            // Crear un pincel con opacidad personalizada para el Fill
+            var fillBrush = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Colors.Orange);
+            fillBrush.Opacity = 0.3;
+
+            tempChart.Series.Clear();
             tempChart.Series = new SeriesCollection
             {
                 new LineSeries
                 {
                     Title = "Temperatura",
                     Values = temperaturas,
+                    Fill = fillBrush,
+                    Stroke = System.Windows.Media.Brushes.Orange,
                     PointGeometry = DefaultGeometries.Circle,
                     PointGeometrySize = 8,
                     StrokeThickness = 2  // Añadido para mejor visibilidad
@@ -230,7 +325,7 @@ namespace InterfazPlantaCtrlTemp
         private void ConfigurarGraficoEntradas()
         {
             // Crear un pincel con opacidad personalizada para el Fill
-            var fillBrush = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Colors.Orange);
+            var fillBrush = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Colors.LightSkyBlue);
             fillBrush.Opacity = 0.3;
 
             entradaChart.Series.Clear();
@@ -241,7 +336,7 @@ namespace InterfazPlantaCtrlTemp
                    Title = "Entrada",
                    Values = entradas,
                    Fill = fillBrush,
-                   Stroke = System.Windows.Media.Brushes.Orange,
+                   Stroke = System.Windows.Media.Brushes.LightSkyBlue,
                    PointGeometry = DefaultGeometries.Circle,
                    PointGeometrySize = 8,
                    StrokeThickness = 2  // Añadido para mejor visibilidad
@@ -273,7 +368,7 @@ namespace InterfazPlantaCtrlTemp
             var fillBrushVent = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Colors.Blue);
             fillBrushVent.Opacity = 0.3;
 
-            var fillBrushCal = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Colors.Orange);
+            var fillBrushCal = new System.Windows.Media.SolidColorBrush(System.Windows.Media.Colors.Red);
             fillBrushCal.Opacity = 0.3;
 
             entradaChart.Series.Clear();
@@ -295,7 +390,7 @@ namespace InterfazPlantaCtrlTemp
                     Title = "Entrada Calefactor",
                     Values = entradaCal,
                     Fill = fillBrushCal,
-                    Stroke = System.Windows.Media.Brushes.Orange,
+                    Stroke = System.Windows.Media.Brushes.Red,
                     PointGeometry = DefaultGeometries.Circle,
                     PointGeometrySize = 8,
                     StrokeThickness = 2  // Añadido para mejor visibilidad
@@ -454,48 +549,6 @@ namespace InterfazPlantaCtrlTemp
             }
         }
 
-        // Método para el control manual de la maqueta con el botón Cargar
-        private async void BtnCargar_Click(object sender, EventArgs e)
-        {
-            buttonCargar.Enabled = false; // Deshabilitar botón durante la operación
-            buttonCargarEntradas.Enabled = false; // Deshabilitar el botón de cargar entradas durante la operación
-            entradaChart.Visible = false; // Ocultar el gráfico de entradas
-            buttonOcultar.Visible = false; // Ocultar el botón de ocultar el gráfico de entradas
-
-            tempChart.Size = new Size(810, 660); // Ajustar el tamaño del gráfico de temperatura
-
-            try
-            {
-                // Limpiar gráfico
-                tempChart.Series.Clear();
-                temperaturas.Clear();
-                tiempos.Clear();
-                tempChart.Update(true, true);
-                Debug.WriteLine("Gráfico actualizado");
-
-                // Configurar el gráfico inicial
-                ConfigurarGraficoTempInicial();
-                ConfigurarGraficoEntradas();
-
-                EnviarDatos($"v{numericVelVent.Value.ToString()}V");
-                EnviarDatos($"n{numericPotCal.Value.ToString()}N");
-
-                cronometro.Restart();
-
-                // Iniciar la recepción de datos
-                await Task.Run(() => RecibirDatos((int)numericTEjecucion.Value + 1, (float)numericVelVent.Value, 1000));
-
-                Debug.WriteLine("Fin de RecibirDatos");
-            }
-            finally
-            {
-                // Rehabilitar botón al finalizar
-                buttonCargar.Enabled = true;
-                buttonCargarEntradas.Enabled = true;
-            }
-
-        }
-
         // Control de Entradas del Sistema
         // Metodos para asegurar que el valor de TFinal sea mayor que el de TInicio
         private void numericRampVentTInicio_ValueChanged(object sender, EventArgs e)
@@ -636,37 +689,33 @@ namespace InterfazPlantaCtrlTemp
                     if (checkEscVent.Checked && !checkEscCal.Checked) // Solo entrada escalón para el ventilador
                     {
                         Debug.WriteLine("Entrada escalón para el Ventilador");
-                        // Valores iniciales antes de la entrada escalón
-                        EnviarDatos("v40V");
-                        EnviarDatos("n0N");
 
                         // Iniciar la recepción de datos
                         int valorPreEsc = (int)numericEscVentTInicio.Value;
                         Debug.WriteLine($"Tiempo previo al escalón: {valorPreEsc}");
-                        await Task.Run(() => RecibirDatos(valorPreEsc, 40, 1000));
+                        await Task.Run(() => RecibirDatos(valorPreEsc, ventilador.GetVelocidad(), 1000));
                         Debug.WriteLine("Fin de RecibirDatos");
 
                         // Ajustar los valores enviados a los seleccionados por el usuario para la entrada escalón
-                        EnviarDatos($"v{numericEscVentConsg.Value.ToString()}V");
+                        ventilador.SetVelocidad((int)numericEscVentConsg.Value);
+                        EnviarDatos($"v{ventilador.GetVelocidad().ToString()}V");
                         int valorPostEsc = (int)numericTEjecucion.Value + 1 - (int)numericEscVentTInicio.Value;
                         Debug.WriteLine($"Tiempo posterior al escalón: {valorPostEsc}");
-                        await Task.Run(() => RecibirDatos(valorPostEsc, (float)numericEscVentConsg.Value, 1000));
+                        await Task.Run(() => RecibirDatos(valorPostEsc, ventilador.GetVelocidad(), 1000));
                         Debug.WriteLine("Fin de RecibirDatos");
                     }
                     else if (!checkEscVent.Checked && checkEscCal.Checked) // Solo entrada escalón para el calefactor
                     {
                         Debug.WriteLine("Entrada escalón para el Calefactor");
-                        // Valores iniciales antes de la entrada escalón
-                        EnviarDatos("v40V");
-                        EnviarDatos("n0N");
 
                         // Iniciar la recepción de datos
                         int valorPreEsc = (int)numericEscCalTInicio.Value;
                         Debug.WriteLine($"Tiempo previo al escalón: {valorPreEsc}");
-                        await Task.Run(() => RecibirDatos(valorPreEsc, 0, 1000));
+                        await Task.Run(() => RecibirDatos(valorPreEsc, calefactor.GetPotencia(), 1000));
                         Debug.WriteLine("Fin de RecibirDatos");
 
                         // Ajustar los valores enviados a los seleccionados por el usuario para la entrada escalón
+                        calefactor.SetPotencia((int)numericEscCalConsg.Value);
                         EnviarDatos($"n{numericEscCalConsg.Value.ToString()}N");
 
                         // Iniciar la recepción de datos
