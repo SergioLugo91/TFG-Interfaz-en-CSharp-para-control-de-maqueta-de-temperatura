@@ -49,6 +49,8 @@
             this.label5 = new System.Windows.Forms.Label();
             this.checkRampCal = new System.Windows.Forms.CheckBox();
             this.checkRampVent = new System.Windows.Forms.CheckBox();
+            this.pictureBox6 = new System.Windows.Forms.PictureBox();
+            this.pictureBox7 = new System.Windows.Forms.PictureBox();
             this.numericRampVentTInicio = new System.Windows.Forms.NumericUpDown();
             this.label6 = new System.Windows.Forms.Label();
             this.numericRampVentConsg = new System.Windows.Forms.NumericUpDown();
@@ -59,6 +61,10 @@
             this.label3 = new System.Windows.Forms.Label();
             this.checkEscCal = new System.Windows.Forms.CheckBox();
             this.checkEscVent = new System.Windows.Forms.CheckBox();
+            this.pictureBox5 = new System.Windows.Forms.PictureBox();
+            this.pictureBox4 = new System.Windows.Forms.PictureBox();
+            this.pictureBox3 = new System.Windows.Forms.PictureBox();
+            this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.checkRampa = new System.Windows.Forms.CheckBox();
             this.checkEscalon = new System.Windows.Forms.CheckBox();
             this.buttonCargarEntradas = new System.Windows.Forms.Button();
@@ -71,7 +77,19 @@
             this.labelConsignaVent = new System.Windows.Forms.Label();
             this.numericRampCalTFinal = new System.Windows.Forms.NumericUpDown();
             this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.buttonCargarLazoCerrado = new System.Windows.Forms.Button();
+            this.pictureBox8 = new System.Windows.Forms.PictureBox();
+            this.checkPID = new System.Windows.Forms.CheckBox();
+            this.label8 = new System.Windows.Forms.Label();
+            this.checkKd = new System.Windows.Forms.CheckBox();
+            this.checkKi = new System.Windows.Forms.CheckBox();
+            this.checkKp = new System.Windows.Forms.CheckBox();
+            this.numericKd = new System.Windows.Forms.NumericUpDown();
+            this.numericKi = new System.Windows.Forms.NumericUpDown();
+            this.numericKp = new System.Windows.Forms.NumericUpDown();
+            this.numericConsgTemp = new System.Windows.Forms.NumericUpDown();
             this.groupGrafico = new System.Windows.Forms.GroupBox();
+            this.buttonOcultar = new System.Windows.Forms.Button();
             this.entradaChart = new LiveCharts.WinForms.CartesianChart();
             this.tempChart = new LiveCharts.WinForms.CartesianChart();
             this.comBox = new System.Windows.Forms.ComboBox();
@@ -82,25 +100,7 @@
             this.labelTEjec = new System.Windows.Forms.Label();
             this.numericTEjecucion = new System.Windows.Forms.NumericUpDown();
             this.labelTEjecucion = new System.Windows.Forms.Label();
-            this.numericConsgTemp = new System.Windows.Forms.NumericUpDown();
-            this.numericKp = new System.Windows.Forms.NumericUpDown();
-            this.numericKi = new System.Windows.Forms.NumericUpDown();
-            this.numericKd = new System.Windows.Forms.NumericUpDown();
-            this.checkKp = new System.Windows.Forms.CheckBox();
-            this.checkKi = new System.Windows.Forms.CheckBox();
-            this.checkKd = new System.Windows.Forms.CheckBox();
-            this.label8 = new System.Windows.Forms.Label();
-            this.checkPID = new System.Windows.Forms.CheckBox();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.buttonOcultar = new System.Windows.Forms.Button();
-            this.pictureBox6 = new System.Windows.Forms.PictureBox();
-            this.pictureBox7 = new System.Windows.Forms.PictureBox();
-            this.pictureBox5 = new System.Windows.Forms.PictureBox();
-            this.pictureBox4 = new System.Windows.Forms.PictureBox();
-            this.pictureBox3 = new System.Windows.Forms.PictureBox();
-            this.pictureBox2 = new System.Windows.Forms.PictureBox();
-            this.pictureBox8 = new System.Windows.Forms.PictureBox();
-            this.buttonCargarLazoCerrado = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.numericVelVent)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericPotCal)).BeginInit();
             this.groupCtrlMaqueta.SuspendLayout();
@@ -111,31 +111,31 @@
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericRampCalTInicio)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericRampCalConsg)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox6)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox7)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericRampVentTInicio)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericRampVentConsg)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericEscCalTInicio)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericEscCalConsg)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox5)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericRampVentTFinal)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericEscVentTInicio)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericEscVentConsg)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericRampCalTFinal)).BeginInit();
             this.tabPage3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox8)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericKd)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericKi)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericKp)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericConsgTemp)).BeginInit();
             this.groupGrafico.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericTEjecucion)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericConsgTemp)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericKp)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericKi)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericKd)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox6)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox7)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox5)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox8)).BeginInit();
             this.SuspendLayout();
             // 
             // title
@@ -400,6 +400,26 @@
             this.checkRampVent.Text = "Ventilador";
             this.checkRampVent.UseVisualStyleBackColor = true;
             // 
+            // pictureBox6
+            // 
+            this.pictureBox6.Image = global::InterfazPlantaCtrlTemp.Properties.Resources.heating_element_filled_line_icon_vector1;
+            this.pictureBox6.Location = new System.Drawing.Point(231, 251);
+            this.pictureBox6.Name = "pictureBox6";
+            this.pictureBox6.Size = new System.Drawing.Size(40, 40);
+            this.pictureBox6.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pictureBox6.TabIndex = 40;
+            this.pictureBox6.TabStop = false;
+            // 
+            // pictureBox7
+            // 
+            this.pictureBox7.Image = global::InterfazPlantaCtrlTemp.Properties.Resources._72502;
+            this.pictureBox7.Location = new System.Drawing.Point(231, 131);
+            this.pictureBox7.Name = "pictureBox7";
+            this.pictureBox7.Size = new System.Drawing.Size(35, 35);
+            this.pictureBox7.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pictureBox7.TabIndex = 35;
+            this.pictureBox7.TabStop = false;
+            // 
             // numericRampVentTInicio
             // 
             this.numericRampVentTInicio.DecimalPlaces = 1;
@@ -525,6 +545,46 @@
             this.checkEscVent.TabIndex = 29;
             this.checkEscVent.Text = "Ventilador";
             this.checkEscVent.UseVisualStyleBackColor = true;
+            // 
+            // pictureBox5
+            // 
+            this.pictureBox5.Image = global::InterfazPlantaCtrlTemp.Properties.Resources.Captura_de_pantalla_2025_02_05_142444;
+            this.pictureBox5.Location = new System.Drawing.Point(277, 11);
+            this.pictureBox5.Name = "pictureBox5";
+            this.pictureBox5.Size = new System.Drawing.Size(50, 50);
+            this.pictureBox5.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pictureBox5.TabIndex = 26;
+            this.pictureBox5.TabStop = false;
+            // 
+            // pictureBox4
+            // 
+            this.pictureBox4.Image = global::InterfazPlantaCtrlTemp.Properties.Resources.heating_element_filled_line_icon_vector1;
+            this.pictureBox4.Location = new System.Drawing.Point(23, 251);
+            this.pictureBox4.Name = "pictureBox4";
+            this.pictureBox4.Size = new System.Drawing.Size(40, 40);
+            this.pictureBox4.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pictureBox4.TabIndex = 25;
+            this.pictureBox4.TabStop = false;
+            // 
+            // pictureBox3
+            // 
+            this.pictureBox3.Image = global::InterfazPlantaCtrlTemp.Properties.Resources.Captura_de_pantalla_2025_02_05_141935;
+            this.pictureBox3.Location = new System.Drawing.Point(77, 11);
+            this.pictureBox3.Name = "pictureBox3";
+            this.pictureBox3.Size = new System.Drawing.Size(50, 50);
+            this.pictureBox3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pictureBox3.TabIndex = 24;
+            this.pictureBox3.TabStop = false;
+            // 
+            // pictureBox2
+            // 
+            this.pictureBox2.Image = global::InterfazPlantaCtrlTemp.Properties.Resources._72502;
+            this.pictureBox2.Location = new System.Drawing.Point(23, 131);
+            this.pictureBox2.Name = "pictureBox2";
+            this.pictureBox2.Size = new System.Drawing.Size(35, 35);
+            this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pictureBox2.TabIndex = 0;
+            this.pictureBox2.TabStop = false;
             // 
             // checkRampa
             // 
@@ -703,6 +763,103 @@
             this.tabPage3.TabIndex = 4;
             this.tabPage3.Text = "Control en Lazo Cerrado";
             // 
+            // buttonCargarLazoCerrado
+            // 
+            this.buttonCargarLazoCerrado.Location = new System.Drawing.Point(319, 379);
+            this.buttonCargarLazoCerrado.Name = "buttonCargarLazoCerrado";
+            this.buttonCargarLazoCerrado.Size = new System.Drawing.Size(75, 23);
+            this.buttonCargarLazoCerrado.TabIndex = 30;
+            this.buttonCargarLazoCerrado.Text = "Cargar";
+            this.buttonCargarLazoCerrado.UseVisualStyleBackColor = true;
+            this.buttonCargarLazoCerrado.Click += new System.EventHandler(this.buttonCargarLazoCerrado_Click);
+            // 
+            // pictureBox8
+            // 
+            this.pictureBox8.Image = global::InterfazPlantaCtrlTemp.Properties.Resources.Captura_de_pantalla_2025_09_19_125114;
+            this.pictureBox8.Location = new System.Drawing.Point(173, 27);
+            this.pictureBox8.Name = "pictureBox8";
+            this.pictureBox8.Size = new System.Drawing.Size(50, 50);
+            this.pictureBox8.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pictureBox8.TabIndex = 29;
+            this.pictureBox8.TabStop = false;
+            // 
+            // checkPID
+            // 
+            this.checkPID.AutoSize = true;
+            this.checkPID.Location = new System.Drawing.Point(144, 83);
+            this.checkPID.Name = "checkPID";
+            this.checkPID.Size = new System.Drawing.Size(101, 17);
+            this.checkPID.TabIndex = 28;
+            this.checkPID.Text = "Controlador PID";
+            this.checkPID.UseVisualStyleBackColor = true;
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(131, 122);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(129, 13);
+            this.label8.TabIndex = 27;
+            this.label8.Text = "Consigna de Temperatura";
+            // 
+            // checkKd
+            // 
+            this.checkKd.AutoSize = true;
+            this.checkKd.Location = new System.Drawing.Point(46, 263);
+            this.checkKd.Name = "checkKd";
+            this.checkKd.Size = new System.Drawing.Size(110, 17);
+            this.checkKd.TabIndex = 26;
+            this.checkKd.Text = "Acción Derivativa";
+            this.checkKd.UseVisualStyleBackColor = true;
+            // 
+            // checkKi
+            // 
+            this.checkKi.AutoSize = true;
+            this.checkKi.Location = new System.Drawing.Point(46, 227);
+            this.checkKi.Name = "checkKi";
+            this.checkKi.Size = new System.Drawing.Size(97, 17);
+            this.checkKi.TabIndex = 25;
+            this.checkKi.Text = "Acción Integral";
+            this.checkKi.UseVisualStyleBackColor = true;
+            // 
+            // checkKp
+            // 
+            this.checkKp.AutoSize = true;
+            this.checkKp.Location = new System.Drawing.Point(47, 190);
+            this.checkKp.Name = "checkKp";
+            this.checkKp.Size = new System.Drawing.Size(121, 17);
+            this.checkKp.TabIndex = 24;
+            this.checkKp.Text = "Acción Proporcional";
+            this.checkKp.UseVisualStyleBackColor = true;
+            // 
+            // numericKd
+            // 
+            this.numericKd.Location = new System.Drawing.Point(173, 260);
+            this.numericKd.Name = "numericKd";
+            this.numericKd.Size = new System.Drawing.Size(120, 20);
+            this.numericKd.TabIndex = 3;
+            // 
+            // numericKi
+            // 
+            this.numericKi.Location = new System.Drawing.Point(173, 224);
+            this.numericKi.Name = "numericKi";
+            this.numericKi.Size = new System.Drawing.Size(120, 20);
+            this.numericKi.TabIndex = 2;
+            // 
+            // numericKp
+            // 
+            this.numericKp.Location = new System.Drawing.Point(173, 187);
+            this.numericKp.Name = "numericKp";
+            this.numericKp.Size = new System.Drawing.Size(120, 20);
+            this.numericKp.TabIndex = 1;
+            // 
+            // numericConsgTemp
+            // 
+            this.numericConsgTemp.Location = new System.Drawing.Point(134, 138);
+            this.numericConsgTemp.Name = "numericConsgTemp";
+            this.numericConsgTemp.Size = new System.Drawing.Size(120, 20);
+            this.numericConsgTemp.TabIndex = 0;
+            // 
             // groupGrafico
             // 
             this.groupGrafico.Controls.Add(this.buttonOcultar);
@@ -714,6 +871,18 @@
             this.groupGrafico.TabIndex = 5;
             this.groupGrafico.TabStop = false;
             this.groupGrafico.Text = "Gráfica de Temperatura";
+            // 
+            // buttonOcultar
+            // 
+            this.buttonOcultar.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("buttonOcultar.BackgroundImage")));
+            this.buttonOcultar.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.buttonOcultar.Location = new System.Drawing.Point(7, 684);
+            this.buttonOcultar.Name = "buttonOcultar";
+            this.buttonOcultar.Size = new System.Drawing.Size(34, 24);
+            this.buttonOcultar.TabIndex = 2;
+            this.buttonOcultar.UseVisualStyleBackColor = true;
+            this.buttonOcultar.Visible = false;
+            this.buttonOcultar.Click += new System.EventHandler(this.buttonOcultar_Click);
             // 
             // entradaChart
             // 
@@ -822,83 +991,6 @@
             this.labelTEjecucion.TabIndex = 6;
             this.labelTEjecucion.Text = "Tiempo de Ejecución:";
             // 
-            // numericConsgTemp
-            // 
-            this.numericConsgTemp.Location = new System.Drawing.Point(175, 149);
-            this.numericConsgTemp.Name = "numericConsgTemp";
-            this.numericConsgTemp.Size = new System.Drawing.Size(120, 20);
-            this.numericConsgTemp.TabIndex = 0;
-            // 
-            // numericKp
-            // 
-            this.numericKp.Location = new System.Drawing.Point(173, 187);
-            this.numericKp.Name = "numericKp";
-            this.numericKp.Size = new System.Drawing.Size(120, 20);
-            this.numericKp.TabIndex = 1;
-            // 
-            // numericKi
-            // 
-            this.numericKi.Location = new System.Drawing.Point(173, 224);
-            this.numericKi.Name = "numericKi";
-            this.numericKi.Size = new System.Drawing.Size(120, 20);
-            this.numericKi.TabIndex = 2;
-            // 
-            // numericKd
-            // 
-            this.numericKd.Location = new System.Drawing.Point(173, 260);
-            this.numericKd.Name = "numericKd";
-            this.numericKd.Size = new System.Drawing.Size(120, 20);
-            this.numericKd.TabIndex = 3;
-            // 
-            // checkKp
-            // 
-            this.checkKp.AutoSize = true;
-            this.checkKp.Location = new System.Drawing.Point(47, 190);
-            this.checkKp.Name = "checkKp";
-            this.checkKp.Size = new System.Drawing.Size(121, 17);
-            this.checkKp.TabIndex = 24;
-            this.checkKp.Text = "Acción Proporcional";
-            this.checkKp.UseVisualStyleBackColor = true;
-            // 
-            // checkKi
-            // 
-            this.checkKi.AutoSize = true;
-            this.checkKi.Location = new System.Drawing.Point(46, 227);
-            this.checkKi.Name = "checkKi";
-            this.checkKi.Size = new System.Drawing.Size(97, 17);
-            this.checkKi.TabIndex = 25;
-            this.checkKi.Text = "Acción Integral";
-            this.checkKi.UseVisualStyleBackColor = true;
-            // 
-            // checkKd
-            // 
-            this.checkKd.AutoSize = true;
-            this.checkKd.Location = new System.Drawing.Point(46, 263);
-            this.checkKd.Name = "checkKd";
-            this.checkKd.Size = new System.Drawing.Size(110, 17);
-            this.checkKd.TabIndex = 26;
-            this.checkKd.Text = "Acción Derivativa";
-            this.checkKd.UseVisualStyleBackColor = true;
-            // 
-            // label8
-            // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(172, 133);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(129, 13);
-            this.label8.TabIndex = 27;
-            this.label8.Text = "Consigna de Temperatura";
-            // 
-            // checkPID
-            // 
-            this.checkPID.AutoSize = true;
-            this.checkPID.Location = new System.Drawing.Point(144, 83);
-            this.checkPID.Name = "checkPID";
-            this.checkPID.Size = new System.Drawing.Size(101, 17);
-            this.checkPID.TabIndex = 28;
-            this.checkPID.Text = "Controlador PID";
-            this.checkPID.UseVisualStyleBackColor = true;
-            // 
             // pictureBox1
             // 
             this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
@@ -908,98 +1000,6 @@
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox1.TabIndex = 10;
             this.pictureBox1.TabStop = false;
-            // 
-            // buttonOcultar
-            // 
-            this.buttonOcultar.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("buttonOcultar.BackgroundImage")));
-            this.buttonOcultar.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.buttonOcultar.Location = new System.Drawing.Point(7, 684);
-            this.buttonOcultar.Name = "buttonOcultar";
-            this.buttonOcultar.Size = new System.Drawing.Size(34, 24);
-            this.buttonOcultar.TabIndex = 2;
-            this.buttonOcultar.UseVisualStyleBackColor = true;
-            this.buttonOcultar.Visible = false;
-            this.buttonOcultar.Click += new System.EventHandler(this.buttonOcultar_Click);
-            // 
-            // pictureBox6
-            // 
-            this.pictureBox6.Image = global::InterfazPlantaCtrlTemp.Properties.Resources.heating_element_filled_line_icon_vector1;
-            this.pictureBox6.Location = new System.Drawing.Point(231, 251);
-            this.pictureBox6.Name = "pictureBox6";
-            this.pictureBox6.Size = new System.Drawing.Size(40, 40);
-            this.pictureBox6.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pictureBox6.TabIndex = 40;
-            this.pictureBox6.TabStop = false;
-            // 
-            // pictureBox7
-            // 
-            this.pictureBox7.Image = global::InterfazPlantaCtrlTemp.Properties.Resources._72502;
-            this.pictureBox7.Location = new System.Drawing.Point(231, 131);
-            this.pictureBox7.Name = "pictureBox7";
-            this.pictureBox7.Size = new System.Drawing.Size(35, 35);
-            this.pictureBox7.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pictureBox7.TabIndex = 35;
-            this.pictureBox7.TabStop = false;
-            // 
-            // pictureBox5
-            // 
-            this.pictureBox5.Image = global::InterfazPlantaCtrlTemp.Properties.Resources.Captura_de_pantalla_2025_02_05_142444;
-            this.pictureBox5.Location = new System.Drawing.Point(277, 11);
-            this.pictureBox5.Name = "pictureBox5";
-            this.pictureBox5.Size = new System.Drawing.Size(50, 50);
-            this.pictureBox5.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pictureBox5.TabIndex = 26;
-            this.pictureBox5.TabStop = false;
-            // 
-            // pictureBox4
-            // 
-            this.pictureBox4.Image = global::InterfazPlantaCtrlTemp.Properties.Resources.heating_element_filled_line_icon_vector1;
-            this.pictureBox4.Location = new System.Drawing.Point(23, 251);
-            this.pictureBox4.Name = "pictureBox4";
-            this.pictureBox4.Size = new System.Drawing.Size(40, 40);
-            this.pictureBox4.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pictureBox4.TabIndex = 25;
-            this.pictureBox4.TabStop = false;
-            // 
-            // pictureBox3
-            // 
-            this.pictureBox3.Image = global::InterfazPlantaCtrlTemp.Properties.Resources.Captura_de_pantalla_2025_02_05_141935;
-            this.pictureBox3.Location = new System.Drawing.Point(77, 11);
-            this.pictureBox3.Name = "pictureBox3";
-            this.pictureBox3.Size = new System.Drawing.Size(50, 50);
-            this.pictureBox3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pictureBox3.TabIndex = 24;
-            this.pictureBox3.TabStop = false;
-            // 
-            // pictureBox2
-            // 
-            this.pictureBox2.Image = global::InterfazPlantaCtrlTemp.Properties.Resources._72502;
-            this.pictureBox2.Location = new System.Drawing.Point(23, 131);
-            this.pictureBox2.Name = "pictureBox2";
-            this.pictureBox2.Size = new System.Drawing.Size(35, 35);
-            this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pictureBox2.TabIndex = 0;
-            this.pictureBox2.TabStop = false;
-            // 
-            // pictureBox8
-            // 
-            this.pictureBox8.Image = global::InterfazPlantaCtrlTemp.Properties.Resources.Captura_de_pantalla_2025_09_19_125114;
-            this.pictureBox8.Location = new System.Drawing.Point(173, 22);
-            this.pictureBox8.Name = "pictureBox8";
-            this.pictureBox8.Size = new System.Drawing.Size(50, 50);
-            this.pictureBox8.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pictureBox8.TabIndex = 29;
-            this.pictureBox8.TabStop = false;
-            // 
-            // buttonCargarLazoCerrado
-            // 
-            this.buttonCargarLazoCerrado.Location = new System.Drawing.Point(319, 379);
-            this.buttonCargarLazoCerrado.Name = "buttonCargarLazoCerrado";
-            this.buttonCargarLazoCerrado.Size = new System.Drawing.Size(75, 23);
-            this.buttonCargarLazoCerrado.TabIndex = 30;
-            this.buttonCargarLazoCerrado.Text = "Cargar";
-            this.buttonCargarLazoCerrado.UseVisualStyleBackColor = true;
-            this.buttonCargarLazoCerrado.Click += new System.EventHandler(this.buttonCargarLazoCerrado_Click);
             // 
             // Form1
             // 
@@ -1027,34 +1027,34 @@
             this.tabPage1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericRampCalTInicio)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericRampCalConsg)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox6)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox7)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericRampVentTInicio)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericRampVentConsg)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericEscCalTInicio)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericEscCalConsg)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox5)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericRampVentTFinal)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericEscVentTInicio)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericEscVentConsg)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericRampCalTFinal)).EndInit();
             this.tabPage3.ResumeLayout(false);
             this.tabPage3.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox8)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericKd)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericKi)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericKp)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericConsgTemp)).EndInit();
             this.groupGrafico.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericTEjecucion)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericConsgTemp)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericKp)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericKi)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericKd)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox6)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox7)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox5)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox8)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 

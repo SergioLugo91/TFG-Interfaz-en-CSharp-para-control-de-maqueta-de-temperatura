@@ -28,6 +28,8 @@ namespace InterfazPlantaCtrlTemp
         private ChartValues<double> entradaCal = new ChartValues<double>();
         private ChartValues<double> entradaVent = new ChartValues<double>();
 
+        private AxisSection setpointSection;
+
         public Form1()
         {
             InitializeComponent();
@@ -145,11 +147,8 @@ namespace InterfazPlantaCtrlTemp
                     buttonCargarEntradas.Enabled = true;
 
                     // Detener el timer si lo encontramos
-                    if (sender is System.Windows.Forms.Timer timer)
-                    {
-                        timer.Stop();
-                        timer.Dispose();
-                    }
+                    portCheckTimer.Stop();
+                    portCheckTimer.Dispose();
                 }
             }
             catch (IOException)
@@ -213,8 +212,8 @@ namespace InterfazPlantaCtrlTemp
             {
                 Title = "Tiempo (s)",
                 LabelFormatter = value => value.ToString("N1") + "s",
-                MinValue = 0,
-                MaxValue = 30 // Establecer el máximo inicial según los puntos esperados
+                MinValue = double.NaN, // Automático
+                MaxValue = double.NaN  // Automático
             });
 
             tempChart.AxisY.Clear();
@@ -255,7 +254,7 @@ namespace InterfazPlantaCtrlTemp
                 Title = "Tiempo (s)",
                 LabelFormatter = value => value.ToString("N1") + "s",
                 MinValue = 0,
-                MaxValue = 30 // Establecer el máximo inicial según los puntos esperados
+                MaxValue = (int)numericTEjecucion.Value // Establecer el máximo inicial según los puntos esperados
             });
 
             entradaChart.AxisY.Clear();
@@ -309,7 +308,7 @@ namespace InterfazPlantaCtrlTemp
                 Title = "Tiempo (s)",
                 LabelFormatter = value => value.ToString("N1") + "s",
                 MinValue = 0,
-                MaxValue = 30 // Establecer el máximo inicial según los puntos esperados
+                MaxValue = (int)numericTEjecucion.Value // Establecer el máximo inicial según los puntos esperados
             });
 
             entradaChart.AxisY.Clear();
@@ -492,6 +491,7 @@ namespace InterfazPlantaCtrlTemp
             {
                 // Rehabilitar botón al finalizar
                 buttonCargar.Enabled = true;
+                buttonCargarEntradas.Enabled = true;
             }
 
         }
@@ -537,6 +537,7 @@ namespace InterfazPlantaCtrlTemp
             if (checkEscalon.Checked)
             {
                 checkRampa.Checked = false; // Desmarcar la entrada rampa si se selecciona escalón
+                buttonCargarEntradas.Enabled = true;
 
                 // Habilitar los controles de entrada escalón
                 numericEscVentConsg.Enabled = true;
@@ -567,6 +568,7 @@ namespace InterfazPlantaCtrlTemp
             if (checkRampa.Checked)
             {
                 checkEscalon.Checked = false; // Desmarcar la entrada escalón si se selecciona rampa
+                buttonCargarEntradas.Enabled = true;
 
                 // Habilitar los controles de entrada rampa
                 numericRampVentConsg.Enabled = true;
@@ -895,6 +897,7 @@ namespace InterfazPlantaCtrlTemp
             {
                 // Rehabilitar botón al finalizar
                 buttonCargarEntradas.Enabled = true;
+                buttonCargar.Enabled = true;
             }
         }
 
@@ -918,12 +921,16 @@ namespace InterfazPlantaCtrlTemp
 
         private void calculoComando(float Kp, float Ki, float Kd)
         {
-            float comando;
+            int comando;
             float temperatura = 0;
-            int dt = 10;
+            int dt = 10; // ms
+            float dtSec = dt / 1000f;
             float error = 0;
             float errorPrev = 0;
-            float integralTotal = 0;
+            float integralTotal = 0f;
+
+            const float outMin = 0f;
+            const float outMax = 85f;
 
             for (double i = 0; i < (double)numericTEjecucion.Value; i += (dt/1000D)) 
             {
@@ -943,7 +950,14 @@ namespace InterfazPlantaCtrlTemp
                     Debug.WriteLine($"Error actual: {error}");
 
                     // Cálculo de la integral del error
-                    integralTotal += error * dt;
+                    integralTotal += error * dtSec;
+
+                    // Anti-windup: limitar integral
+                    if (Math.Abs(Ki) > 1e-6f)
+                    {
+                        float integralLimit = outMax / Math.Abs(Ki);
+                        integralTotal = Math.Max(-integralLimit, Math.Min(integralTotal, integralLimit));
+                    }
                 }
                 catch (TimeoutException)
                 {
@@ -952,26 +966,19 @@ namespace InterfazPlantaCtrlTemp
 
                 float gananciaProporcional = Kp * error;
                 float gananciaIntegral = Ki * integralTotal;
-                float gananciaDerivativa = Kd * (error - errorPrev) / dt;
+                float gananciaDerivativa = Kd * (error - errorPrev) / dtSec;
 
                 errorPrev = error;
 
-                comando = gananciaProporcional + gananciaIntegral + gananciaDerivativa;
+                // Salida sin saturar (valor calculado por PID)
+                float comandoRaw = gananciaProporcional + gananciaIntegral + gananciaDerivativa;
 
-                if (comando < 0) // Si el comando es negativo se quiere enfriar el sistema
-                {
-                    comando = Math.Max(40, Math.Min(comando, 100));
-                    EnviarDatos($"v{comando}V");
-                }
-                else if (comando > 0) // Si el comando es positivo se quiere calentar el sistema
-                {
-                    comando = Math.Max(0, Math.Min(comando, 85));
-                    EnviarDatos($"n{comando}N");
-                }
-                
+                // Se limita el comando al rango permitido (0-85) y se envía al calefactor
+                comando = (int)Math.Round(Math.Max(outMin, Math.Min(comandoRaw, outMax)));
+
+                EnviarDatos($"n{comando}N"); 
                 RecibirDatos(1, comando, dt);
             }
-            
         }
 
         private void buttonCargarLazoCerrado_Click(object sender, EventArgs e)
@@ -986,11 +993,26 @@ namespace InterfazPlantaCtrlTemp
             tiempos.Clear();
             tempChart.Update(true, true);
             Debug.WriteLine("Gráfico actualizado");
+
             // Configurar el gráfico inicial
             ConfigurarGraficoTempInicial();
+            // Crear o actualizar la línea horizontal de la consigna
+            double consigna = (double)numericConsgTemp.Value;
+            setpointSection = new AxisSection
+            {
+                Value = consigna,
+                Stroke = System.Windows.Media.Brushes.Red,
+                StrokeThickness = 2,
+                SectionWidth = 0 // 0 para una línea en lugar de una franja
+            };
+
+            // Asignar la sección al eje Y (reemplaza secciones previas)
+            tempChart.AxisY[0].Sections = new SectionsCollection { setpointSection };
+
             ConfigurarGraficoEntradas();
 
             cronometro.Restart();
+            EnviarDatos("v40V"); // Velocidad fija del ventilador al 40%
 
             try
             {
@@ -1027,9 +1049,19 @@ namespace InterfazPlantaCtrlTemp
                     MessageBox.Show("Seleccione un tipo de control en lazo cerrado válido");
                 }
             }
-            catch
-            {  
+            catch (Exception ex)
+            {
+                // Registrar para depuración
+                Debug.WriteLine($"Error en lazo cerrado: {ex}");
 
+                // Informar al usuario (mensaje breve y amigable)
+                MessageBox.Show($"Se produjo un error durante el control en lazo cerrado:\n{ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                // Restaurar estado de la interfaz
+                checkKp.Enabled = true;
+                checkKi.Enabled = true;
+                checkKd.Enabled = true;
+                buttonCargarLazoCerrado.Enabled = true;
             }
         }
     }
