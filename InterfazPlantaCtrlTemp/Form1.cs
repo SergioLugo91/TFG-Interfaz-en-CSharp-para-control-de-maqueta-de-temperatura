@@ -19,7 +19,7 @@ namespace InterfazPlantaCtrlTemp
     {
         // Declaración de variables globales
         System.IO.Ports.SerialPort PuertoArduino;
-        Stopwatch cronometro;
+        readonly Stopwatch cronometro;
         private System.Windows.Forms.Timer portCheckTimer;
 
         private int valorPendienteVentVel = -1;
@@ -54,22 +54,24 @@ namespace InterfazPlantaCtrlTemp
             // Inicializar el cronómetro
             cronometro = new Stopwatch();
 
-            // Asociar el evento .ValueChanged con el método _ValueChanged
-            numericVelVent.ValueChanged += numericVelVent_ValueChanged;
-            numericPotCal.ValueChanged += numericPotCal_ValueChanged;
-            trackVelVent.MouseUp += trackVelVent_MouseUp;
-            trackPotCal.MouseUp += trackPotCal_MouseUp;
+            // Suscripciones de eventos para los controles de la interfaz
+            numericVelVent.ValueChanged += NumericVelVent_ValueChanged;
+            numericPotCal.ValueChanged += NumericPotCal_ValueChanged;
+            trackVelVent.MouseUp += TrackVelVent_MouseUp;
+            trackPotCal.MouseUp += TrackPotCal_MouseUp;
 
             numericRampVentTInicio.ValueChanged += numericRampVentTInicio_ValueChanged;
             numericRampVentTFinal.ValueChanged += numericRampVentTFinal_ValueChanged;
             numericRampCalTInicio.ValueChanged += numericRampCalTInicio_ValueChanged;
             numericRampCalTFinal.ValueChanged += numericRampCalTFinal_ValueChanged;
 
-            numericTEjecucion.ValueChanged += numericTEjecucion_ValueChanged;
+            numericTEjecucionAuto.ValueChanged += NumericTEjecucion_ValueChanged;
+            numericTEjecucionLC.ValueChanged += NumericTEjecucionLC_ValueChanged;
 
-            // Asociar el evento .CheckedChanged con el método _CheckedChanged
             checkEscalon.CheckedChanged += checkEscalon_CheckedChanged;
             checkRampa.CheckedChanged += checkRampa_CheckedChanged;
+
+            checkCrtlManual.CheckedChanged += CheckCrtlManual_CheckedChanged;
 
             // Asociar el evento FormClosing con el método Form1_FormClosing
             this.FormClosing += new FormClosingEventHandler(Form1_FormClosing);
@@ -151,6 +153,10 @@ namespace InterfazPlantaCtrlTemp
             // Set up de los botones de la interfaz
             buttonCargarEntradas.Enabled = false;
             checkCrtlManual.Enabled = false;
+            numericVelVent.Enabled = false;
+            trackVelVent.Enabled = false;
+            numericPotCal.Enabled = false;
+            trackPotCal.Enabled = false;
         }
 
         // Método para verificar los puertos seriales disponibles
@@ -197,7 +203,7 @@ namespace InterfazPlantaCtrlTemp
         }
 
         // Método para conectar el puerto serial con el botón conectar
-        private void btnConectar_Click(object sender, EventArgs e)
+        private void BtnConectar_Click(object sender, EventArgs e)
         {
             // Crear Puerto Serial
             try
@@ -236,20 +242,28 @@ namespace InterfazPlantaCtrlTemp
         }
 
         // Método para actualizar el valor máximo de Tfinal para el Ventilador y el Calefactor al cambiar el Tiempo de Ejecución
-        private void numericTEjecucion_ValueChanged(object sender, EventArgs e)
+        private void NumericTEjecucion_ValueChanged(object sender, EventArgs e)
         {
             // Actualizar el valor máximo de TFinal para el Ventilador
-            numericRampVentTFinal.Maximum = numericTEjecucion.Value + 1;
-            numericRampVentTInicio.Maximum = numericTEjecucion.Value;
-            numericEscVentTInicio.Maximum = numericTEjecucion.Value;
+            numericRampVentTFinal.Maximum = numericTEjecucionAuto.Value + 1;
+            numericRampVentTInicio.Maximum = numericTEjecucionAuto.Value;
+            numericEscVentTInicio.Maximum = numericTEjecucionAuto.Value;
             // Actualizar el valor máximo de TFinal para el Calefactor
-            numericRampCalTFinal.Maximum = numericTEjecucion.Value + 1;
-            numericRampCalTInicio.Maximum = numericTEjecucion.Value;
-            numericEscCalTInicio.Maximum = numericTEjecucion.Value;
+            numericRampCalTFinal.Maximum = numericTEjecucionAuto.Value + 1;
+            numericRampCalTInicio.Maximum = numericTEjecucionAuto.Value;
+            numericEscCalTInicio.Maximum = numericTEjecucionAuto.Value;
+
+            // Sincronizar con numericTEjecucionLC
+            numericTEjecucionLC.Value = numericTEjecucionAuto.Value;
+        }
+        private void NumericTEjecucionLC_ValueChanged(object sender, EventArgs e)
+        {
+            // Sincronizar con numericTEjecucionAuto
+            numericTEjecucionAuto.Value = numericTEjecucionLC.Value;
         }
 
         // Métodos para sincronizar la barra con el numericUpDown y cambiar los valores del Ventilador y el Calefactor
-        private void numericVelVent_ValueChanged(object sender, EventArgs e)
+        private void NumericVelVent_ValueChanged(object sender, EventArgs e)
         {
             // Sincronización inmediata de la UI
             trackVelVent.Value = Convert.ToInt32(numericVelVent.Value);
@@ -262,7 +276,7 @@ namespace InterfazPlantaCtrlTemp
                 ventDebounceTimer.Start();
             }
         }
-        private void trackVelVent_MouseUp(object sender, EventArgs e)
+        private void TrackVelVent_MouseUp(object sender, EventArgs e)
         {
             // Asegurar que la UI y pending estén con el valor final
             numericVelVent.Value = trackVelVent.Value;
@@ -272,7 +286,7 @@ namespace InterfazPlantaCtrlTemp
             if (ventDebounceTimer != null) ventDebounceTimer.Stop();
             ApplyPendingVentVel();
         }
-        private void numericPotCal_ValueChanged(object sender, EventArgs e)
+        private void NumericPotCal_ValueChanged(object sender, EventArgs e)
         {
             // Sincronización inmediata de la UI
             trackPotCal.Value = Convert.ToInt32(numericPotCal.Value);
@@ -285,15 +299,23 @@ namespace InterfazPlantaCtrlTemp
                 calDebounceTimer.Start();
             }
         }
-        private void trackPotCal_MouseUp(object sender, EventArgs e)
+        private void TrackPotCal_MouseUp(object sender, EventArgs e)
         {
             // Asegurar que la UI y pending estén con el valor final
             numericPotCal.Value = trackPotCal.Value;
             valorPendienteCalPot = trackPotCal.Value;
 
             // Enviar inmediatamente: parar debounce y aplicar
-            if (calDebounceTimer != null) calDebounceTimer.Stop();
+            calDebounceTimer?.Stop();
             ApplyPendingCalPot();
+        }
+
+        // Obtener el valor máximo del eje X para inicializar el gráfico
+        private double GetMaxEjeX()
+        {
+            // Selecciona el numeric correspondiente según el modo
+            double maxEje = checkCrtlManual.Checked ? (double)numericTamVentana.Value : (double)numericTEjecucionAuto.Value;
+            return maxEje;
         }
 
         // Método para la configuración inicial del gráfico
@@ -317,6 +339,7 @@ namespace InterfazPlantaCtrlTemp
                     StrokeThickness = 2  // Añadido para mejor visibilidad
                 }
             };
+            double MaxEjeX = GetMaxEjeX();
 
             tempChart.AxisX.Clear();
             tempChart.AxisX.Add(new Axis
@@ -324,7 +347,7 @@ namespace InterfazPlantaCtrlTemp
                 Title = "Tiempo (s)",
                 LabelFormatter = value => value.ToString("N1") + "s",
                 MinValue = 0d,
-                MaxValue = (double)numericTEjecucion.Value
+                MaxValue = MaxEjeX
             });
 
             tempChart.AxisY.Clear();
@@ -365,7 +388,7 @@ namespace InterfazPlantaCtrlTemp
                 Title = "Tiempo (s)",
                 LabelFormatter = value => value.ToString("N1") + "s",
                 MinValue = 0d,
-                MaxValue = (int)numericTEjecucion.Value // Establecer el máximo inicial según los puntos esperados
+                MaxValue = (int)numericTEjecucionAuto.Value // Establecer el máximo inicial según los puntos esperados
             });
 
             entradaChart.AxisY.Clear();
@@ -419,7 +442,7 @@ namespace InterfazPlantaCtrlTemp
                 Title = "Tiempo (s)",
                 LabelFormatter = value => value.ToString("N1") + "s",
                 MinValue = 0d,
-                MaxValue = (int)numericTEjecucion.Value // Establecer el máximo inicial según los puntos esperados
+                MaxValue = (int)numericTEjecucionAuto.Value // Establecer el máximo inicial según los puntos esperados
             });
 
             entradaChart.AxisY.Clear();
@@ -429,6 +452,26 @@ namespace InterfazPlantaCtrlTemp
                 LabelFormatter = value => value.ToString("N1") + "%",
                 MinValue = 0,  // Valor inicial mínimo
                 MaxValue = 50  // Valor inicial máximo
+            });
+        }
+
+        // Método para recortar la serie de temperatura a una ventana móvil (segundos)
+        private void TrimTemperatureWindow(double windowSeconds)
+        {
+            // Asegurar ejecución en hilo UI
+            tempChart.Invoke((MethodInvoker)delegate
+            {
+                if (tiempos == null || temperaturas == null || tiempos.Count == 0) return;
+
+                double now = cronometro.Elapsed.TotalSeconds;
+                double minAllowed = Math.Max(0.0, now - windowSeconds);
+
+                // Ajustar ejes X para mostrar la ventana
+                if (tempChart.AxisX != null && tempChart.AxisX.Count > 0)
+                {
+                    tempChart.AxisX[0].MinValue = minAllowed;
+                    tempChart.AxisX[0].MaxValue = Math.Max(now,(double)numericTamVentana.Value);
+                }
             });
         }
 
@@ -474,7 +517,14 @@ namespace InterfazPlantaCtrlTemp
                             tempChart.AxisY[0].MinValue = Math.Floor(temperaturas.Min() - margen);
                             tempChart.AxisY[0].MaxValue = Math.Ceiling(temperaturas.Max() + margen);
                         }
+
                     });
+
+                    // Recortar la serie de temperatura si está activado el control manual
+                    if (checkCrtlManual.Checked)
+                    {
+                        TrimTemperatureWindow((double)numericTamVentana.Value);
+                    }
 
                     // Añadir valores al gráfico de entradas (Actualizar UI) (Para el modo de entradas del sistema)
                     entradaChart.Invoke((MethodInvoker)delegate
@@ -607,7 +657,7 @@ namespace InterfazPlantaCtrlTemp
                 }
             }
         }
-        private void checkCrtlManual_CheckedChanged(object sender, EventArgs e)
+        private void CheckCrtlManual_CheckedChanged(object sender, EventArgs e)
         {
             if (checkCrtlManual.Checked)
             {
@@ -814,7 +864,7 @@ namespace InterfazPlantaCtrlTemp
                         // Ajustar los valores enviados a los seleccionados por el usuario para la entrada escalón
                         ventilador.SetVelocidad((int)numericEscVentConsg.Value);
                         EnviarDatos($"v{ventilador.GetVelocidad().ToString()}V");
-                        int valorPostEsc = (int)numericTEjecucion.Value + 1 - (int)numericEscVentTInicio.Value;
+                        int valorPostEsc = (int)numericTEjecucionAuto.Value + 1 - (int)numericEscVentTInicio.Value;
                         Debug.WriteLine($"Tiempo posterior al escalón: {valorPostEsc}");
                         await Task.Run(() => RecibirDatos(valorPostEsc, ventilador.GetVelocidad(), 1000));
                         Debug.WriteLine("Fin de RecibirDatos");
@@ -834,7 +884,7 @@ namespace InterfazPlantaCtrlTemp
                         EnviarDatos($"n{numericEscCalConsg.Value.ToString()}N");
 
                         // Iniciar la recepción de datos
-                        int valorPostEsc = (int)numericTEjecucion.Value + 1 - (int)numericEscCalTInicio.Value;
+                        int valorPostEsc = (int)numericTEjecucionAuto.Value + 1 - (int)numericEscCalTInicio.Value;
                         Debug.WriteLine($"Tiempo posterior al escalón: {valorPostEsc}");
                         await Task.Run(() => RecibirDatos(valorPostEsc, (float)numericEscCalConsg.Value, 1000));
                         Debug.WriteLine("Fin de RecibirDatos");
@@ -875,7 +925,7 @@ namespace InterfazPlantaCtrlTemp
                         }
 
                         // Iniciar la recepción de datos
-                        int valorPostEsc = (int)numericTEjecucion.Value + 1 - Math.Max((int)numericEscVentTInicio.Value, (int)numericEscCalTInicio.Value);
+                        int valorPostEsc = (int)numericTEjecucionAuto.Value + 1 - Math.Max((int)numericEscVentTInicio.Value, (int)numericEscCalTInicio.Value);
                         Debug.WriteLine($"Tiempo posterior al escalón: {valorPostEsc}");
                         await Task.Run(() => RecibirDatos2(valorPostEsc, (float)numericEscVentConsg.Value, (float)numericEscCalConsg.Value, 1000));
                         Debug.WriteLine("Fin de RecibirDatos");
@@ -913,7 +963,7 @@ namespace InterfazPlantaCtrlTemp
                         // Ajustar los valores enviados a los seleccionados por el usuario para la entrada rampa
                         EnviarDatos($"v{numericRampVentConsg.Value.ToString()}V");
                         // Iniciar la recepción de datos
-                        int valorPostRamp = (int)numericTEjecucion.Value + 1 - (int)numericRampVentTFinal.Value;
+                        int valorPostRamp = (int)numericTEjecucionAuto.Value + 1 - (int)numericRampVentTFinal.Value;
                         Debug.WriteLine($"Tiempo posterior a la rampa: {valorPostRamp}");
                         await Task.Run(() => RecibirDatos(valorPostRamp, (float)numericRampVentConsg.Value, 1000));
                         Debug.WriteLine("Fin de RecibirDatos");
@@ -942,7 +992,7 @@ namespace InterfazPlantaCtrlTemp
                         // Ajustar los valores enviados a los seleccionados por el usuario para la entrada rampa
                         EnviarDatos($"n{numericRampCalConsg.Value.ToString()}N");
                         // Iniciar la recepción de datos
-                        int valorPostRamp = (int)numericTEjecucion.Value + 1 - (int)numericRampCalTFinal.Value;
+                        int valorPostRamp = (int)numericTEjecucionAuto.Value + 1 - (int)numericRampCalTFinal.Value;
                         Debug.WriteLine($"Tiempo posterior a la rampa: {valorPostRamp}");
                         await Task.Run(() => RecibirDatos(valorPostRamp, (float)numericRampCalConsg.Value, 1000));
                         Debug.WriteLine("Fin de RecibirDatos");
@@ -1042,7 +1092,7 @@ namespace InterfazPlantaCtrlTemp
                         }
 
                         // Envío de valores finales de rampa
-                        int valorPostEsc = (int)numericTEjecucion.Value + 1 - Math.Max((int)numericRampVentTFinal.Value, (int)numericRampCalTFinal.Value);
+                        int valorPostEsc = (int)numericTEjecucionAuto.Value + 1 - Math.Max((int)numericRampVentTFinal.Value, (int)numericRampCalTFinal.Value);
                         Debug.WriteLine($"Tiempo posterior al escalón: {valorPostEsc}");
                         await Task.Run(() => RecibirDatos2(valorPostEsc, (float)numericRampVentConsg.Value, (float)numericRampCalConsg.Value, 1000));
                         Debug.WriteLine("Fin de RecibirDatos");
@@ -1080,6 +1130,31 @@ namespace InterfazPlantaCtrlTemp
             }
         }
 
+        // Método para refrescar la ventana de visualización
+        private void buttonRefresh_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                // Limpiar gráfico
+                tempChart.Series.Clear();
+                entradaChart.Series.Clear();
+                temperaturas.Clear();
+                entradaCal.Clear();
+                entradaVent.Clear();
+                tiempos.Clear();
+                tempChart.Update(true, true);
+                entradaChart.Update(true, true);
+                Debug.WriteLine("Gráficos actualizados");
+
+                // Configurar el gráfico inicial
+                ConfigurarGraficoTempInicial();
+                ConfigurarGraficoEntradas();
+                ConfigurarGraficoEntradas2();
+            }
+            catch (Exception) { }
+
+            cronometro.Restart();
+        }
 
         // Control de Entradas en Lazo Cerrado Mediante un Controlador PID
 
@@ -1096,7 +1171,7 @@ namespace InterfazPlantaCtrlTemp
             const float outMin = 0f;
             const float outMax = 85f;
 
-            for (double i = 0; i < (double)numericTEjecucion.Value; i += (dt/1000D)) 
+            for (double i = 0; i < (double)numericTEjecucionLC.Value; i += (dt/1000D)) 
             {
                 PuertoArduino.WriteLine($"t{i}T");
                 PuertoArduino.ReadTimeout = 200;

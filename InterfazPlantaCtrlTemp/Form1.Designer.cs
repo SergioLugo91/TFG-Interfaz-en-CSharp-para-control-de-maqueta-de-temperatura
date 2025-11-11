@@ -43,14 +43,15 @@
             this.groupCtrlEntradas = new System.Windows.Forms.GroupBox();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.labelTEjec = new System.Windows.Forms.Label();
+            this.numericTEjecucionAuto = new System.Windows.Forms.NumericUpDown();
+            this.labelTEjecucion = new System.Windows.Forms.Label();
             this.numericRampCalTInicio = new System.Windows.Forms.NumericUpDown();
             this.label4 = new System.Windows.Forms.Label();
             this.numericRampCalConsg = new System.Windows.Forms.NumericUpDown();
             this.label5 = new System.Windows.Forms.Label();
             this.checkRampCal = new System.Windows.Forms.CheckBox();
             this.checkRampVent = new System.Windows.Forms.CheckBox();
-            this.pictureBox6 = new System.Windows.Forms.PictureBox();
-            this.pictureBox7 = new System.Windows.Forms.PictureBox();
             this.numericRampVentTInicio = new System.Windows.Forms.NumericUpDown();
             this.label6 = new System.Windows.Forms.Label();
             this.numericRampVentConsg = new System.Windows.Forms.NumericUpDown();
@@ -61,10 +62,6 @@
             this.label3 = new System.Windows.Forms.Label();
             this.checkEscCal = new System.Windows.Forms.CheckBox();
             this.checkEscVent = new System.Windows.Forms.CheckBox();
-            this.pictureBox5 = new System.Windows.Forms.PictureBox();
-            this.pictureBox4 = new System.Windows.Forms.PictureBox();
-            this.pictureBox3 = new System.Windows.Forms.PictureBox();
-            this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.checkRampa = new System.Windows.Forms.CheckBox();
             this.checkEscalon = new System.Windows.Forms.CheckBox();
             this.buttonCargarEntradas = new System.Windows.Forms.Button();
@@ -77,8 +74,10 @@
             this.labelConsignaVent = new System.Windows.Forms.Label();
             this.numericRampCalTFinal = new System.Windows.Forms.NumericUpDown();
             this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.label9 = new System.Windows.Forms.Label();
+            this.numericTEjecucionLC = new System.Windows.Forms.NumericUpDown();
+            this.label10 = new System.Windows.Forms.Label();
             this.buttonCargarLazoCerrado = new System.Windows.Forms.Button();
-            this.pictureBox8 = new System.Windows.Forms.PictureBox();
             this.checkPID = new System.Windows.Forms.CheckBox();
             this.label8 = new System.Windows.Forms.Label();
             this.checkKd = new System.Windows.Forms.CheckBox();
@@ -89,18 +88,26 @@
             this.numericKp = new System.Windows.Forms.NumericUpDown();
             this.numericConsgTemp = new System.Windows.Forms.NumericUpDown();
             this.groupGrafico = new System.Windows.Forms.GroupBox();
-            this.buttonOcultar = new System.Windows.Forms.Button();
             this.entradaChart = new LiveCharts.WinForms.CartesianChart();
             this.tempChart = new LiveCharts.WinForms.CartesianChart();
             this.comBox = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
             this.btnConectar = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.labelTEjec = new System.Windows.Forms.Label();
-            this.numericTEjecucion = new System.Windows.Forms.NumericUpDown();
-            this.labelTEjecucion = new System.Windows.Forms.Label();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.label11 = new System.Windows.Forms.Label();
+            this.label12 = new System.Windows.Forms.Label();
+            this.numericTamVentana = new System.Windows.Forms.NumericUpDown();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.buttonRefresh = new System.Windows.Forms.Button();
+            this.buttonOcultar = new System.Windows.Forms.Button();
+            this.pictureBox6 = new System.Windows.Forms.PictureBox();
+            this.pictureBox7 = new System.Windows.Forms.PictureBox();
+            this.pictureBox5 = new System.Windows.Forms.PictureBox();
+            this.pictureBox4 = new System.Windows.Forms.PictureBox();
+            this.pictureBox3 = new System.Windows.Forms.PictureBox();
+            this.pictureBox2 = new System.Windows.Forms.PictureBox();
+            this.pictureBox8 = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.numericVelVent)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericPotCal)).BeginInit();
             this.groupCtrlMaqueta.SuspendLayout();
@@ -109,33 +116,35 @@
             this.groupCtrlEntradas.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericTEjecucionAuto)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericRampCalTInicio)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericRampCalConsg)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox6)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox7)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericRampVentTInicio)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericRampVentConsg)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericEscCalTInicio)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericEscCalConsg)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox5)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericRampVentTFinal)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericEscVentTInicio)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericEscVentConsg)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericRampCalTFinal)).BeginInit();
             this.tabPage3.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox8)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericTEjecucionLC)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericKd)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericKi)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericKp)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericConsgTemp)).BeginInit();
             this.groupGrafico.SuspendLayout();
             this.groupBox2.SuspendLayout();
-            this.groupBox3.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericTEjecucion)).BeginInit();
+            this.groupBox1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericTamVentana)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox6)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox7)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox5)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox8)).BeginInit();
             this.SuspendLayout();
             // 
             // title
@@ -190,7 +199,7 @@
             this.groupCtrlMaqueta.Controls.Add(this.labelVent);
             this.groupCtrlMaqueta.Controls.Add(this.numericPotCal);
             this.groupCtrlMaqueta.Controls.Add(this.numericVelVent);
-            this.groupCtrlMaqueta.Location = new System.Drawing.Point(12, 126);
+            this.groupCtrlMaqueta.Location = new System.Drawing.Point(12, 176);
             this.groupCtrlMaqueta.Name = "groupCtrlMaqueta";
             this.groupCtrlMaqueta.Size = new System.Drawing.Size(364, 243);
             this.groupCtrlMaqueta.TabIndex = 3;
@@ -287,6 +296,9 @@
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.labelTEjec);
+            this.tabPage1.Controls.Add(this.numericTEjecucionAuto);
+            this.tabPage1.Controls.Add(this.labelTEjecucion);
             this.tabPage1.Controls.Add(this.numericRampCalTInicio);
             this.tabPage1.Controls.Add(this.label4);
             this.tabPage1.Controls.Add(this.numericRampCalConsg);
@@ -326,6 +338,47 @@
             this.tabPage1.Size = new System.Drawing.Size(400, 408);
             this.tabPage1.TabIndex = 2;
             this.tabPage1.Text = "Control Automático";
+            // 
+            // labelTEjec
+            // 
+            this.labelTEjec.AutoSize = true;
+            this.labelTEjec.Location = new System.Drawing.Point(199, 384);
+            this.labelTEjec.Name = "labelTEjec";
+            this.labelTEjec.Size = new System.Drawing.Size(55, 13);
+            this.labelTEjec.TabIndex = 48;
+            this.labelTEjec.Text = "Segundos";
+            // 
+            // numericTEjecucionAuto
+            // 
+            this.numericTEjecucionAuto.Location = new System.Drawing.Point(122, 382);
+            this.numericTEjecucionAuto.Maximum = new decimal(new int[] {
+            240,
+            0,
+            0,
+            0});
+            this.numericTEjecucionAuto.Minimum = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.numericTEjecucionAuto.Name = "numericTEjecucionAuto";
+            this.numericTEjecucionAuto.Size = new System.Drawing.Size(71, 20);
+            this.numericTEjecucionAuto.TabIndex = 49;
+            this.numericTEjecucionAuto.Tag = "";
+            this.numericTEjecucionAuto.Value = new decimal(new int[] {
+            30,
+            0,
+            0,
+            0});
+            // 
+            // labelTEjecucion
+            // 
+            this.labelTEjecucion.AutoSize = true;
+            this.labelTEjecucion.Location = new System.Drawing.Point(6, 384);
+            this.labelTEjecucion.Name = "labelTEjecucion";
+            this.labelTEjecucion.Size = new System.Drawing.Size(110, 13);
+            this.labelTEjecucion.TabIndex = 47;
+            this.labelTEjecucion.Text = "Tiempo de Ejecución:";
             // 
             // numericRampCalTInicio
             // 
@@ -399,26 +452,6 @@
             this.checkRampVent.TabIndex = 41;
             this.checkRampVent.Text = "Ventilador";
             this.checkRampVent.UseVisualStyleBackColor = true;
-            // 
-            // pictureBox6
-            // 
-            this.pictureBox6.Image = global::InterfazPlantaCtrlTemp.Properties.Resources.heating_element_filled_line_icon_vector1;
-            this.pictureBox6.Location = new System.Drawing.Point(231, 251);
-            this.pictureBox6.Name = "pictureBox6";
-            this.pictureBox6.Size = new System.Drawing.Size(40, 40);
-            this.pictureBox6.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pictureBox6.TabIndex = 40;
-            this.pictureBox6.TabStop = false;
-            // 
-            // pictureBox7
-            // 
-            this.pictureBox7.Image = global::InterfazPlantaCtrlTemp.Properties.Resources._72502;
-            this.pictureBox7.Location = new System.Drawing.Point(231, 131);
-            this.pictureBox7.Name = "pictureBox7";
-            this.pictureBox7.Size = new System.Drawing.Size(35, 35);
-            this.pictureBox7.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pictureBox7.TabIndex = 35;
-            this.pictureBox7.TabStop = false;
             // 
             // numericRampVentTInicio
             // 
@@ -545,46 +578,6 @@
             this.checkEscVent.TabIndex = 29;
             this.checkEscVent.Text = "Ventilador";
             this.checkEscVent.UseVisualStyleBackColor = true;
-            // 
-            // pictureBox5
-            // 
-            this.pictureBox5.Image = global::InterfazPlantaCtrlTemp.Properties.Resources.Captura_de_pantalla_2025_02_05_142444;
-            this.pictureBox5.Location = new System.Drawing.Point(277, 11);
-            this.pictureBox5.Name = "pictureBox5";
-            this.pictureBox5.Size = new System.Drawing.Size(50, 50);
-            this.pictureBox5.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pictureBox5.TabIndex = 26;
-            this.pictureBox5.TabStop = false;
-            // 
-            // pictureBox4
-            // 
-            this.pictureBox4.Image = global::InterfazPlantaCtrlTemp.Properties.Resources.heating_element_filled_line_icon_vector1;
-            this.pictureBox4.Location = new System.Drawing.Point(23, 251);
-            this.pictureBox4.Name = "pictureBox4";
-            this.pictureBox4.Size = new System.Drawing.Size(40, 40);
-            this.pictureBox4.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pictureBox4.TabIndex = 25;
-            this.pictureBox4.TabStop = false;
-            // 
-            // pictureBox3
-            // 
-            this.pictureBox3.Image = global::InterfazPlantaCtrlTemp.Properties.Resources.Captura_de_pantalla_2025_02_05_141935;
-            this.pictureBox3.Location = new System.Drawing.Point(77, 11);
-            this.pictureBox3.Name = "pictureBox3";
-            this.pictureBox3.Size = new System.Drawing.Size(50, 50);
-            this.pictureBox3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pictureBox3.TabIndex = 24;
-            this.pictureBox3.TabStop = false;
-            // 
-            // pictureBox2
-            // 
-            this.pictureBox2.Image = global::InterfazPlantaCtrlTemp.Properties.Resources._72502;
-            this.pictureBox2.Location = new System.Drawing.Point(23, 131);
-            this.pictureBox2.Name = "pictureBox2";
-            this.pictureBox2.Size = new System.Drawing.Size(35, 35);
-            this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pictureBox2.TabIndex = 0;
-            this.pictureBox2.TabStop = false;
             // 
             // checkRampa
             // 
@@ -745,8 +738,10 @@
             // 
             // tabPage3
             // 
+            this.tabPage3.Controls.Add(this.label9);
+            this.tabPage3.Controls.Add(this.numericTEjecucionLC);
+            this.tabPage3.Controls.Add(this.label10);
             this.tabPage3.Controls.Add(this.buttonCargarLazoCerrado);
-            this.tabPage3.Controls.Add(this.pictureBox8);
             this.tabPage3.Controls.Add(this.checkPID);
             this.tabPage3.Controls.Add(this.label8);
             this.tabPage3.Controls.Add(this.checkKd);
@@ -756,12 +751,54 @@
             this.tabPage3.Controls.Add(this.numericKi);
             this.tabPage3.Controls.Add(this.numericKp);
             this.tabPage3.Controls.Add(this.numericConsgTemp);
+            this.tabPage3.Controls.Add(this.pictureBox8);
             this.tabPage3.Location = new System.Drawing.Point(4, 22);
             this.tabPage3.Name = "tabPage3";
             this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
             this.tabPage3.Size = new System.Drawing.Size(400, 408);
             this.tabPage3.TabIndex = 4;
             this.tabPage3.Text = "Control en Lazo Cerrado";
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(199, 384);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(55, 13);
+            this.label9.TabIndex = 51;
+            this.label9.Text = "Segundos";
+            // 
+            // numericTEjecucionLC
+            // 
+            this.numericTEjecucionLC.Location = new System.Drawing.Point(122, 382);
+            this.numericTEjecucionLC.Maximum = new decimal(new int[] {
+            240,
+            0,
+            0,
+            0});
+            this.numericTEjecucionLC.Minimum = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.numericTEjecucionLC.Name = "numericTEjecucionLC";
+            this.numericTEjecucionLC.Size = new System.Drawing.Size(71, 20);
+            this.numericTEjecucionLC.TabIndex = 52;
+            this.numericTEjecucionLC.Tag = "";
+            this.numericTEjecucionLC.Value = new decimal(new int[] {
+            30,
+            0,
+            0,
+            0});
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(6, 384);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(110, 13);
+            this.label10.TabIndex = 50;
+            this.label10.Text = "Tiempo de Ejecución:";
             // 
             // buttonCargarLazoCerrado
             // 
@@ -772,16 +809,6 @@
             this.buttonCargarLazoCerrado.Text = "Cargar";
             this.buttonCargarLazoCerrado.UseVisualStyleBackColor = true;
             this.buttonCargarLazoCerrado.Click += new System.EventHandler(this.buttonCargarLazoCerrado_Click);
-            // 
-            // pictureBox8
-            // 
-            this.pictureBox8.Image = global::InterfazPlantaCtrlTemp.Properties.Resources.Captura_de_pantalla_2025_09_19_125114;
-            this.pictureBox8.Location = new System.Drawing.Point(173, 27);
-            this.pictureBox8.Name = "pictureBox8";
-            this.pictureBox8.Size = new System.Drawing.Size(50, 50);
-            this.pictureBox8.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pictureBox8.TabIndex = 29;
-            this.pictureBox8.TabStop = false;
             // 
             // checkPID
             // 
@@ -862,33 +889,22 @@
             // 
             // groupGrafico
             // 
+            this.groupGrafico.Controls.Add(this.buttonRefresh);
             this.groupGrafico.Controls.Add(this.buttonOcultar);
             this.groupGrafico.Controls.Add(this.entradaChart);
             this.groupGrafico.Controls.Add(this.tempChart);
-            this.groupGrafico.Location = new System.Drawing.Point(526, 76);
+            this.groupGrafico.Location = new System.Drawing.Point(432, 76);
             this.groupGrafico.Name = "groupGrafico";
-            this.groupGrafico.Size = new System.Drawing.Size(833, 715);
+            this.groupGrafico.Size = new System.Drawing.Size(927, 803);
             this.groupGrafico.TabIndex = 5;
             this.groupGrafico.TabStop = false;
             this.groupGrafico.Text = "Gráfica de Temperatura";
-            // 
-            // buttonOcultar
-            // 
-            this.buttonOcultar.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("buttonOcultar.BackgroundImage")));
-            this.buttonOcultar.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.buttonOcultar.Location = new System.Drawing.Point(7, 684);
-            this.buttonOcultar.Name = "buttonOcultar";
-            this.buttonOcultar.Size = new System.Drawing.Size(34, 24);
-            this.buttonOcultar.TabIndex = 2;
-            this.buttonOcultar.UseVisualStyleBackColor = true;
-            this.buttonOcultar.Visible = false;
-            this.buttonOcultar.Click += new System.EventHandler(this.buttonOcultar_Click);
             // 
             // entradaChart
             // 
             this.entradaChart.Location = new System.Drawing.Point(15, 470);
             this.entradaChart.Name = "entradaChart";
-            this.entradaChart.Size = new System.Drawing.Size(810, 210);
+            this.entradaChart.Size = new System.Drawing.Size(897, 253);
             this.entradaChart.TabIndex = 1;
             this.entradaChart.Text = "cartesianChart1";
             this.entradaChart.Visible = false;
@@ -897,7 +913,7 @@
             // 
             this.tempChart.Location = new System.Drawing.Point(15, 20);
             this.tempChart.Name = "tempChart";
-            this.tempChart.Size = new System.Drawing.Size(810, 660);
+            this.tempChart.Size = new System.Drawing.Size(897, 703);
             this.tempChart.TabIndex = 0;
             this.tempChart.Text = "cartesianChart1";
             // 
@@ -926,7 +942,7 @@
             this.btnConectar.TabIndex = 7;
             this.btnConectar.Text = "Conectar";
             this.btnConectar.UseVisualStyleBackColor = true;
-            this.btnConectar.Click += new System.EventHandler(this.btnConectar_Click);
+            this.btnConectar.Click += new System.EventHandler(this.BtnConectar_Click);
             // 
             // groupBox2
             // 
@@ -939,57 +955,57 @@
             this.groupBox2.TabIndex = 9;
             this.groupBox2.TabStop = false;
             // 
-            // groupBox3
+            // groupBox1
             // 
-            this.groupBox3.Controls.Add(this.labelTEjec);
-            this.groupBox3.Controls.Add(this.numericTEjecucion);
-            this.groupBox3.Controls.Add(this.labelTEjecucion);
-            this.groupBox3.Location = new System.Drawing.Point(12, 368);
-            this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(364, 51);
-            this.groupBox3.TabIndex = 10;
-            this.groupBox3.TabStop = false;
+            this.groupBox1.Controls.Add(this.label12);
+            this.groupBox1.Controls.Add(this.numericTamVentana);
+            this.groupBox1.Controls.Add(this.label11);
+            this.groupBox1.Location = new System.Drawing.Point(12, 126);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(364, 51);
+            this.groupBox1.TabIndex = 11;
+            this.groupBox1.TabStop = false;
             // 
-            // labelTEjec
+            // label11
             // 
-            this.labelTEjec.AutoSize = true;
-            this.labelTEjec.Location = new System.Drawing.Point(276, 22);
-            this.labelTEjec.Name = "labelTEjec";
-            this.labelTEjec.Size = new System.Drawing.Size(55, 13);
-            this.labelTEjec.TabIndex = 9;
-            this.labelTEjec.Text = "Segundos";
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(6, 22);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(117, 13);
+            this.label11.TabIndex = 6;
+            this.label11.Text = "Tamaño de la ventana:";
             // 
-            // numericTEjecucion
+            // label12
             // 
-            this.numericTEjecucion.Location = new System.Drawing.Point(137, 20);
-            this.numericTEjecucion.Maximum = new decimal(new int[] {
-            90,
+            this.label12.AutoSize = true;
+            this.label12.Location = new System.Drawing.Point(278, 22);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(55, 13);
+            this.label12.TabIndex = 50;
+            this.label12.Text = "Segundos";
+            // 
+            // numericTamVentana
+            // 
+            this.numericTamVentana.Location = new System.Drawing.Point(137, 20);
+            this.numericTamVentana.Maximum = new decimal(new int[] {
+            240,
             0,
             0,
             0});
-            this.numericTEjecucion.Minimum = new decimal(new int[] {
+            this.numericTamVentana.Minimum = new decimal(new int[] {
             10,
             0,
             0,
             0});
-            this.numericTEjecucion.Name = "numericTEjecucion";
-            this.numericTEjecucion.Size = new System.Drawing.Size(121, 20);
-            this.numericTEjecucion.TabIndex = 11;
-            this.numericTEjecucion.Tag = "";
-            this.numericTEjecucion.Value = new decimal(new int[] {
+            this.numericTamVentana.Name = "numericTamVentana";
+            this.numericTamVentana.Size = new System.Drawing.Size(121, 20);
+            this.numericTamVentana.TabIndex = 51;
+            this.numericTamVentana.Tag = "";
+            this.numericTamVentana.Value = new decimal(new int[] {
             30,
             0,
             0,
             0});
-            // 
-            // labelTEjecucion
-            // 
-            this.labelTEjecucion.AutoSize = true;
-            this.labelTEjecucion.Location = new System.Drawing.Point(6, 22);
-            this.labelTEjecucion.Name = "labelTEjecucion";
-            this.labelTEjecucion.Size = new System.Drawing.Size(110, 13);
-            this.labelTEjecucion.TabIndex = 6;
-            this.labelTEjecucion.Text = "Tiempo de Ejecución:";
             // 
             // pictureBox1
             // 
@@ -1001,12 +1017,105 @@
             this.pictureBox1.TabIndex = 10;
             this.pictureBox1.TabStop = false;
             // 
+            // buttonRefresh
+            // 
+            this.buttonRefresh.BackgroundImage = global::InterfazPlantaCtrlTemp.Properties.Resources._25274;
+            this.buttonRefresh.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.buttonRefresh.Location = new System.Drawing.Point(15, 753);
+            this.buttonRefresh.Name = "buttonRefresh";
+            this.buttonRefresh.Size = new System.Drawing.Size(34, 34);
+            this.buttonRefresh.TabIndex = 3;
+            this.buttonRefresh.UseVisualStyleBackColor = true;
+            this.buttonRefresh.Click += new System.EventHandler(this.buttonRefresh_Click);
+            // 
+            // buttonOcultar
+            // 
+            this.buttonOcultar.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("buttonOcultar.BackgroundImage")));
+            this.buttonOcultar.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.buttonOcultar.Location = new System.Drawing.Point(55, 757);
+            this.buttonOcultar.Name = "buttonOcultar";
+            this.buttonOcultar.Size = new System.Drawing.Size(43, 30);
+            this.buttonOcultar.TabIndex = 2;
+            this.buttonOcultar.UseVisualStyleBackColor = true;
+            this.buttonOcultar.Visible = false;
+            this.buttonOcultar.Click += new System.EventHandler(this.buttonOcultar_Click);
+            // 
+            // pictureBox6
+            // 
+            this.pictureBox6.Image = global::InterfazPlantaCtrlTemp.Properties.Resources.heating_element_filled_line_icon_vector1;
+            this.pictureBox6.Location = new System.Drawing.Point(231, 251);
+            this.pictureBox6.Name = "pictureBox6";
+            this.pictureBox6.Size = new System.Drawing.Size(40, 40);
+            this.pictureBox6.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pictureBox6.TabIndex = 40;
+            this.pictureBox6.TabStop = false;
+            // 
+            // pictureBox7
+            // 
+            this.pictureBox7.Image = global::InterfazPlantaCtrlTemp.Properties.Resources._72502;
+            this.pictureBox7.Location = new System.Drawing.Point(231, 131);
+            this.pictureBox7.Name = "pictureBox7";
+            this.pictureBox7.Size = new System.Drawing.Size(35, 35);
+            this.pictureBox7.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pictureBox7.TabIndex = 35;
+            this.pictureBox7.TabStop = false;
+            // 
+            // pictureBox5
+            // 
+            this.pictureBox5.Image = global::InterfazPlantaCtrlTemp.Properties.Resources.Captura_de_pantalla_2025_02_05_142444;
+            this.pictureBox5.Location = new System.Drawing.Point(277, 11);
+            this.pictureBox5.Name = "pictureBox5";
+            this.pictureBox5.Size = new System.Drawing.Size(50, 50);
+            this.pictureBox5.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pictureBox5.TabIndex = 26;
+            this.pictureBox5.TabStop = false;
+            // 
+            // pictureBox4
+            // 
+            this.pictureBox4.Image = global::InterfazPlantaCtrlTemp.Properties.Resources.heating_element_filled_line_icon_vector1;
+            this.pictureBox4.Location = new System.Drawing.Point(23, 251);
+            this.pictureBox4.Name = "pictureBox4";
+            this.pictureBox4.Size = new System.Drawing.Size(40, 40);
+            this.pictureBox4.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pictureBox4.TabIndex = 25;
+            this.pictureBox4.TabStop = false;
+            // 
+            // pictureBox3
+            // 
+            this.pictureBox3.Image = global::InterfazPlantaCtrlTemp.Properties.Resources.Captura_de_pantalla_2025_02_05_141935;
+            this.pictureBox3.Location = new System.Drawing.Point(77, 11);
+            this.pictureBox3.Name = "pictureBox3";
+            this.pictureBox3.Size = new System.Drawing.Size(50, 50);
+            this.pictureBox3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pictureBox3.TabIndex = 24;
+            this.pictureBox3.TabStop = false;
+            // 
+            // pictureBox2
+            // 
+            this.pictureBox2.Image = global::InterfazPlantaCtrlTemp.Properties.Resources._72502;
+            this.pictureBox2.Location = new System.Drawing.Point(23, 131);
+            this.pictureBox2.Name = "pictureBox2";
+            this.pictureBox2.Size = new System.Drawing.Size(35, 35);
+            this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pictureBox2.TabIndex = 0;
+            this.pictureBox2.TabStop = false;
+            // 
+            // pictureBox8
+            // 
+            this.pictureBox8.Image = global::InterfazPlantaCtrlTemp.Properties.Resources.Captura_de_pantalla_2025_09_19_125114;
+            this.pictureBox8.Location = new System.Drawing.Point(173, 27);
+            this.pictureBox8.Name = "pictureBox8";
+            this.pictureBox8.Size = new System.Drawing.Size(50, 50);
+            this.pictureBox8.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pictureBox8.TabIndex = 29;
+            this.pictureBox8.TabStop = false;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1380, 884);
-            this.Controls.Add(this.groupBox3);
+            this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupGrafico);
@@ -1025,25 +1134,20 @@
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericTEjecucionAuto)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericRampCalTInicio)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericRampCalConsg)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox6)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox7)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericRampVentTInicio)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericRampVentConsg)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericEscCalTInicio)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericEscCalConsg)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox5)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericRampVentTFinal)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericEscVentTInicio)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericEscVentConsg)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericRampCalTFinal)).EndInit();
             this.tabPage3.ResumeLayout(false);
             this.tabPage3.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox8)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericTEjecucionLC)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericKd)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericKi)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericKp)).EndInit();
@@ -1051,10 +1155,17 @@
             this.groupGrafico.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
-            this.groupBox3.ResumeLayout(false);
-            this.groupBox3.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericTEjecucion)).EndInit();
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericTamVentana)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox6)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox7)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox5)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox4)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox8)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1082,10 +1193,6 @@
         private LiveCharts.WinForms.CartesianChart entradaChart;
         private System.Windows.Forms.Button buttonOcultar;
         private System.Windows.Forms.PictureBox pictureBox1;
-        private System.Windows.Forms.GroupBox groupBox3;
-        private System.Windows.Forms.Label labelTEjecucion;
-        private System.Windows.Forms.NumericUpDown numericTEjecucion;
-        private System.Windows.Forms.Label labelTEjec;
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.TabPage tabPage1;
         private System.Windows.Forms.Button buttonCargarEntradas;
@@ -1134,6 +1241,17 @@
         private System.Windows.Forms.CheckBox checkPID;
         private System.Windows.Forms.Button buttonCargarLazoCerrado;
         private System.Windows.Forms.CheckBox checkCrtlManual;
+        private System.Windows.Forms.Button buttonRefresh;
+        private System.Windows.Forms.Label labelTEjec;
+        private System.Windows.Forms.NumericUpDown numericTEjecucionAuto;
+        private System.Windows.Forms.Label labelTEjecucion;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.NumericUpDown numericTEjecucionLC;
+        private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.NumericUpDown numericTamVentana;
+        private System.Windows.Forms.Label label11;
     }
 }
 
