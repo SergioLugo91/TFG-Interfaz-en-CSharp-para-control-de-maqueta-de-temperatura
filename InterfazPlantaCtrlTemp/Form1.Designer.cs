@@ -95,9 +95,9 @@
             this.btnConectar = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.label11 = new System.Windows.Forms.Label();
             this.label12 = new System.Windows.Forms.Label();
             this.numericTamVentana = new System.Windows.Forms.NumericUpDown();
+            this.label11 = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.buttonRefresh = new System.Windows.Forms.Button();
             this.buttonOcultar = new System.Windows.Forms.Button();
@@ -904,7 +904,7 @@
             // 
             this.entradaChart.Location = new System.Drawing.Point(15, 470);
             this.entradaChart.Name = "entradaChart";
-            this.entradaChart.Size = new System.Drawing.Size(897, 253);
+            this.entradaChart.Size = new System.Drawing.Size(900, 250);
             this.entradaChart.TabIndex = 1;
             this.entradaChart.Text = "cartesianChart1";
             this.entradaChart.Visible = false;
@@ -913,7 +913,7 @@
             // 
             this.tempChart.Location = new System.Drawing.Point(15, 20);
             this.tempChart.Name = "tempChart";
-            this.tempChart.Size = new System.Drawing.Size(897, 703);
+            this.tempChart.Size = new System.Drawing.Size(900, 700);
             this.tempChart.TabIndex = 0;
             this.tempChart.Text = "cartesianChart1";
             // 
@@ -966,15 +966,6 @@
             this.groupBox1.TabIndex = 11;
             this.groupBox1.TabStop = false;
             // 
-            // label11
-            // 
-            this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(6, 22);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(117, 13);
-            this.label11.TabIndex = 6;
-            this.label11.Text = "Tamaño de la ventana:";
-            // 
             // label12
             // 
             this.label12.AutoSize = true;
@@ -1007,6 +998,15 @@
             0,
             0});
             // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(6, 22);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(117, 13);
+            this.label11.TabIndex = 6;
+            this.label11.Text = "Tamaño de la ventana:";
+            // 
             // pictureBox1
             // 
             this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
@@ -1030,14 +1030,13 @@
             // 
             // buttonOcultar
             // 
-            this.buttonOcultar.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("buttonOcultar.BackgroundImage")));
+            this.buttonOcultar.BackgroundImage = global::InterfazPlantaCtrlTemp.Properties.Resources._2d4e09879b6f017f74ffaee0b0011c0a_icono_de_ojo;
             this.buttonOcultar.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.buttonOcultar.Location = new System.Drawing.Point(55, 757);
+            this.buttonOcultar.Location = new System.Drawing.Point(55, 753);
             this.buttonOcultar.Name = "buttonOcultar";
-            this.buttonOcultar.Size = new System.Drawing.Size(43, 30);
+            this.buttonOcultar.Size = new System.Drawing.Size(34, 34);
             this.buttonOcultar.TabIndex = 2;
             this.buttonOcultar.UseVisualStyleBackColor = true;
-            this.buttonOcultar.Visible = false;
             this.buttonOcultar.Click += new System.EventHandler(this.buttonOcultar_Click);
             // 
             // pictureBox6

@@ -672,9 +672,8 @@ namespace InterfazPlantaCtrlTemp
                 buttonCargarEntradas.Enabled = false;
 
                 entradaChart.Visible = false; // Ocultar el gráfico de entradas
-                buttonOcultar.Visible = false; // Ocultar el botón de ocultar el gráfico de entradas
 
-                tempChart.Size = new Size(810, 660); // Ajustar el tamaño del gráfico de temperatura
+                tempChart.Size = new Size(900, 700); // Ajustar el tamaño del gráfico de temperatura
 
                 try
                 {
@@ -819,10 +818,9 @@ namespace InterfazPlantaCtrlTemp
         {
             buttonCargarEntradas.Enabled = false; // Deshabilitar botón durante la operación
             entradaChart.Visible = true; // Mostrar el gráfico de entradas
-            buttonOcultar.Visible = true; // Mostrar el botón de ocultar el gráfico de entradas
             checkCrtlManual.Enabled = false; // Deshabilitar el control manual durante la operación
 
-            tempChart.Size = new Size(810, 450); // Ajustar el tamaño del gráfico de temperatura
+            tempChart.Size = new Size(900, 450); // Ajustar el tamaño del gráfico de temperatura
 
             try
             {
@@ -1118,15 +1116,18 @@ namespace InterfazPlantaCtrlTemp
         // Método para ocultar o mostrar el gráfico de entradas
         private void buttonOcultar_Click(object sender, EventArgs e)
         {
-            if (entradaChart.Visible == true)
+            if (checkEscalon.Checked || checkRampa.Checked)
             {
-                entradaChart.Visible = false; // Ocultar el gráfico de entradas
-                tempChart.Size = new Size(810, 660); // Ajustar el tamaño del gráfico de temperatura
-            }
-            else
-            {
-                entradaChart.Visible = true; // Mostrar el gráfico de entradas
-                tempChart.Size = new Size(810, 450); // Ajustar el tamaño del gráfico de temperatura
+                if (entradaChart.Visible == true)
+                {
+                    entradaChart.Visible = false; // Ocultar el gráfico de entradas
+                    tempChart.Size = new Size(900, 700); // Ajustar el tamaño del gráfico de temperatura
+                }
+                else
+                {
+                    entradaChart.Visible = true; // Mostrar el gráfico de entradas
+                    tempChart.Size = new Size(900, 450); // Ajustar el tamaño del gráfico de temperatura
+                }
             }
         }
 
