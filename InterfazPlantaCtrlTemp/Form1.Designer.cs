@@ -33,6 +33,7 @@
             this.numericVelVent = new System.Windows.Forms.NumericUpDown();
             this.numericPotCal = new System.Windows.Forms.NumericUpDown();
             this.groupCtrlMaqueta = new System.Windows.Forms.GroupBox();
+            this.checkCrtlManual = new System.Windows.Forms.CheckBox();
             this.trackPotCal = new System.Windows.Forms.TrackBar();
             this.trackVelVent = new System.Windows.Forms.TrackBar();
             this.titleCal = new System.Windows.Forms.Label();
@@ -100,7 +101,6 @@
             this.numericTEjecucion = new System.Windows.Forms.NumericUpDown();
             this.labelTEjecucion = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.checkCrtlManual = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.numericVelVent)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericPotCal)).BeginInit();
             this.groupCtrlMaqueta.SuspendLayout();
@@ -196,6 +196,16 @@
             this.groupCtrlMaqueta.TabIndex = 3;
             this.groupCtrlMaqueta.TabStop = false;
             this.groupCtrlMaqueta.Text = "Control Manual";
+            // 
+            // checkCrtlManual
+            // 
+            this.checkCrtlManual.AutoSize = true;
+            this.checkCrtlManual.Location = new System.Drawing.Point(216, 213);
+            this.checkCrtlManual.Name = "checkCrtlManual";
+            this.checkCrtlManual.Size = new System.Drawing.Size(133, 17);
+            this.checkCrtlManual.TabIndex = 9;
+            this.checkCrtlManual.Text = "Activar Control Manual";
+            this.checkCrtlManual.UseVisualStyleBackColor = true;
             // 
             // trackPotCal
             // 
@@ -876,9 +886,9 @@
             // 
             // entradaChart
             // 
-            this.entradaChart.Location = new System.Drawing.Point(15, 350);
+            this.entradaChart.Location = new System.Drawing.Point(15, 470);
             this.entradaChart.Name = "entradaChart";
-            this.entradaChart.Size = new System.Drawing.Size(810, 330);
+            this.entradaChart.Size = new System.Drawing.Size(810, 210);
             this.entradaChart.TabIndex = 1;
             this.entradaChart.Text = "cartesianChart1";
             this.entradaChart.Visible = false;
@@ -990,16 +1000,6 @@
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox1.TabIndex = 10;
             this.pictureBox1.TabStop = false;
-            // 
-            // checkCrtlManual
-            // 
-            this.checkCrtlManual.AutoSize = true;
-            this.checkCrtlManual.Location = new System.Drawing.Point(216, 213);
-            this.checkCrtlManual.Name = "checkCrtlManual";
-            this.checkCrtlManual.Size = new System.Drawing.Size(133, 17);
-            this.checkCrtlManual.TabIndex = 9;
-            this.checkCrtlManual.Text = "Activar Control Manual";
-            this.checkCrtlManual.UseVisualStyleBackColor = true;
             // 
             // Form1
             // 
