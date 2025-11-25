@@ -73,6 +73,16 @@ namespace InterfazPlantaCtrlTemp.Properties {
         /// <summary>
         ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap _2810399 {
+            get {
+                object obj = ResourceManager.GetObject("2810399", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap _2d4e09879b6f017f74ffaee0b0011c0a_icono_de_ojo {
             get {
                 object obj = ResourceManager.GetObject("2d4e09879b6f017f74ffaee0b0011c0a-icono-de-ojo", resourceCulture);

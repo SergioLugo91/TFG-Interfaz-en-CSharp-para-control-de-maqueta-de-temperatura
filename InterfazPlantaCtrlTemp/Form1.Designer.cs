@@ -99,6 +99,7 @@
             this.numericTamVentana = new System.Windows.Forms.NumericUpDown();
             this.label11 = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.buttonGuardarDatos = new System.Windows.Forms.Button();
             this.buttonRefresh = new System.Windows.Forms.Button();
             this.buttonOcultar = new System.Windows.Forms.Button();
             this.pictureBox6 = new System.Windows.Forms.PictureBox();
@@ -875,6 +876,11 @@
             // 
             // numericKp
             // 
+            this.numericKp.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            196608});
             this.numericKp.Location = new System.Drawing.Point(173, 187);
             this.numericKp.Name = "numericKp";
             this.numericKp.Size = new System.Drawing.Size(120, 20);
@@ -889,6 +895,7 @@
             // 
             // groupGrafico
             // 
+            this.groupGrafico.Controls.Add(this.buttonGuardarDatos);
             this.groupGrafico.Controls.Add(this.buttonRefresh);
             this.groupGrafico.Controls.Add(this.buttonOcultar);
             this.groupGrafico.Controls.Add(this.entradaChart);
@@ -1017,11 +1024,22 @@
             this.pictureBox1.TabIndex = 10;
             this.pictureBox1.TabStop = false;
             // 
+            // buttonGuardarDatos
+            // 
+            this.buttonGuardarDatos.BackgroundImage = global::InterfazPlantaCtrlTemp.Properties.Resources._2810399;
+            this.buttonGuardarDatos.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.buttonGuardarDatos.Location = new System.Drawing.Point(95, 753);
+            this.buttonGuardarDatos.Name = "buttonGuardarDatos";
+            this.buttonGuardarDatos.Size = new System.Drawing.Size(34, 34);
+            this.buttonGuardarDatos.TabIndex = 4;
+            this.buttonGuardarDatos.UseVisualStyleBackColor = true;
+            this.buttonGuardarDatos.Click += new System.EventHandler(this.buttonGuardarDatos_Click);
+            // 
             // buttonRefresh
             // 
             this.buttonRefresh.BackgroundImage = global::InterfazPlantaCtrlTemp.Properties.Resources._25274;
             this.buttonRefresh.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.buttonRefresh.Location = new System.Drawing.Point(15, 753);
+            this.buttonRefresh.Location = new System.Drawing.Point(55, 753);
             this.buttonRefresh.Name = "buttonRefresh";
             this.buttonRefresh.Size = new System.Drawing.Size(34, 34);
             this.buttonRefresh.TabIndex = 3;
@@ -1032,7 +1050,7 @@
             // 
             this.buttonOcultar.BackgroundImage = global::InterfazPlantaCtrlTemp.Properties.Resources._2d4e09879b6f017f74ffaee0b0011c0a_icono_de_ojo;
             this.buttonOcultar.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.buttonOcultar.Location = new System.Drawing.Point(55, 753);
+            this.buttonOcultar.Location = new System.Drawing.Point(15, 753);
             this.buttonOcultar.Name = "buttonOcultar";
             this.buttonOcultar.Size = new System.Drawing.Size(34, 34);
             this.buttonOcultar.TabIndex = 2;
@@ -1251,6 +1269,7 @@
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.NumericUpDown numericTamVentana;
         private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.Button buttonGuardarDatos;
     }
 }
 

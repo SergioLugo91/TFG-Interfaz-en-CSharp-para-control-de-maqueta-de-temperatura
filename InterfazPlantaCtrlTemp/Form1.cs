@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
@@ -9,8 +10,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Media;
+using System.Windows.Shapes;
 using LiveCharts;
 using LiveCharts.Wpf;
+using Microsoft.Data.Analysis;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.TreeView;
 
 namespace InterfazPlantaCtrlTemp
@@ -42,6 +45,12 @@ namespace InterfazPlantaCtrlTemp
 
         private CancellationTokenSource manualModeCts;
 
+        private DataFrame dfAuto;
+        private DataFrame dfManual;
+        private DataFrame dfPID;
+
+        private readonly object dfManualLock = new object();
+
         public Form1()
         {
             InitializeComponent();
@@ -53,6 +62,11 @@ namespace InterfazPlantaCtrlTemp
 
             // Inicializar el cronómetro
             cronometro = new Stopwatch();
+
+            // Inicializar los dataFrame para almacenar los datos
+            InitializeDataFrameAuto();
+            InitializeDataFrameMan();
+            InitializeDataFramePID();
 
             // Suscripciones de eventos para los controles de la interfaz
             numericVelVent.ValueChanged += NumericVelVent_ValueChanged;
@@ -92,50 +106,6 @@ namespace InterfazPlantaCtrlTemp
                 if (PuertoArduino != null && PuertoArduino.IsOpen)
                     EnviarDatos($"n{p}N");
             };
-        }
-
-        // Debounce para el ventilador para evitar envíos excesivos en el control manual
-        private void InitializeVentDebounce()
-        {
-            ventDebounceTimer = new System.Windows.Forms.Timer();
-            ventDebounceTimer.Interval = ratioEnvio;
-            ventDebounceTimer.Tick += VentDebounceTimer_Tick;
-        }
-        private void VentDebounceTimer_Tick(object sender, EventArgs e)
-        {
-            // Se dispara cuando han pasado ventDebounceMs sin cambios: aplicar pending
-            ventDebounceTimer.Stop();
-            ApplyPendingVentVel();
-        }
-        private void ApplyPendingVentVel()
-        {
-            if (valorPendienteVentVel < 0) return;
-            // Establecer velocidad en el objeto (disparará Ventilador.VelocidadChanged y enviará al Arduino)
-            ventilador.SetVelocidad(valorPendienteVentVel);
-            Debug.WriteLine($"[Debounce] Aplicada velocidad ventilador: {valorPendienteVentVel}");
-            valorPendienteVentVel = -1;
-        }
-
-        // Debounce para el calefactor para evitar envíos excesivos en el control manual
-        private void InitializeCalDebounce()
-        {
-            calDebounceTimer = new System.Windows.Forms.Timer();
-            calDebounceTimer.Interval = ratioEnvio;
-            calDebounceTimer.Tick += CalDebounceTimer_Tick;
-        }
-        private void CalDebounceTimer_Tick(object sender, EventArgs e)
-        {
-            // Se dispara cuando han pasado ratioEnvio cambios: aplicar pending
-            calDebounceTimer.Stop();
-            ApplyPendingCalPot();
-        }
-        private void ApplyPendingCalPot()
-        {
-            if (valorPendienteCalPot < 0) return;
-            // Establecer potencia en el objeto (disparará Calefactor.PotenciaChanged y enviará al Arduino)
-            calefactor.SetPotencia(valorPendienteCalPot);
-            Debug.WriteLine($"[Debounce] Aplicada potencia calefactor: {valorPendienteCalPot}");
-            valorPendienteCalPot = -1;
         }
 
         // Método para realizar las acciones de inicio y carga de la interfaz
@@ -475,6 +445,286 @@ namespace InterfazPlantaCtrlTemp
             });
         }
 
+        // Métodos para controlar el DataFrame del modo automático
+        private void InitializeDataFrameAuto()
+        {
+            // Columnas: tiempo, temperatura, entrada única, entrada ventilador, entrada calefactor
+            var colTiempoAuto = new PrimitiveDataFrameColumn<double>("Tiempo_s");
+            var colTempAuto = new PrimitiveDataFrameColumn<double>("Temperatura_C");
+            var colEntradaVentAuto = new PrimitiveDataFrameColumn<double>("EntradaVent");
+            var colEntradaCalAuto = new PrimitiveDataFrameColumn<double>("EntradaCal");
+
+            // Inicializar el DataFrame para almacenar los datos
+            dfAuto = new DataFrame(colTiempoAuto, colTempAuto, colEntradaVentAuto, colEntradaCalAuto);
+        }
+        private void AppendRowToDataFrameAuto(double tiempo, double temperatura, double entradaVent, double entradaCal)
+        {
+            if (dfAuto == null) InitializeDataFrameAuto();
+            dfAuto.Append(new object[] { tiempo, temperatura, entradaVent, entradaCal });
+        }
+        // Métodos para controlar el DataFrame del modo manual
+        private void InitializeDataFrameMan()
+        {
+            // Columnas: tiempo, temperatura
+            var colTiempoMan = new DoubleDataFrameColumn("Tiempo_s");
+            var colTempMan = new DoubleDataFrameColumn("Temperatura_C");
+
+            // Inicializar el DataFrame para almacenar los datos
+            dfManual = new DataFrame(colTiempoMan, colTempMan);
+            Debug.WriteLine("DataFrame manual inicializado.");
+            Debug.WriteLine(dfManual);
+        }
+        private void AppendRowToDataFrameMan(double tiempo, double temperatura)
+        {
+            lock (dfManualLock)
+            {
+                if (dfManual == null)
+                {
+                    Debug.WriteLine("DataFrame manual nulo: inicializando antes de añadir fila.");
+                    InitializeDataFrameMan();
+                }
+
+                var colTiempo = dfManual.Columns["Tiempo_s"] as DoubleDataFrameColumn;
+                var colTemp = dfManual.Columns["Temperatura_C"] as DoubleDataFrameColumn;
+
+                if (colTiempo == null || colTemp == null)
+                {
+                    Debug.WriteLine("Error: columnas dfManual no encontradas.");
+                    return;
+                }
+
+                // Append por columna (mantiene las longitudes sincronizadas)
+                colTiempo.Append(tiempo);
+                colTemp.Append(temperatura);
+
+                // Obtener recuento fiable usando la longitud de las columnas
+                long filasTiempo = colTiempo.Length;
+                long filasTemp = colTemp.Length;
+                long filas = Math.Min(filasTiempo, filasTemp);
+
+                Debug.WriteLine($"Fila añadida. Filas (por columna): Tiempo_s={filasTiempo}, Temperatura_C={filasTemp}");
+
+                // Mostrar la última fila añadida para verificar contenido
+                if (filas > 0)
+                {
+                    var ultimoTiempo = colTiempo[filas - 1];
+                    var ultimaTemp = colTemp[filas - 1];
+                    Debug.WriteLine($"Última fila -> Tiempo_s: {ultimoTiempo}, Temperatura_C: {ultimaTemp}");
+                }
+            }
+        }
+
+        // Métodos para controlar el DataFrame del modo PID
+        private void InitializeDataFramePID()
+        {
+            // Columnas: tiempo, temperatura, consigna
+            var colTiempoPID = new PrimitiveDataFrameColumn<double>("Tiempo_s");
+            var colTempPID = new PrimitiveDataFrameColumn<double>("Temperatura_C");
+            var colConsignaPID = new PrimitiveDataFrameColumn<double>("Consigna");
+
+            // Inicializar el DataFrame para almacenar los datos
+            dfPID = new DataFrame(colTiempoPID, colTempPID, colConsignaPID);
+        }
+        private void AppendRowToDataFramePID(double tiempo, double temperatura, double consigna)
+        {
+            if (dfPID == null) InitializeDataFramePID();
+            dfPID.Append(new object[] { tiempo, temperatura, consigna });
+
+        }
+
+
+        // Métodos para exportar los dataFrames a un archivo .csv
+        private void buttonGuardarDatos_Click(object sender, EventArgs e)
+        {
+            if (checkCrtlManual.Checked)
+            {
+                checkCrtlManual.Checked = false; // Desactivar el modo manual para asegurar que se guarden todos los datos
+                using (var sfd = new SaveFileDialog())
+                {
+                    sfd.Filter = "CSV|*.csv";
+                    sfd.FileName = "datos_temperaturaCtrlManual.csv";
+                    if (sfd.ShowDialog() == DialogResult.OK)
+                    {
+                        try
+                        {
+                            SaveDataFrameToCsvMan(sfd.FileName);
+                            MessageBox.Show("CSV guardado correctamente.", "Exportar CSV", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show($"Error guardando CSV:\n{ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
+                    }
+                }
+            }
+            else if (checkPID.Checked)
+            {
+                using (var sfd = new SaveFileDialog())
+                {
+                    sfd.Filter = "CSV|*.csv";
+                    sfd.FileName = "datos_temperaturaCtrlPID.csv";
+                    if (sfd.ShowDialog() == DialogResult.OK)
+                    {
+                        try
+                        {
+                            SaveDataFrameToCsvPID(sfd.FileName);
+                            MessageBox.Show("CSV guardado correctamente.", "Exportar CSV", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show($"Error guardando CSV:\n{ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
+                    }
+                }
+            }
+            else
+            {
+                using (var sfd = new SaveFileDialog())
+                {
+                    sfd.Filter = "CSV|*.csv";
+                    sfd.FileName = "datos_temperaturaCtrlAuto.csv";
+                    if (sfd.ShowDialog() == DialogResult.OK)
+                    {
+                        try
+                        {
+                            SaveDataFrameToCsvAuto(sfd.FileName);
+                            MessageBox.Show("CSV guardado correctamente.", "Exportar CSV", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show($"Error guardando CSV:\n{ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
+                    }
+                }
+            }
+        }
+        private void SaveDataFrameToCsvMan(string path)
+        {
+            if (dfManual == null || dfManual.Columns.Count == 0) throw new InvalidOperationException("DataFrame vacío.");
+            SaveDataFrameToCsv(dfManual, path);
+        }
+        private void SaveDataFrameToCsvAuto(string path)
+        {
+            if (dfAuto == null || dfAuto.Columns.Count == 0) throw new InvalidOperationException("DataFrame vacío.");
+            SaveDataFrameToCsv(dfAuto, path);
+        }
+        private void SaveDataFrameToCsvPID(string path)
+        {
+            if (dfPID == null || dfPID.Columns.Count == 0) throw new InvalidOperationException("DataFrame vacío.");
+            SaveDataFrameToCsv(dfPID, path);
+        }
+        private void SaveDataFrameToCsv(DataFrame df, string path)
+        {
+            if (df == null || df.Columns.Count == 0) throw new InvalidOperationException("DataFrame vacío.");
+
+            // Comprobar y obtener número de filas fiable (longitud mínima entre columnas)
+            long rowCount = long.MaxValue;
+            foreach (var c in df.Columns) rowCount = Math.Min(rowCount, c.Length);
+            if (rowCount == long.MaxValue) rowCount = 0;
+
+            Debug.WriteLine($"Guardando DataFrame a CSV: columnas={df.Columns.Count}, filas={rowCount}");
+            foreach (var c in df.Columns) Debug.WriteLine($"Columna '{c.Name}' length={c.Length}");
+
+            using (var sw = new StreamWriter(path, false, System.Text.Encoding.UTF8))
+            {
+                // Cabecera con nombres de columna
+                var header = string.Join(",", df.Columns.Select(c => EscapeCsv(c.Name ?? string.Empty)));
+                sw.WriteLine(header);
+
+                // Filas: iterar por índice y leer cada columna
+                for (long i = 0; i < rowCount; i++)
+                {
+                    var values = new string[df.Columns.Count];
+                    for (int j = 0; j < df.Columns.Count; j++)
+                    {
+                        object val = df.Columns[j][i];
+                        string formatted;
+
+                        if (val == null)
+                        {
+                            formatted = string.Empty;
+                        }
+                        else if (val is double d)
+                        {
+                            formatted = d.ToString("F2", CultureInfo.InvariantCulture);
+                        }
+                        else if (val is float f)
+                        {
+                            formatted = f.ToString("F2", CultureInfo.InvariantCulture);
+                        }
+                        else if (val is decimal m)
+                        {
+                            formatted = m.ToString("F2", CultureInfo.InvariantCulture);
+                        }
+                        else if (val is IFormattable formattable)
+                        {
+                            // Otros tipos numéricos (int, long, ...) -> formatear sin decimales
+                            formatted = formattable.ToString(null, CultureInfo.InvariantCulture);
+                        }
+                        else
+                        {
+                            formatted = Convert.ToString(val, CultureInfo.InvariantCulture) ?? string.Empty;
+                        }
+
+                        values[j] = EscapeCsv(formatted);
+                    }
+                    sw.WriteLine(string.Join(",", values));
+                }
+            }
+        }
+
+        private string EscapeCsv(string s)
+        {
+            if (string.IsNullOrEmpty(s)) return "";
+            bool mustQuote = s.Contains(",") || s.Contains("\"") || s.Contains("\r") || s.Contains("\n");
+            if (mustQuote) return "\"" + s.Replace("\"", "\"\"") + "\"";
+            return s;
+        }
+
+        // Debounce para el ventilador para evitar envíos excesivos en el control manual
+        private void InitializeVentDebounce()
+        {
+            ventDebounceTimer = new System.Windows.Forms.Timer();
+            ventDebounceTimer.Interval = ratioEnvio;
+            ventDebounceTimer.Tick += VentDebounceTimer_Tick;
+        }
+        private void VentDebounceTimer_Tick(object sender, EventArgs e)
+        {
+            // Se dispara cuando han pasado ventDebounceMs sin cambios: aplicar pending
+            ventDebounceTimer.Stop();
+            ApplyPendingVentVel();
+        }
+        private void ApplyPendingVentVel()
+        {
+            if (valorPendienteVentVel < 0) return;
+            // Establecer velocidad en el objeto (disparará Ventilador.VelocidadChanged y enviará al Arduino)
+            ventilador.SetVelocidad(valorPendienteVentVel);
+            Debug.WriteLine($"[Debounce] Aplicada velocidad ventilador: {valorPendienteVentVel}");
+            valorPendienteVentVel = -1;
+        }
+
+        // Debounce para el calefactor para evitar envíos excesivos en el control manual
+        private void InitializeCalDebounce()
+        {
+            calDebounceTimer = new System.Windows.Forms.Timer();
+            calDebounceTimer.Interval = ratioEnvio;
+            calDebounceTimer.Tick += CalDebounceTimer_Tick;
+        }
+        private void CalDebounceTimer_Tick(object sender, EventArgs e)
+        {
+            // Se dispara cuando han pasado ratioEnvio cambios: aplicar pending
+            calDebounceTimer.Stop();
+            ApplyPendingCalPot();
+        }
+        private void ApplyPendingCalPot()
+        {
+            if (valorPendienteCalPot < 0) return;
+            // Establecer potencia en el objeto (disparará Calefactor.PotenciaChanged y enviará al Arduino)
+            calefactor.SetPotencia(valorPendienteCalPot);
+            Debug.WriteLine($"[Debounce] Aplicada potencia calefactor: {valorPendienteCalPot}");
+            valorPendienteCalPot = -1;
+        }
+
         // Método de enviar datos al arduino
         private void EnviarDatos(string datos)
         {
@@ -497,11 +747,17 @@ namespace InterfazPlantaCtrlTemp
                     Debug.WriteLine($"Datos recibidos: {lectura}");
 
                     // Extraer y parsear el dato de temperatura
-                    lectura = lectura.Substring(1, 5);
-                    double temperatura = double.Parse(lectura, CultureInfo.InvariantCulture);
+                    string numero = new string(lectura.Where(c => char.IsDigit(c) || c == '.' || c == '-').ToArray());
+                    double temperatura = double.Parse(numero, CultureInfo.InvariantCulture);
                     double tiempoActual = cronometro.Elapsed.TotalSeconds;
 
                     Debug.WriteLine($"Tiempo: {tiempoActual}s, Temperatura: {temperatura}°C");
+
+                    // Guardar datos en el DataFrame
+                    if (checkPID.Checked) 
+                        AppendRowToDataFramePID(tiempoActual * 1000, temperatura, setpointSection.Value);
+                    else
+                        AppendRowToDataFrameMan(tiempoActual, temperatura);
 
                     // Añadir valores al gráfico de temperatura (Actualizar UI)
                     tempChart.Invoke((MethodInvoker)delegate
@@ -523,7 +779,7 @@ namespace InterfazPlantaCtrlTemp
                     // Recortar la serie de temperatura si está activado el control manual
                     if (checkCrtlManual.Checked)
                     {
-                        TrimTemperatureWindow((double)numericTamVentana.Value);
+                        TrimTemperatureWindow(Math.Max((double)numericTamVentana.Value,5));
                     }
 
                     // Añadir valores al gráfico de entradas (Actualizar UI) (Para el modo de entradas del sistema)
@@ -564,12 +820,14 @@ namespace InterfazPlantaCtrlTemp
                     Debug.WriteLine($"Datos recibidos: {lectura}");
 
                     // Extraer y parsear el dato de temperatura
-                    lectura = lectura.Substring(1, 5);
-                    double temperatura = double.Parse(lectura, CultureInfo.InvariantCulture);
+                    string numero = new string(lectura.Where(c => char.IsDigit(c) || c == '.' || c == '-').ToArray());
+                    double temperatura = double.Parse(numero, CultureInfo.InvariantCulture);
                     double tiempoActual = cronometro.Elapsed.TotalSeconds;
 
                     Debug.WriteLine($"Tiempo: {tiempoActual}s, Temperatura: {temperatura}°C");
 
+                    // Guardar los datos en el dataFrameAuto
+                    AppendRowToDataFrameAuto(tiempoActual, temperatura, entradavent, entradacal);
 
                     // Añadir valores al gráfico de temperatura (Actualizar UI)
                     tempChart.Invoke((MethodInvoker)delegate
@@ -672,6 +930,7 @@ namespace InterfazPlantaCtrlTemp
                 buttonCargarEntradas.Enabled = false;
 
                 entradaChart.Visible = false; // Ocultar el gráfico de entradas
+                buttonOcultar.Enabled = false;
 
                 tempChart.Size = new Size(900, 700); // Ajustar el tamaño del gráfico de temperatura
 
@@ -683,6 +942,9 @@ namespace InterfazPlantaCtrlTemp
                     tiempos.Clear();
                     tempChart.Update(true, true);
                     Debug.WriteLine("Gráfico actualizado");
+
+                    // Limpiar el dataFrame
+                    InitializeDataFrameMan();
 
                     // Configurar el gráfico inicial
                     ConfigurarGraficoTempInicial();
@@ -710,6 +972,7 @@ namespace InterfazPlantaCtrlTemp
                 checkEscalon.Enabled = true;
                 checkRampa.Enabled = true;
                 buttonCargarEntradas.Enabled = true;
+                buttonOcultar.Enabled = true;
             }
         }
 
@@ -817,6 +1080,7 @@ namespace InterfazPlantaCtrlTemp
         private async void buttonCargarEntradas_Click(object sender, EventArgs e)
         {
             buttonCargarEntradas.Enabled = false; // Deshabilitar botón durante la operación
+            buttonGuardarDatos.Enabled = false; // Deshabilitar botón de guardar datos durante la operación
             entradaChart.Visible = true; // Mostrar el gráfico de entradas
             checkCrtlManual.Enabled = false; // Deshabilitar el control manual durante la operación
 
@@ -840,6 +1104,9 @@ namespace InterfazPlantaCtrlTemp
                 tiempos.Clear();
                 entradaChart.Update(true, true);
                 Debug.WriteLine("Gráfico de entradas actualizado");
+
+                // Limpiar el dataFrame
+                InitializeDataFrameAuto();
 
                 // Configurar el gráfico inicial
                 ConfigurarGraficoTempInicial();
@@ -1109,6 +1376,7 @@ namespace InterfazPlantaCtrlTemp
             {
                 // Rehabilitar botón al finalizar
                 buttonCargarEntradas.Enabled = true;
+                buttonGuardarDatos.Enabled = true;
                 checkCrtlManual.Enabled = true;
             }
         }
@@ -1147,6 +1415,11 @@ namespace InterfazPlantaCtrlTemp
                 entradaChart.Update(true, true);
                 Debug.WriteLine("Gráficos actualizados");
 
+                // Limpiar los dataFrame
+                InitializeDataFrameMan();
+                InitializeDataFrameAuto();
+                InitializeDataFramePID();
+
                 // Configurar el gráfico inicial
                 ConfigurarGraficoTempInicial();
                 ConfigurarGraficoEntradas();
@@ -1159,74 +1432,14 @@ namespace InterfazPlantaCtrlTemp
 
         // Control de Entradas en Lazo Cerrado Mediante un Controlador PID
 
-        private void calculoComando(float Kp, float Ki, float Kd)
-        {
-            int comando;
-            float temperatura = 0;
-            int dt = 10; // ms
-            float dtSec = dt / 1000f;
-            float error = 0;
-            float errorPrev = 0;
-            float integralTotal = 0f;
-
-            const float outMin = 0f;
-            const float outMax = 85f;
-
-            for (double i = 0; i < (double)numericTEjecucionLC.Value; i += (dt/1000D)) 
-            {
-                PuertoArduino.WriteLine($"t{i}T");
-                PuertoArduino.ReadTimeout = 200;
-                try
-                {
-                    string lectura = PuertoArduino.ReadLine().Trim();
-                    Debug.WriteLine($"Datos recibidos: {lectura}");
-                    // Extraer y parsear el dato de temperatura
-                    lectura = lectura.Substring(1, 5);
-                    temperatura = float.Parse(lectura, CultureInfo.InvariantCulture);
-                    Debug.WriteLine($"Temperatura actual: {temperatura}°C");
-
-                    // Cálculo del error
-                    error = (float)numericConsgTemp.Value - temperatura;
-                    Debug.WriteLine($"Error actual: {error}");
-
-                    // Cálculo de la integral del error
-                    integralTotal += error * dtSec;
-
-                    // Anti-windup: limitar integral
-                    if (Math.Abs(Ki) > 1e-6f)
-                    {
-                        float integralLimit = outMax / Math.Abs(Ki);
-                        integralTotal = Math.Max(-integralLimit, Math.Min(integralTotal, integralLimit));
-                    }
-                }
-                catch (TimeoutException)
-                {
-                    Debug.WriteLine("Timeout");
-                }
-
-                float gananciaProporcional = Kp * error;
-                float gananciaIntegral = Ki * integralTotal;
-                float gananciaDerivativa = Kd * (error - errorPrev) / dtSec;
-
-                errorPrev = error;
-
-                // Salida sin saturar (valor calculado por PID)
-                float comandoRaw = gananciaProporcional + gananciaIntegral + gananciaDerivativa;
-
-                // Se limita el comando al rango permitido (0-85) y se envía al calefactor
-                comando = (int)Math.Round(Math.Max(outMin, Math.Min(comandoRaw, outMax)));
-
-                EnviarDatos($"n{comando}N"); 
-                RecibirDatos(1, comando, dt);
-            }
-        }
-
         private void buttonCargarLazoCerrado_Click(object sender, EventArgs e)
         {
             checkKp.Enabled = false; // Deshabilitar el checkbox de Kp
             checkKi.Enabled = false; // Deshabilitar el checkbox de Ki
             checkKd.Enabled = false; // Deshabilitar el checkbox de Kd
             checkCrtlManual.Enabled = false; // Deshabilitar el control manual durante la operación
+            buttonCargarLazoCerrado.Enabled = false; // Deshabilitar el botón de cargar lazo cerrado durante la operación
+            buttonGuardarDatos.Enabled = false; // Deshabilitar botón de guardar datos durante la operación
 
             // Limpiar gráfico
             tempChart.Series.Clear();
@@ -1234,6 +1447,9 @@ namespace InterfazPlantaCtrlTemp
             tiempos.Clear();
             tempChart.Update(true, true);
             Debug.WriteLine("Gráfico actualizado");
+
+            // Limpiar el dataFrame
+            InitializeDataFramePID();
 
             // Configurar el gráfico inicial
             ConfigurarGraficoTempInicial();
@@ -1253,7 +1469,7 @@ namespace InterfazPlantaCtrlTemp
             ConfigurarGraficoEntradas();
 
             cronometro.Restart();
-            EnviarDatos("v40V"); // Velocidad fija del ventilador al 40%
+            EnviarDatos("v50V"); // Velocidad fija del ventilador al 50%
 
             try
             {
@@ -1305,7 +1521,69 @@ namespace InterfazPlantaCtrlTemp
                 checkKi.Enabled = true;
                 checkKd.Enabled = true;
                 buttonCargarLazoCerrado.Enabled = true;
+                buttonGuardarDatos.Enabled = true;
                 checkCrtlManual.Enabled = true;
+            }
+        }
+        private void calculoComando(float Kp, float Ki, float Kd)
+        {
+            int comando;
+            float temperatura = 0;
+            int dt = 10; // ms
+            float dtSec = dt / 1000f;
+            float error = 0;
+            float errorPrev = 0;
+            float integralTotal = 0f;
+
+            const float outMin = 0f;
+            const float outMax = 85f;
+
+            for (double i = 0; i < (double)numericTEjecucionLC.Value; i += (dt / 1000D))
+            {
+                PuertoArduino.WriteLine($"t{i}T");
+                PuertoArduino.ReadTimeout = 200;
+                try
+                {
+                    string lectura = PuertoArduino.ReadLine().Trim();
+                    Debug.WriteLine($"Datos recibidos: {lectura}");
+                    // Extraer y parsear el dato de temperatura
+                    lectura = lectura.Substring(1, 5);
+                    temperatura = float.Parse(lectura, CultureInfo.InvariantCulture);
+                    Debug.WriteLine($"Temperatura actual: {temperatura}°C");
+
+                    // Cálculo del error
+                    error = (float)numericConsgTemp.Value - temperatura;
+                    Debug.WriteLine($"Error actual: {error}");
+
+                    // Cálculo de la integral del error
+                    integralTotal += error * dtSec;
+
+                    // Anti-windup: limitar integral
+                    if (Math.Abs(Ki) > 1e-6f)
+                    {
+                        float integralLimit = outMax / Math.Abs(Ki);
+                        integralTotal = Math.Max(-integralLimit, Math.Min(integralTotal, integralLimit));
+                    }
+                }
+                catch (TimeoutException)
+                {
+                    Debug.WriteLine("Timeout");
+                }
+
+                float gananciaProporcional = Kp * error;
+                float gananciaIntegral = Ki * integralTotal;
+                float gananciaDerivativa = Kd * (error - errorPrev) / dtSec;
+
+                errorPrev = error;
+
+                // Salida sin saturar (valor calculado por PID)
+                float comandoRaw = gananciaProporcional + gananciaIntegral + gananciaDerivativa;
+
+                // Se limita el comando al rango permitido (0-85) y se envía al calefactor
+                comando = (int)Math.Round(Math.Max(outMin, Math.Min(comandoRaw, outMax)));
+
+                EnviarDatos($"n{comando}N");
+                RecibirDatos(1, comando, dt);
             }
         }
     }
