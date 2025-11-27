@@ -167,6 +167,21 @@ namespace InterfazPlantaCtrlTemp
                 checkCrtlManual.Checked = false;
             }
 
+            ventilador.SetVelocidad(40);
+            calefactor.SetPotencia(0);
+
+            try
+            {
+                EnviarDatos($"v{ventilador.GetVelocidad().ToString()}V");
+                EnviarDatos($"n{calefactor.GetPotencia().ToString()}N");
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Error enviando datos al cerrar: {ex.Message}");
+            } finally {
+                Thread.Sleep(200); // Esperar a que se envíen los datos antes de cerrar el puerto
+            }
+
             // Cerrar puerto
             if (PuertoArduino != null && PuertoArduino.IsOpen)
             {
@@ -737,6 +752,8 @@ namespace InterfazPlantaCtrlTemp
         {
             if (df == null || df.Columns.Count == 0) throw new InvalidOperationException("DataFrame vacío.");
 
+            var culture = CultureInfo.GetCultureInfo("es-ES");
+
             // Comprobar y obtener número de filas fiable (longitud mínima entre columnas)
             long rowCount = long.MaxValue;
             foreach (var c in df.Columns) rowCount = Math.Min(rowCount, c.Length);
@@ -748,7 +765,7 @@ namespace InterfazPlantaCtrlTemp
             using (var sw = new StreamWriter(path, false, System.Text.Encoding.UTF8))
             {
                 // Cabecera con nombres de columna
-                var header = string.Join(",", df.Columns.Select(c => EscapeCsv(c.Name ?? string.Empty)));
+                var header = string.Join(";", df.Columns.Select(c => EscapeCsv(c.Name ?? string.Empty)));
                 sw.WriteLine(header);
 
                 // Filas: iterar por índice y leer cada columna
@@ -766,29 +783,29 @@ namespace InterfazPlantaCtrlTemp
                         }
                         else if (val is double d)
                         {
-                            formatted = d.ToString("F2", CultureInfo.InvariantCulture);
+                            formatted = d.ToString("F2", culture);
                         }
                         else if (val is float f)
                         {
-                            formatted = f.ToString("F2", CultureInfo.InvariantCulture);
+                            formatted = f.ToString("F2", culture);
                         }
                         else if (val is decimal m)
                         {
-                            formatted = m.ToString("F2", CultureInfo.InvariantCulture);
+                            formatted = m.ToString("F2", culture);
                         }
                         else if (val is IFormattable formattable)
                         {
                             // Otros tipos numéricos (int, long, ...) -> formatear sin decimales
-                            formatted = formattable.ToString(null, CultureInfo.InvariantCulture);
+                            formatted = formattable.ToString(null, culture);
                         }
                         else
                         {
-                            formatted = Convert.ToString(val, CultureInfo.InvariantCulture) ?? string.Empty;
+                            formatted = Convert.ToString(val, culture) ?? string.Empty;
                         }
 
                         values[j] = EscapeCsv(formatted);
                     }
-                    sw.WriteLine(string.Join(",", values));
+                    sw.WriteLine(string.Join(";", values));
                 }
             }
         }
@@ -796,7 +813,7 @@ namespace InterfazPlantaCtrlTemp
         private string EscapeCsv(string s)
         {
             if (string.IsNullOrEmpty(s)) return "";
-            bool mustQuote = s.Contains(",") || s.Contains("\"") || s.Contains("\r") || s.Contains("\n");
+            bool mustQuote = s.Contains(";") || s.Contains("\"") || s.Contains("\r") || s.Contains("\n");
             if (mustQuote) return "\"" + s.Replace("\"", "\"\"") + "\"";
             return s;
         }
