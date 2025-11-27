@@ -18,7 +18,6 @@ C:\Users\sergi\Documents\Universidad\4\TFG\InterfazPlantaCtrlTemp\bin\Debug\Live
 C:\Users\sergi\Documents\Universidad\4\TFG\InterfazPlantaCtrlTemp\bin\Debug\LiveCharts.Wpf.pdb
 C:\Users\sergi\Documents\Universidad\4\TFG\InterfazPlantaCtrlTemp\bin\Debug\LiveCharts.Wpf.xml
 C:\Users\sergi\Documents\Universidad\4\TFG\InterfazPlantaCtrlTemp\obj\Debug\Interfaz.D344F253.Up2Date
-C:\Users\sergi\Documents\Universidad\4\TFG\InterfazPlantaCtrlTemp\obj\Debug\InterfazPlantaCtrlTemp.exe.config
 C:\Users\sergi\Documents\Universidad\4\TFG\InterfazPlantaCtrlTemp\bin\Debug\Apache.Arrow.dll
 C:\Users\sergi\Documents\Universidad\4\TFG\InterfazPlantaCtrlTemp\bin\Debug\Microsoft.Data.Analysis.dll
 C:\Users\sergi\Documents\Universidad\4\TFG\InterfazPlantaCtrlTemp\bin\Debug\Microsoft.ML.DataView.dll

@@ -50,8 +50,6 @@ namespace InterfazPlantaCtrlTemp
         private DataFrame dfPID;
 
         private readonly object dfManualLock = new object();
-        private readonly object dfAutoLock = new object();
-        private readonly object dfPIDLock = new object();
 
         public Form1()
         {
@@ -162,10 +160,8 @@ namespace InterfazPlantaCtrlTemp
         // Método para cerrar el puerto serial
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (checkCrtlManual.Checked)
-            {
-                checkCrtlManual.Checked = false;
-            }
+            ventilador.SetVelocidad(40); // Reducir ventilador
+            calefactor.SetPotencia(0);   // Apagar calefactor
 
             // Cerrar puerto
             if (PuertoArduino != null && PuertoArduino.IsOpen)
@@ -474,62 +470,18 @@ namespace InterfazPlantaCtrlTemp
         private void InitializeDataFrameAuto()
         {
             // Columnas: tiempo, temperatura, entrada única, entrada ventilador, entrada calefactor
-            var colTiempoAuto = new DoubleDataFrameColumn("Tiempo_s");
-            var colTempAuto = new DoubleDataFrameColumn("Temperatura_C");
-            var colEntradaVentAuto = new DoubleDataFrameColumn("Entrada_Vent");
-            var colEntradaCalAuto = new DoubleDataFrameColumn("Entrada_Cal");
+            var colTiempoAuto = new PrimitiveDataFrameColumn<double>("Tiempo_s");
+            var colTempAuto = new PrimitiveDataFrameColumn<double>("Temperatura_C");
+            var colEntradaVentAuto = new PrimitiveDataFrameColumn<double>("EntradaVent");
+            var colEntradaCalAuto = new PrimitiveDataFrameColumn<double>("EntradaCal");
 
             // Inicializar el DataFrame para almacenar los datos
             dfAuto = new DataFrame(colTiempoAuto, colTempAuto, colEntradaVentAuto, colEntradaCalAuto);
         }
-        private void AppendRowToDataFrameAuto(double tiempo, double temperatura, double EntradaVent, double EntradaCal)
+        private void AppendRowToDataFrameAuto(double tiempo, double temperatura, double entradaVent, double entradaCal)
         {
-            lock (dfAutoLock)
-            {
-                if (dfAuto == null)
-                {
-                    Debug.WriteLine("DataFrame auto nulo: inicializando antes de añadir fila.");
-                    InitializeDataFrameAuto();
-                }
-
-                var colTiempo = dfAuto.Columns["Tiempo_s"] as DoubleDataFrameColumn;
-                var colTemp = dfAuto.Columns["Temperatura_C"] as DoubleDataFrameColumn;
-                var colEntradaVentAuto = dfAuto.Columns["Entrada_Vent"] as DoubleDataFrameColumn;
-                var colEntradaCalAuto = dfAuto.Columns["Entrada_Cal"] as DoubleDataFrameColumn;
-
-                if (colTiempo == null || colTemp == null || colEntradaVentAuto == null || colEntradaCalAuto == null)
-                {
-                    Debug.WriteLine("Error: columnas dfAuto no encontradas.");
-                    return;
-                }
-
-                // Append por columna (mantiene las longitudes sincronizadas)
-                colTiempo.Append(tiempo);
-                colTemp.Append(temperatura);
-                colEntradaVentAuto.Append(EntradaVent);
-                colEntradaCalAuto.Append(EntradaCal);
-
-                // Obtener recuento fiable usando la longitud de las columnas
-                long filasTiempo = colTiempo.Length;
-                long filasTemp = colTemp.Length;
-                long filasEntVent = colEntradaVentAuto.Length;
-                long filasEntCal = colEntradaCalAuto.Length;
-                long filas1 = Math.Min(filasTiempo, filasTemp);
-                long filas2 = Math.Min(filasEntVent, filasEntCal);
-                long filas = Math.Min(filas1, filas2);
-
-                Debug.WriteLine($"Fila añadida. Filas (por columna): Tiempo_s={filasTiempo}, Temperatura_C={filasTemp}, Entrada_Vent={filasEntVent}, Entrada_Cal{filasEntCal}");
-
-                // Mostrar la última fila añadida para verificar contenido
-                if (filas > 0)
-                {
-                    var ultimoTiempo = colTiempo[filas - 1];
-                    var ultimaTemp = colTemp[filas - 1];
-                    var ultimaEntVent = colEntradaVentAuto[filas - 1];
-                    var ultimaEntCal = colEntradaCalAuto[filas - 1];
-                    Debug.WriteLine($"Última fila -> Tiempo_s: {ultimoTiempo}, Temperatura_C: {ultimaTemp}, Entrada_Vent: {ultimaEntVent}, Entrada_Cal: {ultimaEntCal}");
-                }
-            }
+            if (dfAuto == null) InitializeDataFrameAuto();
+            dfAuto.Append(new object[] { tiempo, temperatura, entradaVent, entradaCal });
         }
         // Métodos para controlar el DataFrame del modo manual
         private void InitializeDataFrameMan()
@@ -537,15 +489,13 @@ namespace InterfazPlantaCtrlTemp
             // Columnas: tiempo, temperatura
             var colTiempoMan = new DoubleDataFrameColumn("Tiempo_s");
             var colTempMan = new DoubleDataFrameColumn("Temperatura_C");
-            var colEntradaVentMan = new DoubleDataFrameColumn("Entrada_Vent");
-            var colEntradaCalMan = new DoubleDataFrameColumn("Entrada_Cal");
 
             // Inicializar el DataFrame para almacenar los datos
-            dfManual = new DataFrame(colTiempoMan, colTempMan, colEntradaVentMan, colEntradaCalMan);
+            dfManual = new DataFrame(colTiempoMan, colTempMan);
             Debug.WriteLine("DataFrame manual inicializado.");
             Debug.WriteLine(dfManual);
         }
-        private void AppendRowToDataFrameMan(double tiempo, double temperatura, double EntradaVent, double EntradaCal)
+        private void AppendRowToDataFrameMan(double tiempo, double temperatura)
         {
             lock (dfManualLock)
             {
@@ -557,10 +507,8 @@ namespace InterfazPlantaCtrlTemp
 
                 var colTiempo = dfManual.Columns["Tiempo_s"] as DoubleDataFrameColumn;
                 var colTemp = dfManual.Columns["Temperatura_C"] as DoubleDataFrameColumn;
-                var colEntradaVentMan = dfManual.Columns["Entrada_Vent"] as DoubleDataFrameColumn;
-                var colEntradaCalMan = dfManual.Columns["Entrada_Cal"] as DoubleDataFrameColumn;
 
-                if (colTiempo == null || colTemp == null || colEntradaVentMan == null || colEntradaCalMan == null)
+                if (colTiempo == null || colTemp == null)
                 {
                     Debug.WriteLine("Error: columnas dfManual no encontradas.");
                     return;
@@ -569,28 +517,20 @@ namespace InterfazPlantaCtrlTemp
                 // Append por columna (mantiene las longitudes sincronizadas)
                 colTiempo.Append(tiempo);
                 colTemp.Append(temperatura);
-                colEntradaVentMan.Append(EntradaVent);
-                colEntradaCalMan.Append(EntradaCal);
 
                 // Obtener recuento fiable usando la longitud de las columnas
                 long filasTiempo = colTiempo.Length;
                 long filasTemp = colTemp.Length;
-                long filasEntVent = colEntradaVentMan.Length;
-                long filasEntCal = colEntradaCalMan.Length;
-                long filas1 = Math.Min(filasTiempo, filasTemp);
-                long filas2 = Math.Min(filasEntVent, filasEntCal);
-                long filas = Math.Min(filas1, filas2);
+                long filas = Math.Min(filasTiempo, filasTemp);
 
-                Debug.WriteLine($"Fila añadida. Filas (por columna): Tiempo_s={filasTiempo}, Temperatura_C={filasTemp}, Entrada_Vent={filasEntVent}, Entrada_Cal{filasEntCal}");
+                Debug.WriteLine($"Fila añadida. Filas (por columna): Tiempo_s={filasTiempo}, Temperatura_C={filasTemp}");
 
                 // Mostrar la última fila añadida para verificar contenido
                 if (filas > 0)
                 {
                     var ultimoTiempo = colTiempo[filas - 1];
                     var ultimaTemp = colTemp[filas - 1];
-                    var ultimaEntVent = colEntradaVentMan[filas - 1];
-                    var ultimaEntCal = colEntradaCalMan[filas - 1];
-                    Debug.WriteLine($"Última fila -> Tiempo_s: {ultimoTiempo}, Temperatura_C: {ultimaTemp}, Entrada_Vent: {ultimaEntVent}, Entrada_Cal: {ultimaEntCal}");
+                    Debug.WriteLine($"Última fila -> Tiempo_s: {ultimoTiempo}, Temperatura_C: {ultimaTemp}");
                 }
             }
         }
@@ -599,56 +539,17 @@ namespace InterfazPlantaCtrlTemp
         private void InitializeDataFramePID()
         {
             // Columnas: tiempo, temperatura, consigna
-            var colTiempoPID = new DoubleDataFrameColumn("Tiempo_s");
-            var colTempPID = new DoubleDataFrameColumn("Temperatura_C");
-            var colConsignaPID = new DoubleDataFrameColumn("Consigna");
+            var colTiempoPID = new PrimitiveDataFrameColumn<double>("Tiempo_s");
+            var colTempPID = new PrimitiveDataFrameColumn<double>("Temperatura_C");
+            var colConsignaPID = new PrimitiveDataFrameColumn<double>("Consigna");
 
             // Inicializar el DataFrame para almacenar los datos
             dfPID = new DataFrame(colTiempoPID, colTempPID, colConsignaPID);
         }
         private void AppendRowToDataFramePID(double tiempo, double temperatura, double consigna)
         {
-            lock (dfPIDLock)
-            {
-                if (dfPID == null)
-                {
-                    Debug.WriteLine("DataFrame PID nulo: inicializando antes de añadir fila.");
-                    InitializeDataFrameMan();
-                }
-
-                var colTiempo = dfPID.Columns["Tiempo_s"] as DoubleDataFrameColumn;
-                var colTemp = dfPID.Columns["Temperatura_C"] as DoubleDataFrameColumn;
-                var colConsigna = dfPID.Columns["Consigna"] as DoubleDataFrameColumn;
-
-                if (colTiempo == null || colTemp == null || colConsigna == null)
-                {
-                    Debug.WriteLine("Error: columnas dfPID no encontradas.");
-                    return;
-                }
-
-                // Append por columna (mantiene las longitudes sincronizadas)
-                colTiempo.Append(tiempo);
-                colTemp.Append(temperatura);
-                colConsigna.Append(consigna);
-
-                // Obtener recuento fiable usando la longitud de las columnas
-                long filasTiempo = colTiempo.Length;
-                long filasTemp = colTemp.Length;
-                long filasConsigna = colConsigna.Length;
-                long filas1 = Math.Min(filasTiempo, filasTemp);
-                long filas = Math.Min(filas1, filasConsigna);
-
-                Debug.WriteLine($"Fila añadida. Filas (por columna): Tiempo_s={filasTiempo}, Temperatura_C={filasTemp}, Entrada_Vent={filasConsigna}");
-
-                // Mostrar la última fila añadida para verificar contenido
-                if (filas > 0)
-                {
-                    var ultimoTiempo = colTiempo[filas - 1];
-                    var ultimaTemp = colTemp[filas - 1];
-                    var ultimaConsigna = colConsigna[filas - 1];
-                    Debug.WriteLine($"Última fila -> Tiempo_s: {ultimoTiempo}, Temperatura_C: {ultimaTemp}, Consigna: {ultimaConsigna}");
-                }
-            }
+            if (dfPID == null) InitializeDataFramePID();
+            dfPID.Append(new object[] { tiempo, temperatura, consigna });
 
         }
 
@@ -939,7 +840,7 @@ namespace InterfazPlantaCtrlTemp
 
                     // Guardar los datos en el dataFrameAuto
                     if (checkCrtlManual.Checked)
-                        AppendRowToDataFrameMan(tiempoActual, temperatura, entradavent, entradacal);
+                        AppendRowToDataFrameMan(tiempoActual, temperatura);
                     else
                         AppendRowToDataFrameAuto(tiempoActual, temperatura, entradavent, entradacal);
 
@@ -1054,48 +955,29 @@ namespace InterfazPlantaCtrlTemp
                 checkRampa.Enabled = false;
                 buttonCargarEntradas.Enabled = false;
 
+                entradaChart.Visible = false; // Ocultar el gráfico de entradas
+
+                tempChart.Size = new Size(900, 700); // Ajustar el tamaño del gráfico de temperatura
+
                 // Enviar valores iniciales
+                
                 ventilador.SetVelocidad((int)numericVelVent.Value);
                 calefactor.SetPotencia((int)numericPotCal.Value);
-                try 
-                {
-                    EnviarDatos($"v{ventilador.GetVelocidad().ToString()}V");
-                    EnviarDatos($"n{calefactor.GetPotencia().ToString()}N");
-                }
-                catch (Exception ex)
-                {
-                    Debug.WriteLine($"Error enviando datos iniciales: {ex.Message}");
-                }
-
 
                 try
                 {
-                    // Limpiar gráfico de temperatura
-                    tempChart.Series.Clear();
-                    temperaturas.Clear();
-                    tiempos.Clear();
-                    tempChart.Update(true, true);
-                    Debug.WriteLine("Gráfico de temperatura actualizado");
-                    // Limpiar gráfico de entradas
-                    entradaChart.Series.Clear();
-                    entradas.Clear();
-                    entradaCal.Clear();
-                    entradaVent.Clear();
-                    tiempos.Clear();
-                    entradaChart.Update(true, true);
-                    Debug.WriteLine("Gráfico de entradas actualizado");
-
                     // Limpiar el dataFrame
                     InitializeDataFrameMan();
 
                     // Configurar el gráfico inicial
                     ConfigurarGraficoTempInicial();
                     ConfigurarGraficoEntradas2();
-                }
-                finally
-                {
+                    tempChart.Update(true, true);
+                    entradaChart.Update(true, true);
                     Debug.WriteLine("Gráfico actualizado");
                 }
+                catch
+                { }
 
                 cronometro.Restart();
                 StartModoManual();
