@@ -167,13 +167,10 @@ namespace InterfazPlantaCtrlTemp
                 checkCrtlManual.Checked = false;
             }
 
-            ventilador.SetVelocidad(40);
-            calefactor.SetPotencia(0);
-
             try
             {
-                EnviarDatos($"v{ventilador.GetVelocidad().ToString()}V");
-                EnviarDatos($"n{calefactor.GetPotencia().ToString()}N");
+                ventilador.SetVelocidad(40);
+                calefactor.SetPotencia(0);
             }
             catch (Exception ex)
             {
@@ -192,7 +189,7 @@ namespace InterfazPlantaCtrlTemp
         }
 
         // Método para conectar el puerto serial con el botón conectar
-        private void BtnConectar_Click(object sender, EventArgs e)
+        private async void BtnConectar_Click(object sender, EventArgs e)
         {
             // Crear Puerto Serial
             try
@@ -228,6 +225,8 @@ namespace InterfazPlantaCtrlTemp
             {
                 MessageBox.Show("No se puede acceder al puerto seleccionado. Verifique la conexión y el puerto.", "Error de conexión", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+
+            await Task.Delay(200); // Esperar a que el puerto esté listo
         }
 
         // Método para actualizar el valor máximo de Tfinal para el Ventilador y el Calefactor al cambiar el Tiempo de Ejecución
@@ -533,7 +532,7 @@ namespace InterfazPlantaCtrlTemp
                 long filas2 = Math.Min(filasEntVent, filasEntCal);
                 long filas = Math.Min(filas1, filas2);
 
-                Debug.WriteLine($"Fila añadida. Filas (por columna): Tiempo_s={filasTiempo}, Temperatura_C={filasTemp}, Entrada_Vent={filasEntVent}, Entrada_Cal{filasEntCal}");
+                //Debug.WriteLine($"Fila añadida. Filas (por columna): Tiempo_s={filasTiempo}, Temperatura_C={filasTemp}, Entrada_Vent={filasEntVent}, Entrada_Cal{filasEntCal}");
 
                 // Mostrar la última fila añadida para verificar contenido
                 if (filas > 0)
@@ -542,7 +541,7 @@ namespace InterfazPlantaCtrlTemp
                     var ultimaTemp = colTemp[filas - 1];
                     var ultimaEntVent = colEntradaVentAuto[filas - 1];
                     var ultimaEntCal = colEntradaCalAuto[filas - 1];
-                    Debug.WriteLine($"Última fila -> Tiempo_s: {ultimoTiempo}, Temperatura_C: {ultimaTemp}, Entrada_Vent: {ultimaEntVent}, Entrada_Cal: {ultimaEntCal}");
+                    //Debug.WriteLine($"Última fila -> Tiempo_s: {ultimoTiempo}, Temperatura_C: {ultimaTemp}, Entrada_Vent: {ultimaEntVent}, Entrada_Cal: {ultimaEntCal}");
                 }
             }
         }
@@ -616,10 +615,12 @@ namespace InterfazPlantaCtrlTemp
             // Columnas: tiempo, temperatura, consigna
             var colTiempoPID = new DoubleDataFrameColumn("Tiempo_s");
             var colTempPID = new DoubleDataFrameColumn("Temperatura_C");
+            var colEntradaVentPID = new DoubleDataFrameColumn("Entrada_Vent");
+            var colEntradaCalPID = new DoubleDataFrameColumn("Entrada_Cal");
             var colConsignaPID = new DoubleDataFrameColumn("Consigna");
 
             // Inicializar el DataFrame para almacenar los datos
-            dfPID = new DataFrame(colTiempoPID, colTempPID, colConsignaPID);
+            dfPID = new DataFrame(colTiempoPID, colTempPID, colEntradaVentPID, colEntradaCalPID, colConsignaPID);
         }
         private void AppendRowToDataFramePID(double tiempo, double temperatura, double consigna)
         {
@@ -862,106 +863,62 @@ namespace InterfazPlantaCtrlTemp
             valorPendienteCalPot = -1;
         }
 
+
         // Método de enviar datos al arduino
         private void EnviarDatos(string datos)
         {
-            PuertoArduino.WriteLine(datos);
-            Debug.WriteLine($"Datos enviados: {datos}");
-        }
-
-        // Método de recibir datos del arduino
-        private void RecibirDatos(int graph, float entrada, int dt)
-        {
-            for (int i = 0; i < graph; i++)
+            try
             {
-                Debug.WriteLine($"Leyendo dato: {i}");
-                PuertoArduino.WriteLine($"t{i}T");
-                PuertoArduino.ReadTimeout = 200;
-
-                try
+                if (PuertoArduino != null && PuertoArduino.IsOpen)
                 {
-                    string lectura = PuertoArduino.ReadLine().Trim();
-                    Debug.WriteLine($"Datos recibidos: {lectura}");
-
-                    // Extraer y parsear el dato de temperatura
-                    string numero = new string(lectura.Where(c => char.IsDigit(c) || c == '.' || c == '-').ToArray());
-                    double temperatura = double.Parse(numero, CultureInfo.InvariantCulture);
-                    double tiempoActual = cronometro.Elapsed.TotalSeconds;
-
-                    Debug.WriteLine($"Tiempo: {tiempoActual}s, Temperatura: {temperatura}°C");
-
-                    // Guardar datos en el DataFrame
-                    AppendRowToDataFramePID(tiempoActual * 1000, temperatura, setpointSection.Value);
-
-                    // Añadir valores al gráfico de temperatura (Actualizar UI)
-                    tempChart.Invoke((MethodInvoker)delegate
-                    {
-                        // Añadir los valores a las series
-                        temperaturas.Add(temperatura);
-                        tiempos.Add(tiempoActual);
-
-                        // Ajustar eje Y dinámicamente
-                        if (temperaturas.Count > 0)
-                        {
-                            double margen = Math.Max(5, temperaturas.Max() * 0.1); // 10% de margen o 5 unidades
-                            tempChart.AxisY[0].MinValue = Math.Floor(temperaturas.Min() - margen);
-                            tempChart.AxisY[0].MaxValue = Math.Ceiling(temperaturas.Max() + margen);
-                        }
-
-                    });
-
-                    // Añadir valores al gráfico de entradas (Actualizar UI) (Para el modo de entradas del sistema)
-                    entradaChart.Invoke((MethodInvoker)delegate
-                    {
-                        // Añadir los valores a las series
-                        entradas.Add(entrada);
-                        tiempos.Add(tiempoActual);
-
-                        // Ajustar eje Y dinámicamente
-                        if (entradas.Count > 0)
-                        {
-                            double margen = Math.Max(5, entradas.Max() * 0.1); // 10% de margen o 5 unidades
-                            entradaChart.AxisY[0].MinValue = Math.Floor(entradas.Min() - margen);
-                            entradaChart.AxisY[0].MaxValue = Math.Ceiling(entradas.Max() + margen);
-                        }
-                    });
-
-                    // Esperar un segundo antes de la siguiente lectura
-                    Thread.Sleep(dt);
+                    PuertoArduino.WriteLine(datos);
+                    Debug.WriteLine($"Datos enviados: {datos}");
                 }
-                catch (TimeoutException) { Debug.WriteLine("Timeout"); }
+                else
+                {
+                    Debug.WriteLine($"Puerto no abierto. No se envió: {datos}");
+                }
+            }
+            catch (IOException ioEx)
+            {
+                Debug.WriteLine($"IOException enviando datos '{datos}': {ioEx.Message}");
+            }
+            catch (InvalidOperationException invEx)
+            {
+                Debug.WriteLine($"InvalidOperationException enviando datos '{datos}': {invEx.Message}");
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Error enviando datos '{datos}': {ex.Message}");
             }
         }
 
-        // Método de recibir datos para dos entradas de control automático
-        private void RecibirDatos2(int graph, float entradavent, float entradacal, int dt)
+        // Método de recibir datos del arduino
+        private void RecibirDatos(int i, float entrada)
         {
-            for (int i = 0; i < graph; i++)
+            Debug.WriteLine($"Leyendo dato: {i}");
+            PuertoArduino.WriteLine($"t{i}T");
+            PuertoArduino.ReadTimeout = 200;
+            try
             {
-                Debug.WriteLine($"Leyendo dato: {i}");
-                PuertoArduino.WriteLine($"t{i}T");
-                PuertoArduino.ReadTimeout = 200;
+                string lectura = PuertoArduino.ReadLine().Trim();
+                Debug.WriteLine($"Datos recibidos: {lectura}");
 
-                try
-                {
-                    string lectura = PuertoArduino.ReadLine().Trim();
-                    Debug.WriteLine($"Datos recibidos: {lectura}");
+                // Extraer y parsear el dato de temperatura
+                string numero = new string(lectura.Where(c => char.IsDigit(c) || c == '.' || c == '-').ToArray());
+                double temperatura = double.Parse(numero, CultureInfo.InvariantCulture);
+                double tiempoActual = cronometro.Elapsed.TotalSeconds;
 
-                    // Extraer y parsear el dato de temperatura
-                    string numero = new string(lectura.Where(c => char.IsDigit(c) || c == '.' || c == '-').ToArray());
-                    double temperatura = double.Parse(numero, CultureInfo.InvariantCulture);
-                    double tiempoActual = cronometro.Elapsed.TotalSeconds;
+                Debug.WriteLine($"Tiempo: {tiempoActual}s, Temperatura: {temperatura}°C");
 
-                    Debug.WriteLine($"Tiempo: {tiempoActual}s, Temperatura: {temperatura}°C");
+                // Guardar datos en el DataFrame
+                if (checkPID.Checked)
+                    AppendRowToDataFramePID(tiempoActual * 1000, temperatura, setpointSection.Value);
+                else
+                    AppendRowToDataFrameAuto(tiempoActual, temperatura, entrada, 0);
 
-                    // Guardar los datos en el dataFrameAuto
-                    if (checkCrtlManual.Checked)
-                        AppendRowToDataFrameMan(tiempoActual, temperatura, entradavent, entradacal);
-                    else
-                        AppendRowToDataFrameAuto(tiempoActual, temperatura, entradavent, entradacal);
-
-                    // Añadir valores al gráfico de temperatura (Actualizar UI)
-                    tempChart.Invoke((MethodInvoker)delegate
+                // Añadir valores al gráfico de temperatura (Actualizar UI)
+                tempChart.Invoke((MethodInvoker)delegate
                     {
                         // Añadir los valores a las series
                         temperaturas.Add(temperatura);
@@ -974,15 +931,113 @@ namespace InterfazPlantaCtrlTemp
                             tempChart.AxisY[0].MinValue = Math.Floor(temperaturas.Min() - margen);
                             tempChart.AxisY[0].MaxValue = Math.Ceiling(temperaturas.Max() + margen);
                         }
+
                     });
 
-                    // Recortar la serie de temperatura si está activado el control manual
-                    if (checkCrtlManual.Checked)
-                    {
-                        TrimTemperatureWindow();
-                    }
+                // Añadir valores al gráfico de entradas (Actualizar UI) (Para el modo de entradas del sistema)
+                entradaChart.Invoke((MethodInvoker)delegate
+                {
+                    // Añadir los valores a las series
+                    entradas.Add(entrada);
+                    tiempos.Add(tiempoActual);
 
-                    // Añadir valores al gráfico de entradas (Actualizar UI) (Para el modo de entradas del sistema)
+                    // Ajustar eje Y dinámicamente
+                    if (entradas.Count > 0)
+                    {
+                        double margen = Math.Max(5, entradas.Max() * 0.1); // 10% de margen o 5 unidades
+                        entradaChart.AxisY[0].MinValue = Math.Floor(entradas.Min() - margen);
+                        entradaChart.AxisY[0].MaxValue = Math.Ceiling(entradas.Max() + margen);
+                    }
+                });
+            }
+            catch (TimeoutException) { Debug.WriteLine("Timeout"); }
+        }
+
+        // Método de recibir datos para dos entradas de control automático
+        private void RecibirDatos2(int i, float entradavent, float entradacal)
+        {
+            Debug.WriteLine($"Leyendo dato: {i}");
+            PuertoArduino.WriteLine($"t{i}T");
+            PuertoArduino.ReadTimeout = 200;
+
+            try
+            {
+                string lectura = PuertoArduino.ReadLine().Trim();
+                Debug.WriteLine($"Datos recibidos: {lectura}");
+
+                // Extraer y parsear el dato de temperatura
+                string numero = new string(lectura.Where(c => char.IsDigit(c) || c == '.' || c == '-').ToArray());
+                double temperatura = double.Parse(numero, CultureInfo.InvariantCulture);
+                double tiempoActual = cronometro.Elapsed.TotalSeconds;
+
+                Debug.WriteLine($"Tiempo: {tiempoActual}s, Temperatura: {temperatura}°C");
+
+                // Guardar los datos en el dataFrame correspondiente
+                if (checkCrtlManual.Checked)
+                    AppendRowToDataFrameMan(tiempoActual, temperatura, entradavent, entradacal);
+                else if (checkEscalon.Checked || checkRampa.Checked)
+                    AppendRowToDataFrameAuto(tiempoActual, temperatura, entradavent, entradacal);
+
+                // Añadir valores al gráfico de temperatura (Actualizar UI)
+                tempChart.Invoke((MethodInvoker)delegate
+                {
+                    // Añadir los valores a las series
+                    temperaturas.Add(temperatura);
+                    tiempos.Add(tiempoActual);
+
+                    // Ajustar eje Y dinámicamente
+                    if (temperaturas.Count > 0)
+                    {
+                        double margen = Math.Max(5, temperaturas.Max() * 0.1); // 10% de margen o 5 unidades
+                        tempChart.AxisY[0].MinValue = Math.Floor(temperaturas.Min() - margen);
+                        tempChart.AxisY[0].MaxValue = Math.Ceiling(temperaturas.Max() + margen);
+                    }
+                });
+
+                // Recortar la serie de temperatura si está activado el control manual
+                if (checkCrtlManual.Checked)
+                {
+                    TrimTemperatureWindow();
+                }
+
+                // Añadir valores al gráfico de entradas (Actualizar UI) (Para el modo de entradas del sistema)
+                // Solo mostrar la serie correspondiente a la entrada seleccionada
+                if (checkEscVent.Checked && !checkEscCal.Checked || checkRampVent.Checked && !checkRampCal.Checked)
+                {
+                    entradaChart.Invoke((MethodInvoker)delegate
+                    {
+                        // Añadir los valores a las series
+                        entradaVent.Add(entradavent);
+                        tiempos.Add(tiempoActual);
+
+                        // Ajustar eje Y dinámicamente
+                        if (entradaVent.Count > 0)
+                        {
+                            double margen = Math.Max(5, entradaVent.Max() * 0.1); // 10% de margen o 5 unidades
+                            entradaChart.AxisY[0].MinValue = Math.Floor(entradaVent.Min() - margen);
+                            entradaChart.AxisY[0].MaxValue = Math.Ceiling(entradaVent.Max() + margen);
+                        }
+                    });
+                }
+                else if (!checkEscVent.Checked && checkEscCal.Checked || !checkRampVent.Checked && checkRampCal.Checked)
+                {
+                    entradaChart.Invoke((MethodInvoker)delegate
+                    {
+                        // Añadir los valores a las series
+                        entradaCal.Add(entradacal);
+                        tiempos.Add(tiempoActual);
+
+                        // Ajustar eje Y dinámicamente
+                        if (entradaCal.Count > 0)
+                        {
+                            double margen = Math.Max(5, entradaCal.Max() * 0.1); // 10% de margen o 5 unidades
+                            entradaChart.AxisY[0].MinValue = Math.Floor(entradaCal.Min() - margen);
+                            entradaChart.AxisY[0].MaxValue = Math.Ceiling(entradaCal.Max() + margen);
+                        }
+                    });
+                }
+                else
+                {
                     entradaChart.Invoke((MethodInvoker)delegate
                     {
                         // Añadir los valores a las series
@@ -998,17 +1053,14 @@ namespace InterfazPlantaCtrlTemp
                             entradaChart.AxisY[0].MaxValue = Math.Ceiling(Math.Max(entradaVent.Max(), entradaCal.Max()) + margen);
                         }
                     });
-                    // Recortar la serie de entradas si está activado el control manual
-                    if (checkCrtlManual.Checked)
-                    {
-                        TrimEntradaWindow();
-                    }
-
-                    // Esperar un segundo antes de la siguiente lectura
-                    Thread.Sleep(dt);
                 }
-                catch (TimeoutException) { Debug.WriteLine("Timeout"); }
+                // Recortar la serie de entradas si está activado el control manual
+                if (checkCrtlManual.Checked)
+                {
+                    TrimEntradaWindow();
+                }
             }
+            catch (TimeoutException) { Debug.WriteLine("Timeout"); }
         }
 
         // Control manual del sistema
@@ -1023,18 +1075,44 @@ namespace InterfazPlantaCtrlTemp
             // Asegurar que el cronómetro está en marcha
             cronometro.Restart();
 
-            Task.Run(() =>
+            Task.Run(async () =>
             {
+                const int periodoMs = 1000;
+
                 while (!token.IsCancellationRequested)
                 {
+                    var iterWatch = Stopwatch.StartNew();
                     try
                     {
-                        RecibirDatos2(1, ventilador.GetVelocidad(), calefactor.GetPotencia(), 1000);
+                        // Ejecutar la lectura/control (bloqueante)
+                        RecibirDatos2(1, ventilador.GetVelocidad(), calefactor.GetPotencia());
+                    }
+                    catch (OperationCanceledException) when (token.IsCancellationRequested)
+                    {
+                        // cancelado, salir
+                        break;
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine($"Error en StartModoManual iteration: {ex.Message}");
                     }
                     finally
                     {
+                        iterWatch.Stop();
                         Debug.WriteLine("Iteración del loop manual completada");
                     }
+
+                    // Esperar el resto del periodo respetando cancelación
+                    int delay = periodoMs - (int)iterWatch.ElapsedMilliseconds;
+                    if (delay > 0)
+                    {
+                        try
+                        {
+                            await Task.Delay(delay, token);
+                        }
+                        catch (TaskCanceledException) { break; }
+                    }
+                    // si delay <= 0 no esperamos (la tarea tardó más de 1s)
                 }
             }, token);
         }
@@ -1267,7 +1345,7 @@ namespace InterfazPlantaCtrlTemp
 
                 // Configurar el gráfico inicial
                 ConfigurarGraficoTempInicial();
-                ConfigurarGraficoEntradas();
+                ConfigurarGraficoEntradas2();
 
                 if (checkEscalon.Checked) // Se ha seleccionado la entrada escalón
                 {
@@ -1276,81 +1354,220 @@ namespace InterfazPlantaCtrlTemp
                     if (checkEscVent.Checked && !checkEscCal.Checked) // Solo entrada escalón para el ventilador
                     {
                         Debug.WriteLine("Entrada escalón para el Ventilador");
+                        // Valores iniciales antes de la entrada escalón
+                        ventilador.SetVelocidad(40);
 
                         // Iniciar la recepción de datos
                         int valorPreEsc = (int)numericEscVentTInicio.Value;
                         Debug.WriteLine($"Tiempo previo al escalón: {valorPreEsc}");
-                        await Task.Run(() => RecibirDatos(valorPreEsc, ventilador.GetVelocidad(), 1000));
-                        Debug.WriteLine("Fin de RecibirDatos");
+
+                        // Ejecutar lecturas una vez por segundo de forma asíncrona
+                        for (int i = 0; i < valorPreEsc; i++)
+                        {
+                            try
+                            {
+                                // Ejecutar la lectura en un hilo de fondo
+                                await Task.Run(() => RecibirDatos2(i, ventilador.GetVelocidad(), calefactor.GetPotencia()));
+                                Debug.WriteLine("Fin de RecibirDatos");
+                            }
+                            catch (Exception ex)
+                            {
+                                Debug.WriteLine($"Error en lectura previa al escalón: {ex}");
+                                // Opcional: break; para abortar si hay error persistente
+                            }
+
+                            // Esperar 1 segundo antes de la siguiente lectura
+                            await Task.Delay(TimeSpan.FromSeconds(1));
+                        }
 
                         // Ajustar los valores enviados a los seleccionados por el usuario para la entrada escalón
                         ventilador.SetVelocidad((int)numericEscVentConsg.Value);
-                        EnviarDatos($"v{ventilador.GetVelocidad().ToString()}V");
                         int valorPostEsc = (int)numericTEjecucionAuto.Value + 1 - (int)numericEscVentTInicio.Value;
                         Debug.WriteLine($"Tiempo posterior al escalón: {valorPostEsc}");
-                        await Task.Run(() => RecibirDatos(valorPostEsc, ventilador.GetVelocidad(), 1000));
-                        Debug.WriteLine("Fin de RecibirDatos");
+
+                        // Ejecutar lecturas una vez por segundo de forma asíncrona
+                        for (int i = 0; i < valorPostEsc; i++)
+                        {
+                            try
+                            {
+                                // Ejecutar la lectura en un hilo de fondo
+                                await Task.Run(() => RecibirDatos2(i, ventilador.GetVelocidad(), calefactor.GetPotencia()));
+                                Debug.WriteLine("Fin de RecibirDatos");
+                            }
+                            catch (Exception ex)
+                            {
+                                Debug.WriteLine($"Error en lectura previa al escalón: {ex}");
+                                // Opcional: break; para abortar si hay error persistente
+                            }
+
+                            // Esperar 1 segundo antes de la siguiente lectura
+                            await Task.Delay(TimeSpan.FromSeconds(1));
+                        }
                     }
                     else if (!checkEscVent.Checked && checkEscCal.Checked) // Solo entrada escalón para el calefactor
                     {
                         Debug.WriteLine("Entrada escalón para el Calefactor");
+                        // Valores iniciales antes de la entrada escalón
+                        calefactor.SetPotencia(0);
 
                         // Iniciar la recepción de datos
                         int valorPreEsc = (int)numericEscCalTInicio.Value;
                         Debug.WriteLine($"Tiempo previo al escalón: {valorPreEsc}");
-                        await Task.Run(() => RecibirDatos(valorPreEsc, calefactor.GetPotencia(), 1000));
-                        Debug.WriteLine("Fin de RecibirDatos");
+
+                        // Ejecutar lecturas una vez por segundo de forma asíncrona
+                        for (int i = 0; i < valorPreEsc; i++)
+                        {
+                            try
+                            {
+                                // Ejecutar la lectura en un hilo de fondo
+                                await Task.Run(() => RecibirDatos2(i,ventilador.GetVelocidad(), calefactor.GetPotencia()));
+                                Debug.WriteLine("Fin de RecibirDatos");
+                            }
+                            catch (Exception ex)
+                            {
+                                Debug.WriteLine($"Error en lectura previa al escalón: {ex}");
+                                // Opcional: break; para abortar si hay error persistente
+                            }
+
+                            // Esperar 1 segundo antes de la siguiente lectura
+                            await Task.Delay(TimeSpan.FromSeconds(1));
+                        }
 
                         // Ajustar los valores enviados a los seleccionados por el usuario para la entrada escalón
                         calefactor.SetPotencia((int)numericEscCalConsg.Value);
-                        EnviarDatos($"n{numericEscCalConsg.Value.ToString()}N");
 
                         // Iniciar la recepción de datos
                         int valorPostEsc = (int)numericTEjecucionAuto.Value + 1 - (int)numericEscCalTInicio.Value;
                         Debug.WriteLine($"Tiempo posterior al escalón: {valorPostEsc}");
-                        await Task.Run(() => RecibirDatos(valorPostEsc, (float)numericEscCalConsg.Value, 1000));
-                        Debug.WriteLine("Fin de RecibirDatos");
+
+                        // Ejecutar lecturas una vez por segundo de forma asíncrona
+                        for (int i = 0; i < valorPostEsc; i++)
+                        {
+                            try
+                            {
+                                // Ejecutar la lectura en un hilo de fondo
+                                await Task.Run(() => RecibirDatos2(i, ventilador.GetVelocidad(), calefactor.GetPotencia()));
+                                Debug.WriteLine("Fin de RecibirDatos");
+                            }
+                            catch (Exception ex)
+                            {
+                                Debug.WriteLine($"Error en lectura previa al escalón: {ex}");
+                                // Opcional: break; para abortar si hay error persistente
+                            }
+
+                            // Esperar 1 segundo antes de la siguiente lectura
+                            await Task.Delay(TimeSpan.FromSeconds(1));
+                        }
                     }
                     else if (checkEscVent.Checked && checkEscCal.Checked) // Entradas escalón para ambos componentes
                     {
                         Debug.WriteLine("Entrada escalón para ambos componentes");
-                        ConfigurarGraficoEntradas2();
                         // Valores iniciales antes de la entrada escalón
-                        EnviarDatos("v40V");
-                        EnviarDatos("n0N");
+                        ventilador.SetVelocidad(40);
+                        calefactor.SetPotencia(0);
 
                         // Iniciar la recepción de datos
                         int valorPreEsc = Math.Min((int)numericEscVentTInicio.Value, (int)numericEscCalTInicio.Value);
                         Debug.WriteLine($"Tiempo previo al escalón: {valorPreEsc}");
-                        await Task.Run(() => RecibirDatos2(valorPreEsc, 40, 0, 1000));
-                        Debug.WriteLine("Fin de RecibirDatos");
+
+                        // Ejecutar lecturas una vez por segundo de forma asíncrona
+                        for (int i = 0; i < valorPreEsc; i++)
+                        {
+                            try
+                            {
+                                // Ejecutar la lectura en un hilo de fondo
+                                await Task.Run(() => RecibirDatos2(i, ventilador.GetVelocidad(), calefactor.GetPotencia()));
+                                Debug.WriteLine("Fin de RecibirDatos");
+                            }
+                            catch (Exception ex)
+                            {
+                                Debug.WriteLine($"Error en lectura previa al escalón: {ex}");
+                                // Opcional: break; para abortar si hay error persistente
+                            }
+
+                            // Esperar 1 segundo antes de la siguiente lectura
+                            await Task.Delay(TimeSpan.FromSeconds(1));
+                        }
 
                         // Enviar el primer valor de escalón
                         if ((int)numericEscVentTInicio.Value < (int)numericEscCalTInicio.Value) // Se envía primero el del ventilador
                         {
-                            EnviarDatos($"v{numericEscVentConsg.Value.ToString()}V");
+                            ventilador.SetVelocidad((int)numericEscVentConsg.Value);
                             int valorFirstEsc = (int)numericEscCalTInicio.Value - (int)numericEscVentTInicio.Value;
-                            await Task.Run(() => RecibirDatos2(valorFirstEsc, (float)numericEscVentConsg.Value, 0, 1000));
-                            EnviarDatos($"n{numericEscCalConsg.Value.ToString()}N");
+
+                            // Ejecutar lecturas una vez por segundo de forma asíncrona
+                            for (int i = 0; i < valorFirstEsc; i++)
+                            {
+                                try
+                                {
+                                    // Ejecutar la lectura en un hilo de fondo
+                                    await Task.Run(() => RecibirDatos2(i, ventilador.GetVelocidad(), calefactor.GetPotencia()));
+                                    Debug.WriteLine("Fin de RecibirDatos");
+                                }
+                                catch (Exception ex)
+                                {
+                                    Debug.WriteLine($"Error en lectura previa al escalón: {ex}");
+                                    // Opcional: break; para abortar si hay error persistente
+                                }
+
+                                // Esperar 1 segundo antes de la siguiente lectura
+                                await Task.Delay(TimeSpan.FromSeconds(1));
+                            }
+                            calefactor.SetPotencia((int)numericEscCalConsg.Value);
                         }
                         else if ((int)numericEscVentTInicio.Value > (int)numericEscCalTInicio.Value) // Se envía primero el del calefactor
                         {
-                            EnviarDatos($"n{numericEscCalConsg.Value.ToString()}N");
+                            calefactor.SetPotencia((int)numericEscCalConsg.Value);
                             int valorFirstEsc = (int)numericEscVentTInicio.Value - (int)numericEscCalTInicio.Value;
-                            await Task.Run(() => RecibirDatos2(valorFirstEsc, 40, (float)numericEscCalConsg.Value, 1000));
-                            EnviarDatos($"v{numericEscVentConsg.Value.ToString()}V");
+
+                            // Ejecutar lecturas una vez por segundo de forma asíncrona
+                            for (int i = 0; i < valorFirstEsc; i++)
+                            {
+                                try
+                                {
+                                    // Ejecutar la lectura en un hilo de fondo
+                                    await Task.Run(() => RecibirDatos2(i, ventilador.GetVelocidad(), calefactor.GetPotencia()));
+                                    Debug.WriteLine("Fin de RecibirDatos");
+                                }
+                                catch (Exception ex)
+                                {
+                                    Debug.WriteLine($"Error en lectura previa al escalón: {ex}");
+                                    // Opcional: break; para abortar si hay error persistente
+                                }
+
+                                // Esperar 1 segundo antes de la siguiente lectura
+                                await Task.Delay(TimeSpan.FromSeconds(1));
+                            }
+                            ventilador.SetVelocidad((int)numericEscVentConsg.Value);
                         }
                         else // Si ambos tiempos de inicio son iguales
                         {
-                            EnviarDatos($"v{numericEscVentConsg.Value.ToString()}V");
-                            EnviarDatos($"n{numericEscCalConsg.Value.ToString()}N");
+                            ventilador.SetVelocidad((int)numericEscVentConsg.Value);
+                            calefactor.SetPotencia((int)numericEscCalConsg.Value);
                         }
 
                         // Iniciar la recepción de datos
                         int valorPostEsc = (int)numericTEjecucionAuto.Value + 1 - Math.Max((int)numericEscVentTInicio.Value, (int)numericEscCalTInicio.Value);
                         Debug.WriteLine($"Tiempo posterior al escalón: {valorPostEsc}");
-                        await Task.Run(() => RecibirDatos2(valorPostEsc, (float)numericEscVentConsg.Value, (float)numericEscCalConsg.Value, 1000));
-                        Debug.WriteLine("Fin de RecibirDatos");
+
+                        // Ejecutar lecturas una vez por segundo de forma asíncrona
+                        for (int i = 0; i < valorPostEsc; i++)
+                        {
+                            try
+                            {
+                                // Ejecutar la lectura en un hilo de fondo
+                                await Task.Run(() => RecibirDatos2(i, ventilador.GetVelocidad(), calefactor.GetPotencia()));
+                                Debug.WriteLine("Fin de RecibirDatos");
+                            }
+                            catch (Exception ex)
+                            {
+                                Debug.WriteLine($"Error en lectura previa al escalón: {ex}");
+                                // Opcional: break; para abortar si hay error persistente
+                            }
+
+                            // Esperar 1 segundo antes de la siguiente lectura
+                            await Task.Delay(TimeSpan.FromSeconds(1));
+                        }
                     }
                     else
                     {
@@ -1365,73 +1582,185 @@ namespace InterfazPlantaCtrlTemp
                     {
                         Debug.WriteLine("Entrada rampa para el Ventilador");
                         // Valores iniciales antes de la entrada rampa
-                        EnviarDatos("v40V");
-                        EnviarDatos("n0N");
+                        ventilador.SetVelocidad(40);
+                        calefactor.SetPotencia(0);
 
                         // Iniciar la recepción de datos
                         int valorPreRamp = (int)numericRampVentTInicio.Value;
                         Debug.WriteLine($"Tiempo previo a la rampa: {valorPreRamp}");
-                        await Task.Run(() => RecibirDatos(valorPreRamp, 40, 1000));
-                        Debug.WriteLine("Fin de RecibirDatos");
+
+                        // Ejecutar lecturas una vez por segundo de forma asíncrona
+                        for (int i = 0; i < valorPreRamp; i++)
+                        {
+                            try
+                            {
+                                // Ejecutar la lectura en un hilo de fondo
+                                await Task.Run(() => RecibirDatos2(i, ventilador.GetVelocidad(), calefactor.GetPotencia()));
+                                Debug.WriteLine("Fin de RecibirDatos");
+                            }
+                            catch (Exception ex)
+                            {
+                                Debug.WriteLine($"Error en lectura previa a la rampa: {ex}");
+                                // Opcional: break; para abortar si hay error persistente
+                            }
+
+                            // Esperar 1 segundo antes de la siguiente lectura
+                            await Task.Delay(TimeSpan.FromSeconds(1));
+                        }
 
                         // Cálculo y envío de los valores de la rampa
                         for (int i = 0; i < (int)numericRampVentTFinal.Value - (int)numericRampVentTInicio.Value; i++)
                         {
                             float valorMidRamp = 40 + (i * (((float)numericRampVentConsg.Value - 40) / ((int)numericRampVentTFinal.Value - (int)numericRampVentTInicio.Value)));
-                            EnviarDatos($"v{valorMidRamp.ToString()}V");
-                            await Task.Run(() => RecibirDatos(1, valorMidRamp, 1000));
+                            ventilador.SetVelocidad((int)valorMidRamp);
+                            // Ejecutar lecturas una vez por segundo de forma asíncrona
+                            try
+                            {
+                                // Ejecutar la lectura en un hilo de fondo
+                                await Task.Run(() => RecibirDatos2(i, ventilador.GetVelocidad(), calefactor.GetPotencia()));
+                                Debug.WriteLine("Fin de RecibirDatos");
+                            }
+                            catch (Exception ex)
+                            {
+                                Debug.WriteLine($"Error en lectura previa a la rampa: {ex}");
+                                // Opcional: break; para abortar si hay error persistente
+                            }
+
+                            // Esperar 1 segundo antes de la siguiente lectura
+                            await Task.Delay(TimeSpan.FromSeconds(1));
                         }
 
                         // Ajustar los valores enviados a los seleccionados por el usuario para la entrada rampa
-                        EnviarDatos($"v{numericRampVentConsg.Value.ToString()}V");
+                        ventilador.SetVelocidad((int)numericRampVentConsg.Value);
                         // Iniciar la recepción de datos
                         int valorPostRamp = (int)numericTEjecucionAuto.Value + 1 - (int)numericRampVentTFinal.Value;
                         Debug.WriteLine($"Tiempo posterior a la rampa: {valorPostRamp}");
-                        await Task.Run(() => RecibirDatos(valorPostRamp, (float)numericRampVentConsg.Value, 1000));
-                        Debug.WriteLine("Fin de RecibirDatos");
+
+                        // Ejecutar lecturas una vez por segundo de forma asíncrona
+                        for (int i = 0; i < valorPostRamp; i++)
+                        {
+                            try
+                            {
+                                // Ejecutar la lectura en un hilo de fondo
+                                await Task.Run(() => RecibirDatos2(i, ventilador.GetVelocidad(), calefactor.GetPotencia()));
+                                Debug.WriteLine("Fin de RecibirDatos");
+                            }
+                            catch (Exception ex)
+                            {
+                                Debug.WriteLine($"Error en lectura previa a la rampa: {ex}");
+                                // Opcional: break; para abortar si hay error persistente
+                            }
+
+                            // Esperar 1 segundo antes de la siguiente lectura
+                            await Task.Delay(TimeSpan.FromSeconds(1));
+                        }
                     }
                     else if (!checkRampVent.Checked && checkRampCal.Checked) // Entrada rampa para el calefactor
                     {
                         Debug.WriteLine("Entrada rampa para el Calefactor");
                         // Valores iniciales antes de la entrada rampa
-                        EnviarDatos("v40V");
-                        EnviarDatos("n0N");
+                        ventilador.SetVelocidad(40);
+                        calefactor.SetPotencia(0);
 
                         // Iniciar la recepción de datos
                         int valorPreRamp = (int)numericRampCalTInicio.Value;
                         Debug.WriteLine($"Tiempo previo a la rampa: {valorPreRamp}");
-                        await Task.Run(() => RecibirDatos(valorPreRamp, 0, 1000));
-                        Debug.WriteLine("Fin de RecibirDatos");
+
+                        // Ejecutar lecturas una vez por segundo de forma asíncrona
+                        for (int i = 0; i < valorPreRamp; i++)
+                        {
+                            try
+                            {
+                                // Ejecutar la lectura en un hilo de fondo
+                                await Task.Run(() => RecibirDatos2(i, ventilador.GetVelocidad(), calefactor.GetPotencia()));
+                                Debug.WriteLine("Fin de RecibirDatos");
+                            }
+                            catch (Exception ex)
+                            {
+                                Debug.WriteLine($"Error en lectura previa a la rampa: {ex}");
+                                // Opcional: break; para abortar si hay error persistente
+                            }
+
+                            // Esperar 1 segundo antes de la siguiente lectura
+                            await Task.Delay(TimeSpan.FromSeconds(1));
+                        }
 
                         // Cálculo y envío de los valores de la rampa
                         for (int i = 0; i < (int)numericRampCalTFinal.Value - (int)numericRampCalTInicio.Value; i++)
                         {
                             float valorMidRamp = i * ((float)numericRampCalConsg.Value / ((int)numericRampCalTFinal.Value - (int)numericRampCalTInicio.Value));
-                            EnviarDatos($"n{valorMidRamp.ToString()}N");
-                            await Task.Run(() => RecibirDatos(1, valorMidRamp, 1000));
+                            calefactor.SetPotencia((int)valorMidRamp);
+                            // Ejecutar lecturas una vez por segundo de forma asíncrona
+                            try
+                            {
+                                // Ejecutar la lectura en un hilo de fondo
+                                await Task.Run(() => RecibirDatos2(i, ventilador.GetVelocidad(), calefactor.GetPotencia()));
+                                Debug.WriteLine("Fin de RecibirDatos");
+                            }
+                            catch (Exception ex)
+                            {
+                                Debug.WriteLine($"Error en lectura previa a la rampa: {ex}");
+                                // Opcional: break; para abortar si hay error persistente
+                            }
+
+                            // Esperar 1 segundo antes de la siguiente lectura
+                            await Task.Delay(TimeSpan.FromSeconds(1));
                         }
 
                         // Ajustar los valores enviados a los seleccionados por el usuario para la entrada rampa
-                        EnviarDatos($"n{numericRampCalConsg.Value.ToString()}N");
+                        calefactor.SetPotencia((int)numericRampCalConsg.Value);
                         // Iniciar la recepción de datos
                         int valorPostRamp = (int)numericTEjecucionAuto.Value + 1 - (int)numericRampCalTFinal.Value;
                         Debug.WriteLine($"Tiempo posterior a la rampa: {valorPostRamp}");
-                        await Task.Run(() => RecibirDatos(valorPostRamp, (float)numericRampCalConsg.Value, 1000));
-                        Debug.WriteLine("Fin de RecibirDatos");
+
+                        // Ejecutar lecturas una vez por segundo de forma asíncrona
+                        for (int i = 0; i < valorPostRamp; i++)
+                        {
+                            try
+                            {
+                                // Ejecutar la lectura en un hilo de fondo
+                                await Task.Run(() => RecibirDatos2(i, ventilador.GetVelocidad(), calefactor.GetPotencia()));
+                                Debug.WriteLine("Fin de RecibirDatos");
+                            }
+                            catch (Exception ex)
+                            {
+                                Debug.WriteLine($"Error en lectura previa a la rampa: {ex}");
+                                // Opcional: break; para abortar si hay error persistente
+                            }
+
+                            // Esperar 1 segundo antes de la siguiente lectura
+                            await Task.Delay(TimeSpan.FromSeconds(1));
+                        }
                     }
                     else if (checkRampVent.Checked && checkRampCal.Checked) // Entrada rampa para ambos componentes
                     {
                         Debug.WriteLine("Entrada rampa para ambos componentes");
-                        ConfigurarGraficoEntradas2();
                         // Valores iniciales antes de la entrada rampa
-                        EnviarDatos("v40V");
-                        EnviarDatos("n0N");
+                        ventilador.SetVelocidad(40);
+                        calefactor.SetPotencia(0);
 
                         // Iniciar la recepción de datos
                         int valorPreRamp = Math.Min((int)numericRampVentTInicio.Value, (int)numericRampCalTInicio.Value);
                         Debug.WriteLine($"Tiempo previo a la rampa: {valorPreRamp}");
-                        await Task.Run(() => RecibirDatos2(valorPreRamp, 40, 0, 1000));
-                        Debug.WriteLine("Fin de RecibirDatos");
+
+                        // Ejecutar lecturas una vez por segundo de forma asíncrona
+                        for (int i = 0; i < valorPreRamp; i++)
+                        {
+                            try
+                            {
+                                // Ejecutar la lectura en un hilo de fondo
+                                await Task.Run(() => RecibirDatos2(i, ventilador.GetVelocidad(), calefactor.GetPotencia()));
+                                Debug.WriteLine("Fin de RecibirDatos");
+                            }
+                            catch (Exception ex)
+                            {
+                                Debug.WriteLine($"Error en lectura previa a la rampa: {ex}");
+                                // Opcional: break; para abortar si hay error persistente
+                            }
+
+                            // Esperar 1 segundo antes de la siguiente lectura
+                            await Task.Delay(TimeSpan.FromSeconds(1));
+                        }
 
                         // Enviar el primer valor de rampa
                         if ((int)numericRampVentTInicio.Value < (int)numericRampCalTInicio.Value) // Se envía primero el del ventilador
@@ -1442,24 +1771,52 @@ namespace InterfazPlantaCtrlTemp
                             {
                                 // El valor de cada rampa no puede superar el valor de consigna definido por el usuario
                                 float valorMidRampVent = Math.Min(40 + (i * (((float)numericRampVentConsg.Value - 40) / ((int)numericRampVentTFinal.Value - (int)numericRampVentTInicio.Value))), (float)numericRampVentConsg.Value);
-                                EnviarDatos($"v{valorMidRampVent.ToString()}V");
+                                ventilador.SetVelocidad((int)valorMidRampVent);
 
                                 // Antes de que se alcance el tiempo de inicio de la rampa del calefactor, su valor se mantiene en 0
                                 if (cronometro.Elapsed.TotalSeconds < (int)numericRampCalTInicio.Value + 1)
                                 {
                                     int valorMidRampCal = 0;
-                                    EnviarDatos($"n{valorMidRampCal.ToString()}N");
+                                    calefactor.SetPotencia(valorMidRampCal);
 
-                                    await Task.Run(() => RecibirDatos2(1, valorMidRampVent, valorMidRampCal, 1000));
+                                    // Ejecutar lecturas una vez por segundo de forma asíncrona
+                                    try
+                                    {
+                                        // Ejecutar la lectura en un hilo de fondo
+                                        await Task.Run(() => RecibirDatos2(i, ventilador.GetVelocidad(), calefactor.GetPotencia()));
+                                        Debug.WriteLine("Fin de RecibirDatos");
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        Debug.WriteLine($"Error en lectura previa a la rampa: {ex}");
+                                        // Opcional: break; para abortar si hay error persistente
+                                    }
+
+                                    // Esperar 1 segundo antes de la siguiente lectura
+                                    await Task.Delay(TimeSpan.FromSeconds(1));
                                 }
                                 // Cuando el tiempo de inicio de la rampa del calefactor se alcanza, se empieza a incrementar su valor
                                 else
                                 {
                                     j++;
                                     float valorMidRampCal = Math.Min(j * ((float)numericRampCalConsg.Value / ((int)numericRampCalTFinal.Value - (int)numericRampCalTInicio.Value)), (float)numericRampCalConsg.Value);
-                                    EnviarDatos($"n{valorMidRampCal.ToString()}N");
+                                    calefactor.SetPotencia((int)valorMidRampCal);
 
-                                    await Task.Run(() => RecibirDatos2(1, valorMidRampVent, valorMidRampCal, 1000));
+                                    // Ejecutar lecturas una vez por segundo de forma asíncrona
+                                    try
+                                    {
+                                        // Ejecutar la lectura en un hilo de fondo
+                                        await Task.Run(() => RecibirDatos2(i, ventilador.GetVelocidad(), calefactor.GetPotencia()));
+                                        Debug.WriteLine("Fin de RecibirDatos");
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        Debug.WriteLine($"Error en lectura previa a la rampa: {ex}");
+                                        // Opcional: break; para abortar si hay error persistente
+                                    }
+
+                                    // Esperar 1 segundo antes de la siguiente lectura
+                                    await Task.Delay(TimeSpan.FromSeconds(1));
                                 }
                             }
                         }
@@ -1471,24 +1828,52 @@ namespace InterfazPlantaCtrlTemp
                             {
                                 // El valor de cada rampa no puede superar el valor de consigna definido por el usuario
                                 float valorMidRampCal = Math.Min(i * ((float)numericRampCalConsg.Value / ((int)numericRampCalTFinal.Value - (int)numericRampCalTInicio.Value)), (float)numericRampCalConsg.Value);
-                                EnviarDatos($"n{valorMidRampCal.ToString()}N");
+                                calefactor.SetPotencia((int)valorMidRampCal);
 
                                 // Antes de que se alcance el tiempo de inicio de la rampa del ventilador, su valor se mantiene en 40
                                 if (cronometro.Elapsed.TotalSeconds < (int)numericRampVentTInicio.Value + 1)
                                 {
                                     int valorMidRampVent = 40;
-                                    EnviarDatos($"v{valorMidRampVent.ToString()}V");
+                                    ventilador.SetVelocidad(valorMidRampVent);
 
-                                    await Task.Run(() => RecibirDatos2(1, valorMidRampVent, valorMidRampCal, 1000));
+                                    // Ejecutar lecturas una vez por segundo de forma asíncrona
+                                    try
+                                    {
+                                        // Ejecutar la lectura en un hilo de fondo
+                                        await Task.Run(() => RecibirDatos2(i, ventilador.GetVelocidad(), calefactor.GetPotencia()));
+                                        Debug.WriteLine("Fin de RecibirDatos");
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        Debug.WriteLine($"Error en lectura previa a la rampa: {ex}");
+                                        // Opcional: break; para abortar si hay error persistente
+                                    }
+
+                                    // Esperar 1 segundo antes de la siguiente lectura
+                                    await Task.Delay(TimeSpan.FromSeconds(1));
                                 }
                                 // Cuando el tiempo de inicio de la rampa del ventilador se alcanza, se empieza a incrementar su valor
                                 else
                                 {
                                     j++;
                                     float valorMidRampVent = Math.Min(40 + (j * (((float)numericRampVentConsg.Value - 40) / ((int)numericRampVentTFinal.Value - (int)numericRampVentTInicio.Value))), (float)numericRampVentConsg.Value);
-                                    EnviarDatos($"v{valorMidRampVent.ToString()}V");
+                                    ventilador.SetVelocidad((int)valorMidRampVent);
 
-                                    await Task.Run(() => RecibirDatos2(1, valorMidRampVent, valorMidRampCal, 1000));
+                                    // Ejecutar lecturas una vez por segundo de forma asíncrona
+                                    try
+                                    {
+                                        // Ejecutar la lectura en un hilo de fondo
+                                        await Task.Run(() => RecibirDatos2(i, ventilador.GetVelocidad(), calefactor.GetPotencia()));
+                                        Debug.WriteLine("Fin de RecibirDatos");
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        Debug.WriteLine($"Error en lectura previa a la rampa: {ex}");
+                                        // Opcional: break; para abortar si hay error persistente
+                                    }
+
+                                    // Esperar 1 segundo antes de la siguiente lectura
+                                    await Task.Delay(TimeSpan.FromSeconds(1));
                                 }
                             }
 
@@ -1501,23 +1886,54 @@ namespace InterfazPlantaCtrlTemp
                             {
                                 // El valor de cada rampa no puede superar el valor de consigna definido por el usuario
                                 float valorMidRampVent = Math.Min(40 + (i * (((float)numericRampVentConsg.Value - 40) / ((int)numericRampVentTFinal.Value - (int)numericRampVentTInicio.Value))), (float)numericRampVentConsg.Value);
-                                EnviarDatos($"v{valorMidRampVent.ToString()}V");
+                                ventilador.SetVelocidad((int)valorMidRampVent);
                                 float valorMidRampCal = Math.Min(i * ((float)numericRampCalConsg.Value / ((int)numericRampCalTFinal.Value - (int)numericRampCalTInicio.Value)), (float)numericRampCalConsg.Value);
-                                EnviarDatos($"n{valorMidRampCal.ToString()}N");
+                                calefactor.SetPotencia((int)valorMidRampCal);
 
-                                await Task.Run(() => RecibirDatos2(1, valorMidRampVent, valorMidRampCal, 1000));
+                                // Ejecutar lecturas una vez por segundo de forma asíncrona
+                                try
+                                {
+                                    // Ejecutar la lectura en un hilo de fondo
+                                    await Task.Run(() => RecibirDatos2(i, ventilador.GetVelocidad(), calefactor.GetPotencia()));
+                                    Debug.WriteLine("Fin de RecibirDatos");
+                                }
+                                catch (Exception ex)
+                                {
+                                    Debug.WriteLine($"Error en lectura previa a la rampa: {ex}");
+                                    // Opcional: break; para abortar si hay error persistente
+                                }
+
+                                // Esperar 1 segundo antes de la siguiente lectura
+                                await Task.Delay(TimeSpan.FromSeconds(1));
                             }
-
-                            // Ajustar los valores enviados a los seleccionados por el usuario para cada entrada rampa
-                            EnviarDatos($"v{numericRampVentConsg.Value.ToString()}V");
-                            EnviarDatos($"n{numericRampCalConsg.Value.ToString()}N");
                         }
 
+                        // Ajustar los valores enviados a los seleccionados por el usuario para cada entrada rampa
+                        ventilador.SetVelocidad((int)numericRampVentConsg.Value);
+                        calefactor.SetPotencia((int)numericRampCalConsg.Value);
+
                         // Envío de valores finales de rampa
-                        int valorPostEsc = (int)numericTEjecucionAuto.Value + 1 - Math.Max((int)numericRampVentTFinal.Value, (int)numericRampCalTFinal.Value);
-                        Debug.WriteLine($"Tiempo posterior al escalón: {valorPostEsc}");
-                        await Task.Run(() => RecibirDatos2(valorPostEsc, (float)numericRampVentConsg.Value, (float)numericRampCalConsg.Value, 1000));
-                        Debug.WriteLine("Fin de RecibirDatos");
+                        int valorPostRamp = (int)numericTEjecucionAuto.Value + 1 - Math.Max((int)numericRampVentTFinal.Value, (int)numericRampCalTFinal.Value);
+                        Debug.WriteLine($"Tiempo posterior a la rampa: {valorPostRamp}");
+
+                        // Ejecutar lecturas una vez por segundo de forma asíncrona
+                        for (int i = 0; i < valorPostRamp; i++)
+                        {
+                            try
+                            {
+                                // Ejecutar la lectura en un hilo de fondo
+                                await Task.Run(() => RecibirDatos2(i, ventilador.GetVelocidad(), calefactor.GetPotencia()));
+                                Debug.WriteLine("Fin de RecibirDatos");
+                            }
+                            catch (Exception ex)
+                            {
+                                Debug.WriteLine($"Error en lectura previa a la rampa: {ex}");
+                                // Opcional: break; para abortar si hay error persistente
+                            }
+
+                            // Esperar 1 segundo antes de la siguiente lectura
+                            await Task.Delay(TimeSpan.FromSeconds(1));
+                        }
                     }
                     else
                     {
@@ -1623,7 +2039,7 @@ namespace InterfazPlantaCtrlTemp
             ConfigurarGraficoEntradas();
 
             cronometro.Restart();
-            EnviarDatos("v50V"); // Velocidad fija del ventilador al 50%
+            ventilador.SetVelocidad(50); // Establecer velocidad fija del ventilador
 
             try
             {
@@ -1736,8 +2152,8 @@ namespace InterfazPlantaCtrlTemp
                 // Se limita el comando al rango permitido (0-85) y se envía al calefactor
                 comando = (int)Math.Round(Math.Max(outMin, Math.Min(comandoRaw, outMax)));
 
-                EnviarDatos($"n{comando}N");
-                RecibirDatos(1, comando, dt);
+                calefactor.SetPotencia(comando);
+                RecibirDatos(1, comando);
             }
         }
     }
