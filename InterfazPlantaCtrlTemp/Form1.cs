@@ -1002,39 +1002,60 @@ namespace InterfazPlantaCtrlTemp
 
                 // Añadir valores al gráfico de entradas (Actualizar UI) (Para el modo de entradas del sistema)
                 // Solo mostrar la serie correspondiente a la entrada seleccionada
-                if (checkEscVent.Checked && !checkEscCal.Checked || checkRampVent.Checked && !checkRampCal.Checked)
+                if (!checkCrtlManual.Checked && (checkEscalon.Checked || checkRampa.Checked))
                 {
-                    entradaChart.Invoke((MethodInvoker)delegate
+                    if ((checkEscVent.Checked && !checkEscCal.Checked) || (checkRampVent.Checked && !checkRampCal.Checked))
                     {
-                        // Añadir los valores a las series
-                        entradaVent.Add(entradavent);
-                        tiempos.Add(tiempoActual);
-
-                        // Ajustar eje Y dinámicamente
-                        if (entradaVent.Count > 0)
+                        entradaChart.Invoke((MethodInvoker)delegate
                         {
-                            double margen = Math.Max(5, entradaVent.Max() * 0.1); // 10% de margen o 5 unidades
-                            entradaChart.AxisY[0].MinValue = Math.Floor(entradaVent.Min() - margen);
-                            entradaChart.AxisY[0].MaxValue = Math.Ceiling(entradaVent.Max() + margen);
-                        }
-                    });
-                }
-                else if (!checkEscVent.Checked && checkEscCal.Checked || !checkRampVent.Checked && checkRampCal.Checked)
-                {
-                    entradaChart.Invoke((MethodInvoker)delegate
+                            // Añadir los valores a las series
+                            entradaVent.Add(entradavent);
+                            tiempos.Add(tiempoActual);
+
+                            // Ajustar eje Y dinámicamente
+                            if (entradaVent.Count > 0)
+                            {
+                                double margen = Math.Max(5, entradaVent.Max() * 0.1); // 10% de margen o 5 unidades
+                                entradaChart.AxisY[0].MinValue = Math.Floor(entradaVent.Min() - margen);
+                                entradaChart.AxisY[0].MaxValue = Math.Ceiling(entradaVent.Max() + margen);
+                            }
+                        });
+                    }
+                    else if ((!checkEscVent.Checked && checkEscCal.Checked) || (!checkRampVent.Checked && checkRampCal.Checked))
                     {
-                        // Añadir los valores a las series
-                        entradaCal.Add(entradacal);
-                        tiempos.Add(tiempoActual);
-
-                        // Ajustar eje Y dinámicamente
-                        if (entradaCal.Count > 0)
+                        entradaChart.Invoke((MethodInvoker)delegate
                         {
-                            double margen = Math.Max(5, entradaCal.Max() * 0.1); // 10% de margen o 5 unidades
-                            entradaChart.AxisY[0].MinValue = Math.Floor(entradaCal.Min() - margen);
-                            entradaChart.AxisY[0].MaxValue = Math.Ceiling(entradaCal.Max() + margen);
-                        }
-                    });
+                            // Añadir los valores a las series
+                            entradaCal.Add(entradacal);
+                            tiempos.Add(tiempoActual);
+
+                            // Ajustar eje Y dinámicamente
+                            if (entradaCal.Count > 0)
+                            {
+                                double margen = Math.Max(5, entradaCal.Max() * 0.1); // 10% de margen o 5 unidades
+                                entradaChart.AxisY[0].MinValue = Math.Floor(entradaCal.Min() - margen);
+                                entradaChart.AxisY[0].MaxValue = Math.Ceiling(entradaCal.Max() + margen);
+                            }
+                        });
+                    }
+                    else
+                    {
+                        // Si están seleccionadas ambas entradas, añadir ambas
+                        entradaChart.Invoke((MethodInvoker)delegate
+                        {
+                            // Añadir los valores a las series
+                            entradaVent.Add(entradavent);
+                            entradaCal.Add(entradacal);
+                            tiempos.Add(tiempoActual);
+                            // Ajustar eje Y dinámicamente
+                            if (entradaVent.Count > 0 || entradaCal.Count > 0)
+                            {
+                                double margen = Math.Max(5, Math.Max(entradaVent.Max(), entradaCal.Max()) * 0.1); // 10% de margen o 5 unidades
+                                entradaChart.AxisY[0].MinValue = Math.Floor(Math.Min(entradaVent.Min(), entradaCal.Min()) - margen);
+                                entradaChart.AxisY[0].MaxValue = Math.Ceiling(Math.Max(entradaVent.Max(), entradaCal.Max()) + margen);
+                            }
+                        });
+                    }
                 }
                 else
                 {
@@ -1252,6 +1273,8 @@ namespace InterfazPlantaCtrlTemp
             if (checkEscalon.Checked)
             {
                 checkRampa.Checked = false; // Desmarcar la entrada rampa si se selecciona escalón
+                checkRampVent.Checked = false;
+                checkRampCal.Checked = false;
                 buttonCargarEntradas.Enabled = true;
 
                 // Habilitar los controles de entrada escalón
@@ -1259,6 +1282,8 @@ namespace InterfazPlantaCtrlTemp
                 numericEscVentTInicio.Enabled = true;
                 numericEscCalConsg.Enabled = true;
                 numericEscCalTInicio.Enabled = true;
+                checkEscVent.Enabled = true;
+                checkEscCal.Enabled = true;
 
                 // Deshabilitar los controles de entrada rampa
                 numericRampVentConsg.Enabled = false;
@@ -1267,6 +1292,8 @@ namespace InterfazPlantaCtrlTemp
                 numericRampCalConsg.Enabled = false;
                 numericRampCalTInicio.Enabled = false;
                 numericRampCalTFinal.Enabled = false;
+                checkRampVent.Enabled = false;
+                checkRampCal.Enabled = false;
             }
             else
             {
@@ -1275,6 +1302,8 @@ namespace InterfazPlantaCtrlTemp
                 numericEscVentTInicio.Enabled = false;
                 numericEscCalConsg.Enabled = false;
                 numericEscCalTInicio.Enabled = false;
+                checkEscVent.Enabled = false;
+                checkEscCal.Enabled = false;
             }
         }
 
@@ -1283,6 +1312,8 @@ namespace InterfazPlantaCtrlTemp
             if (checkRampa.Checked)
             {
                 checkEscalon.Checked = false; // Desmarcar la entrada escalón si se selecciona rampa
+                checkEscVent.Checked = false;
+                checkEscCal.Checked = false;
                 buttonCargarEntradas.Enabled = true;
 
                 // Habilitar los controles de entrada rampa
@@ -1292,12 +1323,16 @@ namespace InterfazPlantaCtrlTemp
                 numericRampCalConsg.Enabled = true;
                 numericRampCalTInicio.Enabled = true;
                 numericRampCalTFinal.Enabled = true;
+                checkRampVent.Enabled = true;
+                checkRampCal.Enabled = true;
 
                 // Deshabilitar los controles de entrada escalón
                 numericEscVentConsg.Enabled = false;
                 numericEscVentTInicio.Enabled = false;
                 numericEscCalConsg.Enabled = false;
                 numericEscCalTInicio.Enabled = false;
+                checkEscVent.Enabled = false;
+                checkEscCal.Enabled = false;
             }
             else
             {
@@ -1308,6 +1343,8 @@ namespace InterfazPlantaCtrlTemp
                 numericRampCalConsg.Enabled = false;
                 numericRampCalTInicio.Enabled = false;
                 numericRampCalTFinal.Enabled = false;
+                checkRampVent.Enabled = false;
+                checkRampCal.Enabled = false;
             }
         }
 
