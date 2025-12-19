@@ -1188,9 +1188,26 @@ namespace InterfazPlantaCtrlTemp
                 trackVelVent.Enabled = true;
                 numericPotCal.Enabled = true;
                 trackPotCal.Enabled = true;
+
+                buttonGuardarDatos.Enabled = true;
                 // Deshabilitar controles de entradas del sistema
                 checkEscalon.Enabled = false;
                 checkRampa.Enabled = false;
+                checkEscVent.Enabled = false;
+                checkEscCal.Enabled = false;
+                numericEscVentConsg.Enabled = false;
+                numericEscVentTInicio.Enabled = false;
+                numericEscCalConsg.Enabled = false;
+                numericEscCalTInicio.Enabled = false;
+                checkRampVent.Enabled = false;
+                checkRampCal.Enabled = false;
+                numericRampVentConsg.Enabled = false;
+                numericRampVentTInicio.Enabled = false;
+                numericRampVentTFinal.Enabled = false;
+                numericRampCalConsg.Enabled = false;
+                numericRampCalTInicio.Enabled = false;
+                numericRampCalTFinal.Enabled = false;
+
                 buttonCargarEntradas.Enabled = false;
                 // Deshabilitar controles de control lazo cerrado
                 checkPID.Enabled = false;
@@ -1253,8 +1270,30 @@ namespace InterfazPlantaCtrlTemp
                 trackPotCal.Enabled = false;
                 // Habilitar controles de entradas del sistema
                 checkEscalon.Enabled = true;
-                checkRampa.Enabled = true;
                 buttonCargarEntradas.Enabled = true;
+                buttonGuardarDatos.Enabled = true;
+                checkRampa.Enabled = true;
+                if (checkEscalon.Checked)
+                {
+                    checkEscVent.Enabled = true;
+                    checkEscCal.Enabled = true;
+                    numericEscVentConsg.Enabled = true;
+                    numericEscVentTInicio.Enabled = true;
+                    numericEscCalConsg.Enabled = true;
+                    numericEscCalTInicio.Enabled = true;
+                }
+                else if (checkRampa.Checked)
+                {
+                    checkRampVent.Enabled = true;
+                    checkRampCal.Enabled = true;
+                    numericRampVentConsg.Enabled = true;
+                    numericRampVentTInicio.Enabled = true;
+                    numericRampVentTFinal.Enabled = true;
+                    numericRampCalConsg.Enabled = true;
+                    numericRampCalTInicio.Enabled = true;
+                    numericRampCalTFinal.Enabled = true;
+                }
+
                 // Habilitar controles de control lazo cerrado
                 checkPID.Enabled = true;
                 buttonCargarLazoCerrado.Enabled = true;
@@ -1414,20 +1453,27 @@ namespace InterfazPlantaCtrlTemp
                 checkCrtlManual.Enabled = true;
                 checkEscalon.Enabled = true;
                 checkRampa.Enabled = true;
-                checkEscVent.Enabled = true;
-                checkEscCal.Enabled = true;
-                checkRampVent.Enabled = true;
-                checkRampCal.Enabled = true;
-                numericEscVentConsg.Enabled = true;
-                numericEscVentTInicio.Enabled = true;
-                numericEscCalConsg.Enabled = true;
-                numericEscCalTInicio.Enabled = true;
-                numericRampVentConsg.Enabled = true;
-                numericRampVentTInicio.Enabled = true;
-                numericRampVentTFinal.Enabled = true;
-                numericRampCalConsg.Enabled = true;
-                numericRampCalTInicio.Enabled = true;
-                numericRampCalTFinal.Enabled = true;
+
+                if (checkEscalon.Checked)
+                {
+                    checkEscVent.Enabled = true;
+                    checkEscCal.Enabled = true;
+                    numericEscVentConsg.Enabled = true;
+                    numericEscVentTInicio.Enabled = true;
+                    numericEscCalConsg.Enabled = true;
+                    numericEscCalTInicio.Enabled = true;
+                }
+                else if (checkRampa.Checked)
+                {
+                    checkRampVent.Enabled = true;
+                    checkRampCal.Enabled = true;
+                    numericRampVentConsg.Enabled = true;
+                    numericRampVentTInicio.Enabled = true;
+                    numericRampVentTFinal.Enabled = true;
+                    numericRampCalConsg.Enabled = true;
+                    numericRampCalTInicio.Enabled = true;
+                    numericRampCalTFinal.Enabled = true;
+                }
                 
                 return;
             }
@@ -1492,6 +1538,9 @@ namespace InterfazPlantaCtrlTemp
                 if (checkEscalon.Checked) // Se ha seleccionado la entrada escalón
                 {
                     Debug.WriteLine("Se ha seleccionado la entrada escalón");
+                    checkRampVent.Checked = false;
+                    checkRampCal.Checked = false;
+
 
                     if (checkEscVent.Checked && !checkEscCal.Checked) // Solo entrada escalón para el ventilador
                     {
@@ -1703,6 +1752,8 @@ namespace InterfazPlantaCtrlTemp
                 else if (checkRampa.Checked) // Se ha seleccionado la entrada rampa
                 {
                     Debug.WriteLine("Se ha seleccionado la entrada rampa");
+                    checkEscVent.Checked = false;
+                    checkEscCal.Checked = false;
 
                     if (checkRampVent.Checked && !checkRampCal.Checked) // Entrada rampa para el ventilador
                     {
@@ -2079,6 +2130,10 @@ namespace InterfazPlantaCtrlTemp
                         Debug.WriteLine($"Error disposing CancellationTokenSource: {ex.Message}");
                     }
                 }
+                // Asegurar que los dispositivos vuelven a un estado seguro
+                ventilador.SetVelocidad(40);
+                calefactor.SetPotencia(0);
+
                 // Rehabilitar botones al finalizar
                 buttonCargarEntradas.Text = "Cargar Entradas";
                 buttonCargarEntradas.Enabled = true;
@@ -2086,21 +2141,27 @@ namespace InterfazPlantaCtrlTemp
                 checkCrtlManual.Enabled = true;
                 checkEscalon.Enabled = true;
                 checkRampa.Enabled = true;
-                checkEscVent.Enabled = true;
-                checkEscCal.Enabled = true;
-                checkRampVent.Enabled = true;
-                checkRampCal.Enabled = true;
 
-                numericEscVentConsg.Enabled = true;
-                numericEscVentTInicio.Enabled = true;
-                numericEscCalConsg.Enabled = true;
-                numericEscCalTInicio.Enabled = true;
-                numericRampVentConsg.Enabled = true;
-                numericRampVentTInicio.Enabled = true;
-                numericRampVentTFinal.Enabled = true;
-                numericRampCalConsg.Enabled = true;
-                numericRampCalTInicio.Enabled = true;
-                numericRampCalTFinal.Enabled = true;
+                if (checkEscalon.Checked)
+                {
+                    checkEscVent.Enabled = true;
+                    checkEscCal.Enabled = true;
+                    numericEscVentConsg.Enabled = true;
+                    numericEscVentTInicio.Enabled = true;
+                    numericEscCalConsg.Enabled = true;
+                    numericEscCalTInicio.Enabled = true;
+                }
+                else if (checkRampa.Checked)
+                {
+                    checkRampVent.Enabled = true;
+                    checkRampCal.Enabled = true;
+                    numericRampVentConsg.Enabled = true;
+                    numericRampVentTInicio.Enabled = true;
+                    numericRampVentTFinal.Enabled = true;
+                    numericRampCalConsg.Enabled = true;
+                    numericRampCalTInicio.Enabled = true;
+                    numericRampCalTFinal.Enabled = true;
+                }
             }
         }
 
@@ -2293,6 +2354,9 @@ namespace InterfazPlantaCtrlTemp
                 }
                 finally
                 {
+                    // Asegurar que el calefactor se apaga al detener el PID
+                    calefactor.SetPotencia(0);
+
                     pidModeCts = null;
                 }
             }
