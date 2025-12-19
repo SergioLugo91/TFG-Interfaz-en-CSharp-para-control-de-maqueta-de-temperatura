@@ -30,12 +30,8 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 1,
+          "SelectedChildIndex": 0,
           "Children": [
-            {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{cce594b6-0c39-4442-ba28-10c64ac7e89f}"
-            },
             {
               "$type": "Document",
               "DocumentIndex": 0,
@@ -44,7 +40,7 @@
               "RelativeDocumentMoniker": "Form1.cs",
               "ToolTip": "C:\\Users\\sergi\\Documents\\Universidad\\4\\TFG\\InterfazPlantaCtrlTemp\\Form1.cs",
               "RelativeToolTip": "Form1.cs",
-              "ViewState": "AgIAANcDAAAAAAAAAAAmwOwDAABdAAAAAAAAAA==",
+              "ViewState": "AgIAANEEAAAAAAAAAAAowOsEAAA3AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-02-05T13:44:05.438Z",
               "EditorCaption": ""

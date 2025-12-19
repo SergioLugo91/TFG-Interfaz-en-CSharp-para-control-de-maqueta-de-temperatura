@@ -80,9 +80,6 @@
             this.labelConsignaVent = new System.Windows.Forms.Label();
             this.numericRampCalTFinal = new System.Windows.Forms.NumericUpDown();
             this.tabPage3 = new System.Windows.Forms.TabPage();
-            this.label9 = new System.Windows.Forms.Label();
-            this.numericTEjecucionLC = new System.Windows.Forms.NumericUpDown();
-            this.label10 = new System.Windows.Forms.Label();
             this.buttonCargarLazoCerrado = new System.Windows.Forms.Button();
             this.checkPID = new System.Windows.Forms.CheckBox();
             this.label8 = new System.Windows.Forms.Label();
@@ -135,7 +132,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericEscVentConsg)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericRampCalTFinal)).BeginInit();
             this.tabPage3.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericTEjecucionLC)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericKd)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericKi)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericKp)).BeginInit();
@@ -799,9 +795,6 @@
             // 
             // tabPage3
             // 
-            this.tabPage3.Controls.Add(this.label9);
-            this.tabPage3.Controls.Add(this.numericTEjecucionLC);
-            this.tabPage3.Controls.Add(this.label10);
             this.tabPage3.Controls.Add(this.buttonCargarLazoCerrado);
             this.tabPage3.Controls.Add(this.checkPID);
             this.tabPage3.Controls.Add(this.label8);
@@ -819,47 +812,6 @@
             this.tabPage3.Size = new System.Drawing.Size(400, 408);
             this.tabPage3.TabIndex = 4;
             this.tabPage3.Text = "Control en Lazo Cerrado";
-            // 
-            // label9
-            // 
-            this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(199, 384);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(55, 13);
-            this.label9.TabIndex = 51;
-            this.label9.Text = "Segundos";
-            // 
-            // numericTEjecucionLC
-            // 
-            this.numericTEjecucionLC.Location = new System.Drawing.Point(122, 382);
-            this.numericTEjecucionLC.Maximum = new decimal(new int[] {
-            240,
-            0,
-            0,
-            0});
-            this.numericTEjecucionLC.Minimum = new decimal(new int[] {
-            5,
-            0,
-            0,
-            0});
-            this.numericTEjecucionLC.Name = "numericTEjecucionLC";
-            this.numericTEjecucionLC.Size = new System.Drawing.Size(71, 20);
-            this.numericTEjecucionLC.TabIndex = 52;
-            this.numericTEjecucionLC.Tag = "";
-            this.numericTEjecucionLC.Value = new decimal(new int[] {
-            30,
-            0,
-            0,
-            0});
-            // 
-            // label10
-            // 
-            this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(6, 384);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(110, 13);
-            this.label10.TabIndex = 50;
-            this.label10.Text = "Tiempo de Ejecución:";
             // 
             // buttonCargarLazoCerrado
             // 
@@ -922,6 +874,12 @@
             // 
             // numericKd
             // 
+            this.numericKd.DecimalPlaces = 3;
+            this.numericKd.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            196608});
             this.numericKd.Location = new System.Drawing.Point(173, 260);
             this.numericKd.Name = "numericKd";
             this.numericKd.Size = new System.Drawing.Size(120, 20);
@@ -929,6 +887,12 @@
             // 
             // numericKi
             // 
+            this.numericKi.DecimalPlaces = 3;
+            this.numericKi.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            196608});
             this.numericKi.Location = new System.Drawing.Point(173, 224);
             this.numericKi.Name = "numericKi";
             this.numericKi.Size = new System.Drawing.Size(120, 20);
@@ -936,6 +900,7 @@
             // 
             // numericKp
             // 
+            this.numericKp.DecimalPlaces = 3;
             this.numericKp.Increment = new decimal(new int[] {
             1,
             0,
@@ -948,7 +913,17 @@
             // 
             // numericConsgTemp
             // 
+            this.numericConsgTemp.Increment = new decimal(new int[] {
+            1,
+            0,
+            0,
+            65536});
             this.numericConsgTemp.Location = new System.Drawing.Point(134, 138);
+            this.numericConsgTemp.Maximum = new decimal(new int[] {
+            60,
+            0,
+            0,
+            0});
             this.numericConsgTemp.Name = "numericConsgTemp";
             this.numericConsgTemp.Size = new System.Drawing.Size(120, 20);
             this.numericConsgTemp.TabIndex = 0;
@@ -1170,7 +1145,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericRampCalTFinal)).EndInit();
             this.tabPage3.ResumeLayout(false);
             this.tabPage3.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericTEjecucionLC)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericKd)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericKi)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericKp)).EndInit();
@@ -1262,9 +1236,6 @@
         private System.Windows.Forms.Label labelTEjec;
         private System.Windows.Forms.NumericUpDown numericTEjecucionAuto;
         private System.Windows.Forms.Label labelTEjecucion;
-        private System.Windows.Forms.Label label9;
-        private System.Windows.Forms.NumericUpDown numericTEjecucionLC;
-        private System.Windows.Forms.Label label10;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.NumericUpDown numericTamVentana;
