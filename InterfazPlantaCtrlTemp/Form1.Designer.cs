@@ -157,7 +157,7 @@
             // 
             // numericVelVent
             // 
-            this.numericVelVent.Location = new System.Drawing.Point(288, 66);
+            this.numericVelVent.Location = new System.Drawing.Point(336, 66);
             this.numericVelVent.Minimum = new decimal(new int[] {
             40,
             0,
@@ -175,7 +175,7 @@
             // 
             // numericPotCal
             // 
-            this.numericPotCal.Location = new System.Drawing.Point(288, 169);
+            this.numericPotCal.Location = new System.Drawing.Point(336, 169);
             this.numericPotCal.Maximum = new decimal(new int[] {
             85,
             0,
@@ -198,7 +198,7 @@
             this.groupCtrlMaqueta.Controls.Add(this.numericVelVent);
             this.groupCtrlMaqueta.Location = new System.Drawing.Point(12, 176);
             this.groupCtrlMaqueta.Name = "groupCtrlMaqueta";
-            this.groupCtrlMaqueta.Size = new System.Drawing.Size(364, 243);
+            this.groupCtrlMaqueta.Size = new System.Drawing.Size(414, 243);
             this.groupCtrlMaqueta.TabIndex = 3;
             this.groupCtrlMaqueta.TabStop = false;
             this.groupCtrlMaqueta.Text = "Control Manual";
@@ -206,7 +206,7 @@
             // checkCrtlManual
             // 
             this.checkCrtlManual.AutoSize = true;
-            this.checkCrtlManual.Location = new System.Drawing.Point(216, 213);
+            this.checkCrtlManual.Location = new System.Drawing.Point(256, 213);
             this.checkCrtlManual.Name = "checkCrtlManual";
             this.checkCrtlManual.Size = new System.Drawing.Size(133, 17);
             this.checkCrtlManual.TabIndex = 9;
@@ -218,7 +218,7 @@
             this.trackPotCal.Location = new System.Drawing.Point(14, 169);
             this.trackPotCal.Maximum = 85;
             this.trackPotCal.Name = "trackPotCal";
-            this.trackPotCal.Size = new System.Drawing.Size(268, 45);
+            this.trackPotCal.Size = new System.Drawing.Size(316, 45);
             this.trackPotCal.TabIndex = 8;
             this.trackPotCal.TickFrequency = 5;
             // 
@@ -228,7 +228,7 @@
             this.trackVelVent.Maximum = 100;
             this.trackVelVent.Minimum = 40;
             this.trackVelVent.Name = "trackVelVent";
-            this.trackVelVent.Size = new System.Drawing.Size(268, 45);
+            this.trackVelVent.Size = new System.Drawing.Size(316, 45);
             this.trackVelVent.TabIndex = 6;
             this.trackVelVent.TickFrequency = 5;
             this.trackVelVent.Value = 40;
@@ -832,6 +832,7 @@
             this.checkPID.TabIndex = 28;
             this.checkPID.Text = "Controlador PID";
             this.checkPID.UseVisualStyleBackColor = true;
+            this.checkPID.CheckedChanged += new System.EventHandler(this.checkPID_CheckedChanged);
             // 
             // label8
             // 
@@ -913,6 +914,7 @@
             // 
             // numericConsgTemp
             // 
+            this.numericConsgTemp.DecimalPlaces = 1;
             this.numericConsgTemp.Increment = new decimal(new int[] {
             1,
             0,
@@ -1005,9 +1007,9 @@
             // comBox
             // 
             this.comBox.FormattingEnabled = true;
-            this.comBox.Location = new System.Drawing.Point(137, 18);
+            this.comBox.Location = new System.Drawing.Point(147, 18);
             this.comBox.Name = "comBox";
-            this.comBox.Size = new System.Drawing.Size(121, 21);
+            this.comBox.Size = new System.Drawing.Size(160, 21);
             this.comBox.TabIndex = 1;
             // 
             // label1
@@ -1021,7 +1023,7 @@
             // 
             // btnConectar
             // 
-            this.btnConectar.Location = new System.Drawing.Point(269, 16);
+            this.btnConectar.Location = new System.Drawing.Point(324, 16);
             this.btnConectar.Name = "btnConectar";
             this.btnConectar.Size = new System.Drawing.Size(75, 23);
             this.btnConectar.TabIndex = 7;
@@ -1036,7 +1038,7 @@
             this.groupBox2.Controls.Add(this.btnConectar);
             this.groupBox2.Location = new System.Drawing.Point(12, 76);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(364, 51);
+            this.groupBox2.Size = new System.Drawing.Size(414, 51);
             this.groupBox2.TabIndex = 9;
             this.groupBox2.TabStop = false;
             // 
@@ -1047,14 +1049,14 @@
             this.groupBox1.Controls.Add(this.label11);
             this.groupBox1.Location = new System.Drawing.Point(12, 126);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(364, 51);
+            this.groupBox1.Size = new System.Drawing.Size(414, 51);
             this.groupBox1.TabIndex = 11;
             this.groupBox1.TabStop = false;
             // 
             // label12
             // 
             this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(278, 22);
+            this.label12.Location = new System.Drawing.Point(334, 22);
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(55, 13);
             this.label12.TabIndex = 50;
@@ -1062,7 +1064,7 @@
             // 
             // numericTamVentana
             // 
-            this.numericTamVentana.Location = new System.Drawing.Point(137, 20);
+            this.numericTamVentana.Location = new System.Drawing.Point(147, 20);
             this.numericTamVentana.Maximum = new decimal(new int[] {
             240,
             0,
@@ -1074,7 +1076,7 @@
             0,
             0});
             this.numericTamVentana.Name = "numericTamVentana";
-            this.numericTamVentana.Size = new System.Drawing.Size(121, 20);
+            this.numericTamVentana.Size = new System.Drawing.Size(160, 20);
             this.numericTamVentana.TabIndex = 51;
             this.numericTamVentana.Tag = "";
             this.numericTamVentana.Value = new decimal(new int[] {

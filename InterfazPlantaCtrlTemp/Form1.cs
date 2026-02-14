@@ -2361,6 +2361,33 @@ namespace InterfazPlantaCtrlTemp
                 }
             }
         }
+
+        // Método para comprobar cuando se activa el modo PID
+        private void checkPID_CheckedChanged(object sender, EventArgs e)
+        {
+
+            if (checkPID.Checked)
+            {
+                // Habilitar los controles para configurar el PID
+                checkKp.Enabled = true;
+                checkKi.Enabled = true;
+                checkKd.Enabled = true;
+                numericKp.Enabled = true;
+                numericKi.Enabled = true;
+                numericKd.Enabled = true;
+            }
+            else
+            {
+                // Deshabilitar los controles 
+                checkKp.Enabled = false;
+                checkKi.Enabled = false;
+                checkKd.Enabled = false;
+                numericKp.Enabled = false;
+                numericKi.Enabled = false;
+                numericKd.Enabled = false;
+            }
+        }
+
         private void buttonCargarLazoCerrado_Click(object sender, EventArgs e)
         {
             // Si ya está en modo PID, detenerlo
