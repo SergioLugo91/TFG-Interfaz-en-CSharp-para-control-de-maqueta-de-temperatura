@@ -279,7 +279,7 @@
             this.groupCtrlEntradas.Size = new System.Drawing.Size(414, 459);
             this.groupCtrlEntradas.TabIndex = 4;
             this.groupCtrlEntradas.TabStop = false;
-            this.groupCtrlEntradas.Text = "Control de Entradas del Sistema";
+            this.groupCtrlEntradas.Text = "Control Automático";
             // 
             // tabControl1
             // 
@@ -334,7 +334,7 @@
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
             this.tabPage1.Size = new System.Drawing.Size(400, 408);
             this.tabPage1.TabIndex = 2;
-            this.tabPage1.Text = "Control Automático";
+            this.tabPage1.Text = "Control de Entradas del Sistema";
             // 
             // labelTEjec
             // 

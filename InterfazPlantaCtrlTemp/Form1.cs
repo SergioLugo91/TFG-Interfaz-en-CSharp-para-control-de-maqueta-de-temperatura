@@ -127,12 +127,34 @@ namespace InterfazPlantaCtrlTemp
             buttonCargarEntradas.Enabled = false;
             checkCrtlManual.Enabled = false;
             checkEscalon.Enabled = false;
+            checkEscVent.Enabled = false;
+            numericEscVentConsg.Enabled = false;
+            numericEscVentTInicio.Enabled = false;
+            checkEscCal.Enabled = false;
+            numericEscCalConsg.Enabled = false;
+            numericEscCalTInicio.Enabled = false;
             checkRampa.Enabled = false;
+            checkRampVent.Enabled = false;
+            numericRampVentConsg.Enabled = false;
+            numericRampVentTInicio.Enabled = false;
+            numericRampVentTFinal.Enabled = false;
+            checkRampCal.Enabled = false;
+            numericRampCalConsg.Enabled = false;
+            numericRampCalTInicio.Enabled = false;
+            numericRampCalTFinal.Enabled = false;
             checkPID.Enabled = false;
+            numericConsgTemp.Enabled = false;
+            checkKp.Enabled = false;
+            numericKp.Enabled = false;
+            checkKi.Enabled = false;
+            numericKi.Enabled = false;
+            checkKd.Enabled = false;
+            numericKd.Enabled = false;
             numericVelVent.Enabled = false;
             trackVelVent.Enabled = false;
             numericPotCal.Enabled = false;
             trackPotCal.Enabled = false;
+
         }
 
         // Método para verificar los puertos seriales disponibles
@@ -1211,6 +1233,13 @@ namespace InterfazPlantaCtrlTemp
                 buttonCargarEntradas.Enabled = false;
                 // Deshabilitar controles de control lazo cerrado
                 checkPID.Enabled = false;
+                checkKp.Enabled = false;
+                numericKp.Enabled = false;
+                checkKi.Enabled = false;
+                numericKi.Enabled = false;
+                checkKd.Enabled = false;
+                numericKd.Enabled = false;
+                numericConsgTemp.Enabled = false;
                 buttonCargarLazoCerrado.Enabled = false;
 
                 // Enviar valores iniciales
@@ -1296,6 +1325,16 @@ namespace InterfazPlantaCtrlTemp
 
                 // Habilitar controles de control lazo cerrado
                 checkPID.Enabled = true;
+                if (checkPID.Checked)
+                {
+                    checkKp.Enabled = true;
+                    numericKp.Enabled = true;
+                    checkKi.Enabled = true;
+                    numericKi.Enabled = true;
+                    checkKd.Enabled = true;
+                    numericKd.Enabled = true;
+                    numericConsgTemp.Enabled = true;
+                }
                 buttonCargarLazoCerrado.Enabled = true;
             }
         }
@@ -2369,6 +2408,7 @@ namespace InterfazPlantaCtrlTemp
             if (checkPID.Checked)
             {
                 // Habilitar los controles para configurar el PID
+                numericConsgTemp.Enabled = true;
                 checkKp.Enabled = true;
                 checkKi.Enabled = true;
                 checkKd.Enabled = true;
@@ -2379,6 +2419,7 @@ namespace InterfazPlantaCtrlTemp
             else
             {
                 // Deshabilitar los controles 
+                numericConsgTemp.Enabled = false;
                 checkKp.Enabled = false;
                 checkKi.Enabled = false;
                 checkKd.Enabled = false;

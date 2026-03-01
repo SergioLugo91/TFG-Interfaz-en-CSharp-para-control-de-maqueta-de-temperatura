@@ -52,6 +52,9 @@
     <ErrorReport>prompt</ErrorReport>
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>CtrlTemp-Photoroom.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Apache.Arrow, Version=14.0.2.0, Culture=neutral, PublicKeyToken=204f54e5a45c07df, processorArchitecture=MSIL">
       <HintPath>packages\Apache.Arrow.14.0.2\lib\netstandard2.0\Apache.Arrow.dll</HintPath>
@@ -169,6 +172,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\2810399.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="CtrlTemp-Photoroom.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
