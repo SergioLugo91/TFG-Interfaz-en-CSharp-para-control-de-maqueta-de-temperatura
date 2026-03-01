@@ -93,10 +93,8 @@ git clone https://github.com/SergioLugo91/TFG-Interfaz-en-CSharp-para-control-de
 3. Seleccionar el puerto y tipo de placa correctos
 4. Cargar el sketch en la placa
 
-### 3. Compilar la aplicación
-1. Abrir `InterfazPlantaCtrlTemp/InterfazPlantaCtrlTemp.sln` en Visual Studio
-2. Restaurar los paquetes NuGet (automático o mediante `Herramientas > Administrador de paquetes NuGet`)
-3. Compilar la solución (`Ctrl + Shift + B`)
+### 3. Ejecutar la aplicación
+1. Ejecutar el archivo de la interfaz (`InterfazPlantaCtrlTemp.exe`)
 
 ---
 
