@@ -9,6 +9,13 @@ de temperatura utilizada en prácticas de laboratorio. La interfaz permite manej
 conectados a una placa Arduino a través de comunicación serie por USB. También permite visualizar en tiempo real la temperatura registrada 
 por un sensor, aplicar señales de entrada tipo escalón o rampa, y observar la respuesta del sistema.
 
+Instalación:
+
+No es necesario instalar ningún software adicional. Para usar la aplicación basta con descargar y ejecutar directamente el archivo ejecutable:
+
+1. Descargar el archivo InterfazPlantaCtrlTemp.exe desde la sección de releases del repositorio.
+2. Ejecutar el archivo InterfazPlantaCtrlTemp.exe con doble clic.
+
 Uso de la aplicación:
 
 1. Asegurarse de que la maqueta tiene el código arduino correcto (todov5.ino)
