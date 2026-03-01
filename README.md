@@ -94,7 +94,9 @@ git clone https://github.com/SergioLugo91/TFG-Interfaz-en-CSharp-para-control-de
 4. Cargar el sketch en la placa
 
 ### 3. Ejecutar la aplicación
-1. Ejecutar el archivo de la interfaz (`InterfazPlantaCtrlTemp.exe`)
+1. Descargar la versión (`Release v1.0`)
+2. Extraer el archivo comprimido (`TFG-Interfaz-en-CSharp-para-control-de-maqueta-de-temperatura-1.0.zip`)
+3. Ejecutar el archivo de la interfaz (`InterfazPlantaCtrlTemp.exe`)
 
 ---
 
