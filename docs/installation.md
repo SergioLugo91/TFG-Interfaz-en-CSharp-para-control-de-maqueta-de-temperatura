@@ -14,4 +14,4 @@ La aplicación está distribuida como un ejecutable para Windows y no requiere i
 2. Extraer el archivo comprimido.
 3. Ejecutar:
 
-InterfazPlantaCtrlTemp.exe
+`InterfazPlantaCtrlTemp.exe`
