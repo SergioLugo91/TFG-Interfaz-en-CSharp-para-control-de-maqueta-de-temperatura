@@ -5,7 +5,7 @@ Esta sección describe cómo compilar o modificar el software.
 ## Clonar el repositorio
 
 ```bash
-git clone https://github.com/usuario/repositorio.git
+git clone https://github.com/SergioLugo91/TFG-Interfaz-en-CSharp-para-control-de-maqueta-de-temperatura
 ```
 
 ## Abrir el proyecto
