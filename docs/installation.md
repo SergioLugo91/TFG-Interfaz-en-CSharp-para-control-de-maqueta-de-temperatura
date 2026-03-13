@@ -1,22 +1,17 @@
 # Instalación
 
-Esta sección describe cómo preparar el entorno para ejecutar la aplicación.
+La aplicación está distribuida como un ejecutable para Windows y no requiere instalación adicional.
 
-## Requisitos de software
+## Requisitos del sistema
 
-- Visual Studio 2019 o superior
-- .NET Framework 4.7.2
-- Arduino IDE
+- Sistema operativo Windows
+- Puerto USB disponible para la conexión con Arduino
+- Firmware cargado en la placa Arduino
 
-## Requisitos de hardware
+## Descarga del programa
 
-- Placa Arduino compatible con comunicación serie
-- Maqueta de control de temperatura con:
-  - Ventilador controlado por PWM
-  - Resistencia calefactora de nicrom
-  - Sensor de temperatura PT100
+1. Descargar la versión publicada del proyecto.
+2. Extraer el archivo comprimido.
+3. Ejecutar:
 
-## Clonar el repositorio
-
-```bash
-git clone https://github.com/SergioLugo91/TFG-Interfaz-en-CSharp-para-control-de-maqueta-de-temperatura.git
+InterfazPlantaCtrlTemp.exe
